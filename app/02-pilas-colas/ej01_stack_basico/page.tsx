@@ -30,23 +30,21 @@ const ejercicio = {
   ]
 };
 
+// Este ejercicio ha sido deshabilitado. El módulo de Pilas y Colas ha sido eliminado de PythonXom.
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-200 flex flex-col items-center">
-      <Head>
-        <title>Ejercicio: Uso de Pila | PythonXom</title>
-        <meta name="description" content="Ejercicio interactivo sobre pilas en Python. Feedback detallado y accesible." />
-      </Head>
-      <nav className="w-full max-w-4xl flex items-center justify-between py-6 px-4 md:px-0">
-        <Link href="/" className="flex items-center gap-2 text-blue-700 font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded transition-all">
-          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="inline-block"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
-          Volver al menú
-        </Link>
-        <span className="text-lg font-bold text-slate-700 tracking-tight">PythonXom</span>
-      </nav>
-      <main className="w-full max-w-3xl bg-white/90 rounded-2xl shadow-xl p-6 md:p-10 mt-2 mb-8 border border-slate-200">
-        <IntroPythonXom data={ejercicio} />
-      </main>
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="bg-white p-8 rounded shadow text-center max-w-lg mx-auto">
+        <h1 className="text-2xl font-bold mb-4 text-red-600">Módulo Eliminado</h1>
+        <p className="mb-2">El módulo de <strong>Pilas y Colas</strong> ha sido eliminado y reemplazado por los nuevos módulos:</p>
+        <ul className="mb-4 text-left list-disc list-inside">
+          <li>Árboles</li>
+          <li>Recursividad</li>
+          <li>Archivos</li>
+        </ul>
+        <p>Por favor, vuelve al menú principal para continuar aprendiendo.</p>
+        <a href="/" className="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Volver al menú principal</a>
+      </div>
     </div>
   );
 }

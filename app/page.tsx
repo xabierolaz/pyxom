@@ -4,18 +4,54 @@ const modules = [
 	{
 		id: '01-introduccion',
 		title: 'Introducción',
-		description: 'Conceptos básicos de Python y algoritmos.',
+		description: 'Conceptos muy básicos de Python y algoritmos. Ideal para principiantes absolutos.',
 		color: 'from-sky-400 to-blue-600',
 		path: '/01-introduccion/ej01_suma_producto',
+		ejercicios: [
+			{ title: 'Suma y Producto', path: '/01-introduccion/ej01_suma_producto' }
+		]
 	},
 	{
-		id: '02-pilas-colas',
-		title: 'Pilas y Colas',
-		description: 'Estructuras de datos fundamentales.',
-		color: 'from-emerald-400 to-green-600',
-		path: '/02-pilas-colas/ej01_stack_basico',
+		id: '03-trees',
+		title: 'Árboles',
+		description: 'Estructuras de datos jerárquicas y recorridos de árboles.',
+		color: 'from-green-400 to-lime-600',
+		path: '/03-trees/ej01_tree_basico',
+		ejercicios: [
+			{ title: 'Nodo y Preorden', path: '/03-trees/ej01_tree_basico' },
+			{ title: 'Recorrido Inorden', path: '/03-trees/ej05_tree_inorden' },
+			{ title: 'Recorrido Postorden', path: '/03-trees/ej06_tree_postorden' },
+			{ title: 'Altura de Árbol', path: '/03-trees/ej02_tree_altura' },
+			{ title: 'Inserción BST', path: '/03-trees/ej04_tree_insercion' },
+			{ title: 'Búsqueda BST', path: '/03-trees/ej03_tree_busqueda' }
+		]
 	},
-	// Puedes agregar más módulos aquí
+	{
+		id: '04-recursividad',
+		title: 'Recursividad',
+		description: 'Problemas y algoritmos que usan recursión.',
+		color: 'from-purple-400 to-fuchsia-600',
+		path: '/04-recursividad/ej01_recursividad_basica',
+		ejercicios: [
+			{ title: 'Factorial', path: '/04-recursividad/ej01_recursividad_basica' },
+			{ title: 'Sumatoria', path: '/04-recursividad/ej02_sumatoria' },
+			{ title: 'Fibonacci', path: '/04-recursividad/ej03_fibonacci' },
+			{ title: 'Potencia', path: '/04-recursividad/ej04_potencia' }
+		]
+	},
+	{
+		id: '05-files',
+		title: 'Archivos',
+		description: 'Lectura y escritura de archivos en Python.',
+		color: 'from-orange-400 to-yellow-500',
+		path: '/05-files/ej01_files_basico',
+		ejercicios: [
+			{ title: 'Lectura de Archivos', path: '/05-files/ej01_files_basico' },
+			{ title: 'Escritura de Archivos', path: '/05-files/ej02_files_escritura' },
+			{ title: 'Lectura de CSV', path: '/05-files/ej03_files_csv' },
+			{ title: 'Añadir Líneas', path: '/05-files/ej04_files_append' }
+		]
+	}
 ];
 
 export default function Page() {
@@ -48,6 +84,15 @@ export default function Page() {
 									<p className="text-white/90 text-base mb-4">
 										{mod.description}
 									</p>
+									<ol className="list-decimal pl-5 text-white/90 mb-4">
+										{mod.ejercicios.map((exercise, index) => (
+											<li key={index}>
+												<Link href={exercise.path} className="hover:underline">
+													{exercise.title}
+												</Link>
+											</li>
+										))}
+									</ol>
 								</div>
 								<span className="inline-block mt-auto px-4 py-2 bg-white/80 text-blue-700 font-semibold rounded-lg shadow hover:bg-white transition-all self-start">
 									Entrar

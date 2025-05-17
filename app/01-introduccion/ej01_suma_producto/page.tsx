@@ -62,10 +62,10 @@ print(f"Suma: {suma}")
 print(f"Producto: {producto}")
 `,
   tests: [
-    { name: "Test Básico", input: "5\n3", expected: "Suma: 8\nProducto: 15", points: 5 },
-    { name: "Test con Ceros", input: "0\n7", expected: "Suma: 7\nProducto: 0", points: 2 },
-    { name: "Test con Negativos", input: "-2\n-4", expected: "Suma: -6\nProducto: 8", points: 3 },
-    { name: "Test Grande (Oculto)", input: "123\n456", expected: "Suma: 579\nProducto: 56088", hidden: true, points: 5 },
+    { name: "Test Básico", input: "5\n3", expected: "Suma: 8\nProducto: 15", points: 5, feedback: "¡Bien! Este test verifica la suma y producto básicos." },
+    { name: "Test con Ceros", input: "0\n7", expected: "Suma: 7\nProducto: 0", points: 2, feedback: "Recuerda que cualquier número multiplicado por cero es cero." },
+    { name: "Test con Negativos", input: "-2\n-4", expected: "Suma: -6\nProducto: 8", points: 3, feedback: "¿Sabías que el producto de dos negativos es positivo?" },
+    { name: "Test Grande (Oculto)", input: "123\n456", expected: "Suma: 579\nProducto: 56088", hidden: true, points: 5, feedback: "Este test comprueba que tu código funciona con números grandes." },
   ],
   globalTimeoutMs: 7000,
   maxPoints: 17, // 15 de tests + 2 de static check (ejemplo)
@@ -136,6 +136,19 @@ print_calls >= 2
 
   positiveFeedback: [ "¡Excelente!", "¡Buen trabajo!", "¡Perfecto!", "¡Sigue así!" ],
   maxHintsToShowAutomatically: 2,
+
+  // --- Feedback de eficiencia y estilo ---
+  efficiencyFeedback: 'Tu código es eficiente para este problema, pero recuerda que para entradas muy grandes podrías necesitar validar los límites.',
+  styleFeedback: 'Usa nombres de variables claros y sigue la indentación estándar de Python. Prefiere f-strings para imprimir.',
+  // --- Sugerencias automáticas y buenas prácticas ---
+  suggestions: [
+    '¿Estás usando int() para convertir los inputs antes de operar?',
+    '¿Tu salida coincide exactamente con el formato pedido? Usa f-strings para evitar errores de formato.'
+  ],
+  bestPractices: [
+    'Evita usar eval() para convertir entradas de usuario.',
+    'Incluye comentarios breves si tu código es más largo o complejo.'
+  ],
 };
 
 export default function SumaProductoAvanzadoPage() {
