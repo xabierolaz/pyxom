@@ -14,6 +14,7 @@ import type {
   FeedbackCondition
 } from '@/types/types'; // Ajusta la ruta si es necesario
 import DiffViewer from './DiffViewer';
+import StyleFeedback from './StyleFeedback';
 
 // --- Carga dinámica para Componentes Pesados ---
 // Añadimos un componente de carga simple para Suspense
@@ -241,6 +242,11 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
                   options={{ fontSize: 15, minimap: { enabled: false }, scrollBeyondLastLine: false, automaticLayout: true, wordWrap: 'on', padding: { top: 12, bottom: 12 } }}
                 />
               </Suspense>
+            </div>
+            {/* Feedback de estilo de código */}
+            <div className="mt-2">
+              <StyleFeedback code={code} />
+              {data.styleFeedback && <p className="text-xs text-slate-500 mt-1">Sugerencia de estilo: {data.styleFeedback}</p>}
             </div>
           </section>
 

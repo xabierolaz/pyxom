@@ -9,6 +9,7 @@ export interface TestCase {
   hidden?: boolean;
   timeoutMs?: number;
   points?: number;
+  feedback?: string; // feedback personalizado por test
 }
 
 export type StaticCheckFunction = 
@@ -61,6 +62,11 @@ export interface ExerciseData {
   maxHintsToShowAutomatically?: number;
   positiveFeedback?: string[]; 
   maxPoints?: number; 
+  efficiencyFeedback?: string;
+  styleFeedback?: string;
+  suggestions?: string[];
+  bestPractices?: string[];
+  badges?: { id: string; label: string; description: string }[];
 }
 
 export interface SingleTestRunResult {
