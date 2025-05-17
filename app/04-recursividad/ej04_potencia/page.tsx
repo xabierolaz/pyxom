@@ -10,7 +10,7 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const potenciaExercise = {
   id: 'ej04_potencia',
   title: 'Potencia Recursiva',
-  description: 'Implementa una función recursiva para calcular a^b (a elevado a la b).',
+  description: 'Implementa una función recursiva para calcular a^b (a elevado a la b). Por ejemplo, potencia(2, 3) debe devolver 8 porque 2*2*2=8.',
   starterCode: `def potencia(a, b):
     pass  # Implementa la recursividad
 `,

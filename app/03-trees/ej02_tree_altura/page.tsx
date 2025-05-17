@@ -12,7 +12,33 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const treeHeightExercise = {
   id: 'ej02_tree_altura',
   title: 'Altura de un Árbol Binario',
-  description: 'Implementa una función recursiva para calcular la altura de un árbol binario dado su nodo raíz.',
+  description: `En este ejercicio, aprenderás a calcular la altura de un árbol binario utilizando recursión.
+
+### Instrucciones:
+1. Implementa una función llamada \`altura\` que reciba el nodo raíz de un árbol binario y devuelva su altura.
+2. La altura de un árbol se define como el número máximo de niveles desde la raíz hasta una hoja.
+3. Usa recursión para calcular la altura de los subárboles izquierdo y derecho.
+
+### Ejemplo:
+Si tienes el siguiente árbol:
+\`\`\`
+    1
+   / \\
+  2   3
+ / \\
+4   5
+\`\`\`
+La altura del árbol es:
+\`\`\`
+3
+\`\`\`
+
+### Consejos:
+- La altura de un árbol vacío (nodo nulo) es 0.
+- Usa la función \`max()\` para comparar las alturas de los subárboles.
+
+### Recursos Adicionales:
+- [Documentación sobre árboles binarios](https://en.wikipedia.org/wiki/Binary_tree)`,
   starterCode: `class Nodo:
     def __init__(self, valor):
         self.valor = valor
@@ -20,8 +46,9 @@ const treeHeightExercise = {
         self.der = None
 
 def altura(nodo):
-    pass  # Implementa la función recursiva
-`,
+    if nodo is None:
+        return 0
+    return 1 + max(altura(nodo.izq), altura(nodo.der))`,
   tests: [
     { name: 'Árbol vacío', input: '', expected: '0', points: 2, feedback: 'La altura de un árbol vacío debe ser 0.' },
     { name: 'Árbol de 1 nodo', input: '', expected: '1', points: 2, feedback: 'La altura de un solo nodo es 1.' },

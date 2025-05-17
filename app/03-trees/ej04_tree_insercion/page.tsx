@@ -12,7 +12,37 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const treeInsertExercise = {
   id: 'ej04_tree_insercion',
   title: 'Inserción en Árbol Binario de Búsqueda',
-  description: 'Implementa una función para insertar un valor en un árbol binario de búsqueda (BST).',
+  description: `En este ejercicio, aprenderás a insertar un valor en un árbol binario de búsqueda (BST).
+
+### Instrucciones:
+1. Implementa una función llamada \`insertar_bst\` que reciba el nodo raíz de un árbol binario de búsqueda y un valor a insertar.
+2. La función debe insertar el valor en la posición correcta siguiendo las propiedades del BST:
+   - Si el valor es menor que el nodo actual, insértalo en el subárbol izquierdo.
+   - Si es mayor, insértalo en el subárbol derecho.
+3. Devuelve el nodo raíz actualizado después de la inserción.
+
+### Ejemplo:
+Si tienes el siguiente árbol:
+\`\`\`
+    10
+   / \\
+  5   15
+\`\`\`
+Insertar el valor \`12\` debe actualizar el árbol a:
+\`\`\`
+    10
+   / \\
+  5   15
+     /
+    12
+\`\`\`
+
+### Consejos:
+- Usa recursión para encontrar la posición correcta.
+- Asegúrate de manejar correctamente el caso de un árbol vacío.
+
+### Recursos Adicionales:
+- [Documentación sobre árboles binarios de búsqueda](https://en.wikipedia.org/wiki/Binary_search_tree)`,
   starterCode: `class Nodo:
     def __init__(self, valor):
         self.valor = valor
@@ -20,7 +50,13 @@ const treeInsertExercise = {
         self.der = None
 
 def insertar_bst(nodo, valor):
-    pass  # Implementa la inserción
+    if nodo is None:
+        return Nodo(valor)
+    if valor < nodo.valor:
+        nodo.izq = insertar_bst(nodo.izq, valor)
+    else:
+        nodo.der = insertar_bst(nodo.der, valor)
+    return nodo
 `,
   tests: [
     { name: 'Insertar en árbol vacío', input: '', expected: '10', points: 2, feedback: 'Debe poder insertar en un árbol vacío.' },

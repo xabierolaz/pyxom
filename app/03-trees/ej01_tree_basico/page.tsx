@@ -13,7 +13,33 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const treeExercise = {
   id: 'ej01_tree_basico',
   title: 'Árbol Binario Básico',
-  description: 'Implementa una clase para un nodo de árbol binario y una función para recorrerlo en preorden.',
+  description: `En este ejercicio, aprenderás a implementar un árbol binario básico y a recorrerlo en preorden.
+
+### Instrucciones:
+1. Implementa una clase llamada \`Nodo\` que represente un nodo de un árbol binario. Cada nodo debe tener:
+   - Un valor.
+   - Un puntero al hijo izquierdo (\`izq\`).
+   - Un puntero al hijo derecho (\`der\`).
+2. Implementa una función llamada \`preorden\` que recorra el árbol en preorden y muestre los valores de los nodos.
+
+### Ejemplo:
+Si tienes el siguiente árbol:
+\`\`\`
+    1
+   / \\
+  2   3
+\`\`\`
+La salida esperada del recorrido preorden es:
+\`\`\`
+1 2 3
+\`\`\`
+
+### Consejos:
+- En un recorrido preorden, primero visitas el nodo actual, luego el hijo izquierdo y finalmente el hijo derecho.
+- Usa recursión para simplificar el recorrido.
+
+### Recursos Adicionales:
+- [Documentación sobre árboles binarios](https://en.wikipedia.org/wiki/Binary_tree)`,
   starterCode: `class Nodo:
     def __init__(self, valor):
         self.valor = valor
@@ -21,8 +47,10 @@ const treeExercise = {
         self.der = None
 
 def preorden(nodo):
-    pass  # Implementa el recorrido preorden
-`,
+    if nodo is not None:
+        print(nodo.valor, end=" ")
+        preorden(nodo.izq)
+        preorden(nodo.der)`,
   tests: [
     { name: 'Test Preorden Simple', input: '', expected: '1 2 3', points: 3, feedback: 'El recorrido preorden debe visitar primero la raíz, luego la izquierda y luego la derecha.' },
     { name: 'Test Árbol Izquierda', input: '', expected: '1 2', points: 2, feedback: 'Verifica que recorra correctamente solo la rama izquierda.' },

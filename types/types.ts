@@ -67,6 +67,12 @@ export interface ExerciseData {
   suggestions?: string[];
   bestPractices?: string[];
   badges?: { id: string; label: string; description: string }[];
+  multimediaContent?: string; // HTML content for multimedia
+  quizData?: {
+    question: string;
+    options: string[];
+    correctAnswer: string;
+  }[]; // Array of quiz questions
 }
 
 export interface SingleTestRunResult {

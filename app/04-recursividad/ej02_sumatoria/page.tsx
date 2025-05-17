@@ -10,7 +10,7 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const sumatoriaExercise = {
   id: 'ej02_sumatoria',
   title: 'Sumatoria Recursiva',
-  description: 'Implementa una función recursiva que calcule la suma de los primeros n números naturales.',
+  description: 'Implementa una función recursiva que calcule la suma de los primeros n números naturales. Por ejemplo, sumatoria(5) debe devolver 15 porque 5+4+3+2+1=15.',
   starterCode: `def sumatoria(n):
     pass  # Implementa la recursividad
 `,

@@ -10,7 +10,7 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const fibonacciExercise = {
   id: 'ej03_fibonacci',
   title: 'Fibonacci Recursivo',
-  description: 'Implementa una función recursiva para calcular el n-ésimo número de Fibonacci.',
+  description: 'Implementa una función recursiva para calcular el n-ésimo número de Fibonacci. Por ejemplo, fibonacci(6) debe devolver 8 porque la secuencia es 0, 1, 1, 2, 3, 5, 8.',
   starterCode: `def fibonacci(n):
     pass  # Implementa la recursividad
 `,

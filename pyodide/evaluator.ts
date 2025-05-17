@@ -234,3 +234,5 @@ export async function getPyodideInstance(): Promise<PyodideInterface | null> {
     console.log(`${DEBUG_PREFIX} getPyodideInstance called.`);
     return initializePyodide();
 }
+
+export { initializePyodide, runSingleTestCase };

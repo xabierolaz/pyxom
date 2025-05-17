@@ -15,6 +15,10 @@ import type {
 } from '@/types/types'; // Ajusta la ruta si es necesario
 import DiffViewer from './DiffViewer';
 import StyleFeedback from './StyleFeedback';
+import VariableViewer from './VariableViewer';
+import ExecutionFlowVisualizer from './ExecutionFlowVisualizer';
+import MultimediaContent from './MultimediaContent';
+import InteractiveQuiz from './InteractiveQuiz';
 
 // --- Carga dinámica para Componentes Pesados ---
 // Añadimos un componente de carga simple para Suspense
@@ -50,6 +54,10 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
   const [activePitfalls, setActivePitfalls] = useState<CommonPitfall[]>([]);
   const [showSolution, setShowSolution] = useState<boolean>(false);
   const [consecutiveFailures, setConsecutiveFailures] = useState<number>(0);
+
+  const handleRun = async () => {
+    const result = await evaluateExercise(code, data);
+  };
 
   // Efecto para inicializar Pyodide y resetear estado al cambiar data.id
   useEffect(() => {
@@ -233,6 +241,20 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           <section>
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Contenido Multimedia:</h2>
+            {data.multimediaContent && (
+              <MultimediaContent content={data.multimediaContent} />
+            )}
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Quiz Interactivo:</h2>
+            {data.quizData && (
+              <InteractiveQuiz quizData={data.quizData} />
+            )}
+          </section>
+
+          <section>
             <h2 className="text-xl font-semibold text-slate-700 mb-2">Tu Código:</h2>
             <div className="rounded-lg overflow-hidden shadow-lg border border-slate-300">
               <Suspense fallback={<LoadingPlaceholder message="Cargando editor..." />}>
@@ -409,6 +431,19 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
           </details>
         </section>
       )}
+      <div>
+        <Editor
+          height="400px"
+          defaultLanguage="python"
+          value={code}
+          onChange={(value) => setCode(value || '')}
+        />
+        <button onClick={handleRun} className="btn btn-primary mt-4">
+          Ejecutar Código
+        </button>
+        <ExecutionFlowVisualizer steps={[]} />
+        <VariableViewer variables={{}} />
+      </div>
     </div>
   );
 }
