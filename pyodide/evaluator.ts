@@ -1,7 +1,8 @@
 // pyxom/pyodide/evaluator.ts
 
-import type { PyodideInterface, PyProxy } from 'pyodide';
-import type { ExerciseData, TestCase, StaticCodeCheck, SingleTestRunResult, StaticCheckRunResult } from '@/types/types'; // Ajusta la ruta si es necesario
+import type { PyodideInterface } from 'pyodide';
+type PyProxy = any;
+import type { ExerciseData, TestCase, StaticCodeCheck, SingleTestRunResult, StaticCheckRunResult, AttemptResult } from '@/types/types'; // Ajusta la ruta si es necesario
 
 let pyodideInstance: PyodideInterface | null = null;
 let astModule: PyProxy | null = null; 
@@ -27,13 +28,15 @@ async function initializePyodide(): Promise<PyodideInterface | null> {
   // @ts-ignore: loadPyodide está en el scope global
   pyodideLoadPromise = window.loadPyodide({
     indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/', 
-  }).then(loadedPyodide => {
+  }).then((loadedPyodide: PyodideInterface) => {
     pyodideInstance = loadedPyodide;
     console.log(`${DEBUG_PREFIX} Evaluator: Pyodide loaded. Loading "ast" module...`);
-    astModule = pyodideInstance.pyimport('ast');
-    console.log(`${DEBUG_PREFIX} Evaluator: Python "ast" module loaded.`);
+    if (pyodideInstance) {
+      astModule = pyodideInstance.pyimport('ast');
+      console.log(`${DEBUG_PREFIX} Evaluator: Python "ast" module loaded.`);
+    }
     return pyodideInstance;
-  }).catch(error => {
+  }).catch((error: any) => {
     console.error(`${DEBUG_PREFIX} Evaluator: Failed to load Pyodide or "ast" module.`, error);
     pyodideLoadPromise = null; 
     pyodideInstance = null; 

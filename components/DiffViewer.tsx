@@ -1,7 +1,7 @@
 'use client';
 
 import { Diff, Hunk, parseDiff } from 'react-diff-view';
-import 'react-diff-view/style.css';
+import 'react-diff-view/style/index.css';
 
 interface Props {
   expected: string;
@@ -12,9 +12,13 @@ export default function DiffViewer({ expected, received }: Props) {
   const diffText = generateUnifiedDiff(expected, received);
   const files = parseDiff(diffText);
 
+  // Only render the first file's hunks (since we generate a single diff)
+  const file = files[0];
+  if (!file) return <div>No diff available</div>;
+
   return (
     <div className="border rounded">
-      <Diff viewType="split" diffType="modify" files={files}>
+      <Diff viewType="split" diffType="modify" hunks={file.hunks}>
         {hunks => hunks.map(hunk => <Hunk key={hunk.content} hunk={hunk} />)}
       </Diff>
     </div>

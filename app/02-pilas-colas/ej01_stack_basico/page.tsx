@@ -9,8 +9,8 @@ const ejercicio = {
     { input: 'p = Pila()\np.push(1)\nprint(p.items)', expected: '[1]', hidden: false }
   ],
   hints: [
-    'Para agregar, usa append.',
-    'Para quitar, usa pop().'
+    { id: 'h1', text: 'Para agregar, usa append.' },
+    { id: 'h2', text: 'Para quitar, usa pop().' }
   ]
 };
 

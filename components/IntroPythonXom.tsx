@@ -13,6 +13,7 @@ import type {
   CommonPitfall,
   FeedbackCondition
 } from '@/types/types'; // Ajusta la ruta si es necesario
+import DiffViewer from './DiffViewer';
 
 // --- Carga dinámica para Componentes Pesados ---
 // Añadimos un componente de carga simple para Suspense
@@ -25,14 +26,6 @@ const Editor = dynamic(() =>
   { 
     ssr: false,
     loading: () => <LoadingPlaceholder message="Cargando editor..." />
-  }
-);
-
-const DiffViewer = dynamic(() => 
-  import('react-diff-view').then(mod => mod.default || mod), 
-  { 
-    ssr: false,
-    loading: () => <LoadingPlaceholder message="Cargando diferencias..." /> 
   }
 );
 
@@ -126,13 +119,12 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     const evaluationResultParts = await evaluateExercise(code, data);
     
     let testsPassedCount = 0;
-    evaluationResultParts.testRunResults.forEach(res => { if (res.passed) testsPassedCount++; });
-    
+    evaluationResultParts.testRunResults.forEach((res: SingleTestRunResult) => { if (res.passed) testsPassedCount++; });
     let staticChecksPassedCount = 0;
-    evaluationResultParts.staticCheckRunResults?.forEach(res => { if (res.passed) staticChecksPassedCount++; });
+    evaluationResultParts.staticCheckRunResults?.forEach((res: StaticCheckRunResult) => { if (res.passed) staticChecksPassedCount++; });
 
     const overallPassed = testsPassedCount === evaluationResultParts.testRunResults.length &&
-                          evaluationResultParts.testRunResults.every(tr => tr.isSuccessExecution) &&
+                          evaluationResultParts.testRunResults.every((tr: SingleTestRunResult) => tr.isSuccessExecution) &&
                           (evaluationResultParts.staticCheckRunResults ? staticChecksPassedCount === (evaluationResultParts.staticCheckRunResults.length || 0) : true);
 
     const newAttempt: AttemptResult = {
@@ -143,7 +135,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
       totalTests: evaluationResultParts.testRunResults.length,
       testsPassedCount,
       totalStaticChecks: evaluationResultParts.staticCheckRunResults?.length || 0,
-      staticChecksPassedCount,
+      staticChecksPassedCount: staticChecksPassedCount,
       durationMs: evaluationResultParts.durationMs,
       totalPointsEarned: 0, 
       maxPossiblePoints: data.maxPoints || 0,
@@ -354,12 +346,12 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
                           <pre className="whitespace-pre-wrap text-xs text-red-600">{res.error}</pre>
                         </div>
                       )}
-                      {res.isSuccessExecution && !res.passed && !res.testCase.hidden && DiffViewer && (
+                      {res.isSuccessExecution && !res.passed && !res.testCase.hidden && (
                         <div className="mt-2">
                           <p className="font-medium text-slate-700 mb-1">Diferencia en la Salida:</p>
                           <div className="text-xs border rounded-md overflow-hidden">
                             <Suspense fallback={<LoadingPlaceholder message="Cargando diferencias..." />}>
-                              <DiffViewer oldValue={res.testCase.expected} newValue={res.normalizedActualOutput} splitView={true} hideLineNumbers={false} useDarkTheme={false} />
+                              <DiffViewer expected={res.testCase.expected} received={res.normalizedActualOutput} />
                             </Suspense>
                           </div>
                         </div>
