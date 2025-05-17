@@ -8,6 +8,11 @@ const modules = [
 		color: 'from-sky-400 to-blue-600',
 		path: '/01-introduccion/ej01_suma_producto',
 		ejercicios: [
+			{ title: 'Variables y Tipos Básicos', path: '/01-introduccion/ej02_variables' },
+			{ title: 'Entrada y Salida Básica', path: '/01-introduccion/ej03_input_output' },
+			{ title: 'Condicionales', path: '/01-introduccion/ej04_condicionales' },
+			{ title: 'Bucles', path: '/01-introduccion/ej05_bucles' },
+			{ title: 'Listas', path: '/01-introduccion/ej06_listas' },
 			{ title: 'Suma y Producto', path: '/01-introduccion/ej01_suma_producto' }
 		]
 	},
