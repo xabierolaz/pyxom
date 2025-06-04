@@ -3,12 +3,43 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import CodeEditor from '@/components/CodeEditor';
 import { ExerciseData, AttemptResult } from '@/types/types';
-import { PYTHON_MOOC_EXERCISES } from '@/data/exercises-database';
-import { commonStaticChecks } from '@/utils/pythonRunner';
+
+// Mock exercise data for demo purposes
+const PYTHON_MOOC_EXERCISES = [
+  {
+    partNumber: 1,
+    title: "Introducción a Python",
+    sections: [
+      {
+        title: "Conceptos Básicos",
+        exercises: [
+          { id: "ej01", title: "Suma y Producto", description: "Operaciones básicas", points: 10 },
+          { id: "ej02", title: "Variables", description: "Tipos de datos", points: 8 },
+          { id: "ej03", title: "Input/Output", description: "Entrada y salida", points: 8 },
+          { id: "ej04", title: "Condicionales", description: "Estructuras de decisión", points: 12 },
+          { id: "ej05", title: "Bucles", description: "Estructuras de repetición", points: 15 }
+        ]
+      }
+    ]
+  }
+];
+
+// Mock user for demo
+const mockUser = {
+  progress: {
+    completedExercises: [] as string[],
+    totalPoints: 0,
+    currentPart: 1,
+    certificates: [] as string[],
+    lastActive: new Date().toISOString(),
+    timeSpent: 0,
+    attempts: {} as Record<string, number>,
+    scores: {} as Record<string, number>
+  }
+};
 
 // Sample exercise data - in a real app, this would come from a database
 const getExerciseData = (partId: string, exerciseId: string): ExerciseData | null => {
@@ -175,7 +206,6 @@ const getModelSolution = (tmcname: string) => {
 
 function ExercisePageContent() {
   const params = useParams();
-  const { user, updateProgress } = useAuth();
   const [exercise, setExercise] = useState<ExerciseData | null>(null);
   const [userCode, setUserCode] = useState<string>('');
   const [lastResult, setLastResult] = useState<AttemptResult | null>(null);
@@ -198,17 +228,19 @@ function ExercisePageContent() {
   const handleSubmit = async (result: AttemptResult) => {
     setLastResult(result);
     
-    if (result.overallPassed && user && exercise) {
-      // Update user progress
-      await updateProgress(exercise.id, {
-        completed: true,
+    if (result.overallPassed && exercise) {
+      // Mock progress update - in a real app, this would update the database
+      console.log('Exercise completed:', {
+        exerciseId: exercise.id,
         code: userCode,
-        attempts: (user.progress.attempts[exercise.id] || 0) + 1,
-        bestScore: Math.max(
-          user.progress.scores[exercise.id] || 0,
-          result.totalPointsEarned || 0
-        )
+        score: result.totalPointsEarned
       });
+      
+      // Add to completed exercises in mock user
+      if (!mockUser.progress.completedExercises.includes(exercise.id)) {
+        mockUser.progress.completedExercises.push(exercise.id);
+        mockUser.progress.totalPoints += result.totalPointsEarned || 0;
+      }
     }
   };
 
@@ -237,7 +269,7 @@ function ExercisePageContent() {
     );
   }
 
-  const isCompleted = user?.progress.completedExercises.includes(exercise.id) || false;
+  const isCompleted = mockUser.progress.completedExercises.includes(exercise.id) || false;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -315,9 +347,5 @@ function ExercisePageContent() {
 }
 
 export default function ExercisePage() {
-  return (
-    <AuthProvider>
-      <ExercisePageContent />
-    </AuthProvider>
-  );
+  return <ExercisePageContent />;
 }

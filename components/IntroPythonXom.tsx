@@ -3,7 +3,8 @@
 
 import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { runPythonTests, getPyodideInstance } from '@/utils/pythonRunner';
+import { runPythonTests, getPyodideInstance, type TestResult, type StaticCheckResult } from '@/utils/pythonRunner';
+import type { PyodideInterface } from 'pyodide';
 import type { 
   ExerciseData, 
   AttemptResult, 
@@ -68,7 +69,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     setConsecutiveFailures(0);
     setIsLoading(true); // Mostrar carga mientras Pyodide podría estar inicializándose    // Solo llama a getPyodideInstance si no está ya listo, para evitar múltiples cargas
     // La lógica de singleton está en pythonRunner.ts
-    getPyodideInstance().then(pyInstance => {
+    getPyodideInstance().then((pyInstance: PyodideInterface) => {
         if (pyInstance) {
             setIsPyodideReady(true);
             console.log("IntroPythonXom: Pyodide está listo.");
@@ -117,18 +118,40 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     setCurrentAttempt(null);
     setShowSolution(false);
     setActiveHints([]);
-    setActivePitfalls([]);    const newAttempt = await runPythonTests(code, data.tests, {
-      timeout: data.globalTimeoutMs || 5000,
-      staticChecks: data.staticCodeChecks
-    });
+    setActivePitfalls([]);    const executionResult = await runPythonTests(code, data.tests.map(test => `assert ${test.input} == ${test.expected}, "Test failed for ${test.name || 'unnamed test'}"`));
     
-    // Set additional properties that might not be included in AttemptResult
-    newAttempt.totalPointsEarned = 0;
-    newAttempt.maxPossiblePoints = data.maxPoints || 0;
-    
-    let points = 0;
-    newAttempt.testRunResults.forEach(tr => points += tr.pointsEarned || 0);
-    newAttempt.staticCheckRunResults?.forEach(scr => points += scr.pointsEarned || 0);
+    // Transform ExecutionResult to AttemptResult
+    const newAttempt: AttemptResult = {
+      timestamp: Date.now(),
+      overallPassed: executionResult.testRunResults.every(tr => tr.passed),
+      testRunResults: executionResult.testRunResults.map((tr, index) => ({
+        testCase: data.tests[index] || { input: '', expected: '' },
+        isSuccessExecution: tr.passed,
+        actualOutput: tr.output || '',
+        normalizedActualOutput: tr.output?.trim() || '',
+        passed: tr.passed,
+        durationMs: 0, // Not available from ExecutionResult
+        error: tr.error,
+        pointsEarned: tr.pointsEarned
+      })),
+      staticCheckRunResults: executionResult.staticCheckRunResults?.map(scr => ({
+        check: { id: '', description: '', checkFunction: async () => false }, // Mock check
+        passed: scr.passed,
+        message: scr.feedback,
+        error: undefined,
+        pointsEarned: scr.pointsEarned
+      })),
+      totalTests: executionResult.testRunResults.length,
+      testsPassedCount: executionResult.testRunResults.filter(tr => tr.passed).length,
+      totalStaticChecks: executionResult.staticCheckRunResults?.length || 0,
+      staticChecksPassedCount: executionResult.staticCheckRunResults?.filter(scr => scr.passed).length || 0,
+      durationMs: 0, // Not available from ExecutionResult
+      totalPointsEarned: 0,
+      maxPossiblePoints: data.maxPoints || 0
+    };
+      let points = 0;
+    newAttempt.testRunResults.forEach((tr: SingleTestRunResult) => points += tr.pointsEarned || 0);
+    newAttempt.staticCheckRunResults?.forEach((scr: StaticCheckRunResult) => points += scr.pointsEarned || 0);
     newAttempt.totalPointsEarned = points;
     
     const currentTriggeredHints: Hint[] = [];

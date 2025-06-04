@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
-import { ExerciseData, AttemptResult, TestCase } from '@/types/types';
-import { runPythonTests } from '@/utils/pythonRunner';
+import { ExerciseData, AttemptResult, SingleTestRunResult, StaticCheckRunResult, TestCase } from '@/types/types';
+import { runPythonTests, type ExecutionResult } from '@/utils/pythonRunner';
 import { TestResultsPanel } from './TestResultsPanel';
 import { HintsPanel } from './HintsPanel';
 import { ModelSolutionPanel } from './ModelSolutionPanel';
@@ -84,16 +84,46 @@ export default function CodeEditor({
       ]
     });
   };
-
   const runTests = async () => {
     if (isRunning) return;
     
     setIsRunning(true);
     try {
-      const result = await runPythonTests(code, exercise.tests, {
-        timeout: exercise.globalTimeoutMs || 5000,
-        staticChecks: exercise.staticCodeChecks
-      });
+      const testStrings = exercise.tests.map(test => 
+        `assert ${test.input} == ${test.expected}, "Test failed for ${test.name || 'unnamed test'}"`
+      );
+      
+      const executionResult = await runPythonTests(code, testStrings);
+      
+      // Transform ExecutionResult to AttemptResult
+      const result: AttemptResult = {
+        timestamp: Date.now(),
+        overallPassed: executionResult.testRunResults.every(tr => tr.passed),
+        testRunResults: executionResult.testRunResults.map((tr, index): SingleTestRunResult => ({
+          testCase: exercise.tests[index] || { input: '', expected: '' },
+          isSuccessExecution: tr.passed,
+          actualOutput: tr.output || '',
+          normalizedActualOutput: tr.output?.trim() || '',
+          passed: tr.passed,
+          durationMs: 0,
+          error: tr.error,
+          pointsEarned: tr.pointsEarned
+        })),
+        staticCheckRunResults: executionResult.staticCheckRunResults?.map((scr): StaticCheckRunResult => ({
+          check: { id: '', description: '', checkFunction: async () => false },
+          passed: scr.passed,
+          message: scr.feedback,
+          error: undefined,
+          pointsEarned: scr.pointsEarned
+        })),
+        totalTests: executionResult.testRunResults.length,
+        testsPassedCount: executionResult.testRunResults.filter(tr => tr.passed).length,
+        totalStaticChecks: executionResult.staticCheckRunResults?.length || 0,
+        staticChecksPassedCount: executionResult.staticCheckRunResults?.filter(scr => scr.passed).length || 0,
+        durationMs: 0,
+        totalPointsEarned: executionResult.testRunResults.reduce((acc, tr) => acc + (tr.pointsEarned || 0), 0),
+        maxPossiblePoints: exercise.maxPoints || 0
+      };
       
       setLastResult(result);
       onSubmit?.(result);
