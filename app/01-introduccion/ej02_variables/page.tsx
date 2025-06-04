@@ -1,8 +1,5 @@
 // Ejercicio de variables y tipos básicos para el módulo Introducción
 import IntroPythonXom from '@/components/IntroPythonXom';
-import Leaderboard from '@/components/Leaderboard';
-import StyleFeedback from '@/components/StyleFeedback';
-import ProgressTracker from '@/components/ProgressTracker';
 
 const variablesExercise = {
   id: 'ej02_variables',
@@ -90,12 +87,6 @@ export default function Page() {
   return (
     <div>
       <IntroPythonXom data={variablesExercise} />
-      <Leaderboard />
-      <StyleFeedback code={variablesExercise.starterCode} />
-      <ProgressTracker
-        currentPoints={variablesExercise.levels.progression.currentPoints}
-        maxPoints={variablesExercise.levels.progression.maxPoints}
-      />
     </div>
   );
 }
