@@ -7,7 +7,7 @@ self.addEventListener('install', e => {
         '/',
         '/favicon.ico',
         '/manifest.json',
-        'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js',
+        'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js',
       ])
     )
   );

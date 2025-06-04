@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { evaluateExercise } from '@/pyodide/evaluator'; // Ajusta la ruta si es necesario
+import { runPythonTests, getPyodideInstance } from '@/utils/pythonRunner';
 import type { 
   ExerciseData, 
   AttemptResult, 
@@ -29,7 +29,7 @@ const Editor = dynamic(() =>
 );
 
 const DiffViewer = dynamic(() => 
-  import('react-diff-view').then(mod => mod.default || mod), 
+  import('./DiffViewer'), 
   { 
     ssr: false,
     loading: () => <LoadingPlaceholder message="Cargando diferencias..." /> 
@@ -66,22 +66,18 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     setActivePitfalls([]);
     setShowSolution(false);
     setConsecutiveFailures(0);
-    setIsLoading(true); // Mostrar carga mientras Pyodide podría estar inicializándose
-
-    // Solo llama a getPyodideInstance si no está ya listo, para evitar múltiples cargas
-    // La lógica de singleton está en evaluator.ts
-    import('@/pyodide/evaluator').then(evaluatorModule => {
-        evaluatorModule.getPyodideInstance().then(pyInstance => {
-            if (pyInstance) {
-                setIsPyodideReady(true);
-                console.log("IntroPythonXom: Pyodide está listo.");
-            } else {
-                setIsPyodideReady(false);
-                console.error("IntroPythonXom: Pyodide no pudo ser inicializado.");
-                // Aquí podrías establecer un estado de error para mostrar un mensaje al usuario
-            }
-            setIsLoading(false);
-        });
+    setIsLoading(true); // Mostrar carga mientras Pyodide podría estar inicializándose    // Solo llama a getPyodideInstance si no está ya listo, para evitar múltiples cargas
+    // La lógica de singleton está en pythonRunner.ts
+    getPyodideInstance().then(pyInstance => {
+        if (pyInstance) {
+            setIsPyodideReady(true);
+            console.log("IntroPythonXom: Pyodide está listo.");
+        } else {
+            setIsPyodideReady(false);
+            console.error("IntroPythonXom: Pyodide no pudo ser inicializado.");
+            // Aquí podrías establecer un estado de error para mostrar un mensaje al usuario
+        }
+        setIsLoading(false);
     });
 
   }, [data.id, data.starterCode]);
@@ -121,33 +117,14 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     setCurrentAttempt(null);
     setShowSolution(false);
     setActiveHints([]);
-    setActivePitfalls([]);
-
-    const evaluationResultParts = await evaluateExercise(code, data);
+    setActivePitfalls([]);    const newAttempt = await runPythonTests(code, data.tests, {
+      timeout: data.globalTimeoutMs || 5000,
+      staticChecks: data.staticCodeChecks
+    });
     
-    let testsPassedCount = 0;
-    evaluationResultParts.testRunResults.forEach(res => { if (res.passed) testsPassedCount++; });
-    
-    let staticChecksPassedCount = 0;
-    evaluationResultParts.staticCheckRunResults?.forEach(res => { if (res.passed) staticChecksPassedCount++; });
-
-    const overallPassed = testsPassedCount === evaluationResultParts.testRunResults.length &&
-                          evaluationResultParts.testRunResults.every(tr => tr.isSuccessExecution) &&
-                          (evaluationResultParts.staticCheckRunResults ? staticChecksPassedCount === (evaluationResultParts.staticCheckRunResults.length || 0) : true);
-
-    const newAttempt: AttemptResult = {
-      timestamp: Date.now(),
-      overallPassed,
-      testRunResults: evaluationResultParts.testRunResults,
-      staticCheckRunResults: evaluationResultParts.staticCheckRunResults,
-      totalTests: evaluationResultParts.testRunResults.length,
-      testsPassedCount,
-      totalStaticChecks: evaluationResultParts.staticCheckRunResults?.length || 0,
-      staticChecksPassedCount,
-      durationMs: evaluationResultParts.durationMs,
-      totalPointsEarned: 0, 
-      maxPossiblePoints: data.maxPoints || 0,
-    };
+    // Set additional properties that might not be included in AttemptResult
+    newAttempt.totalPointsEarned = 0;
+    newAttempt.maxPossiblePoints = data.maxPoints || 0;
     
     let points = 0;
     newAttempt.testRunResults.forEach(tr => points += tr.pointsEarned || 0);
@@ -180,7 +157,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     setAttemptHistory(prev => [newAttempt, ...prev]); // El más reciente primero
     setIsLoading(false);
 
-    if (!overallPassed) {
+    if (!newAttempt.overallPassed) {
       setConsecutiveFailures(prev => prev + 1);
     } else {
       setConsecutiveFailures(0);
@@ -353,13 +330,12 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
                           <p className="font-semibold text-red-700">Error de Ejecución:</p>
                           <pre className="whitespace-pre-wrap text-xs text-red-600">{res.error}</pre>
                         </div>
-                      )}
-                      {res.isSuccessExecution && !res.passed && !res.testCase.hidden && DiffViewer && (
+                      )}                      {res.isSuccessExecution && !res.passed && !res.testCase.hidden && DiffViewer && (
                         <div className="mt-2">
                           <p className="font-medium text-slate-700 mb-1">Diferencia en la Salida:</p>
                           <div className="text-xs border rounded-md overflow-hidden">
                             <Suspense fallback={<LoadingPlaceholder message="Cargando diferencias..." />}>
-                              <DiffViewer oldValue={res.testCase.expected} newValue={res.normalizedActualOutput} splitView={true} hideLineNumbers={false} useDarkTheme={false} />
+                              <DiffViewer expected={res.testCase.expected} received={res.normalizedActualOutput} />
                             </Suspense>
                           </div>
                         </div>

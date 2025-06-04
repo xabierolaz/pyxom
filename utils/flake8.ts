@@ -1,7 +1,7 @@
-import { loadPyodide } from '@/pyodide/evaluator';
+import { getPyodideInstance } from '@/utils/pythonRunner';
 
 export async function runFlake8(code: string): Promise<string[]> {
-  const py = await loadPyodide();
+  const py = await getPyodideInstance();
   await py.runPythonAsync(`
 import micropip, sys, json, textwrap
 try:

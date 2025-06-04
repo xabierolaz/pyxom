@@ -1,50 +1,35 @@
 'use client';
 
-import { Diff, Hunk, parseDiff } from 'react-diff-view';
-import 'react-diff-view/style.css';
-
 interface Props {
   expected: string;
   received: string;
 }
 
 export default function DiffViewer({ expected, received }: Props) {
-  const diffText = generateUnifiedDiff(expected, received);
-  const files = parseDiff(diffText);
-
+  const expectedLines = expected.split('\n');
+  const receivedLines = received.split('\n');
+  
+  const maxLines = Math.max(expectedLines.length, receivedLines.length);
+  
   return (
-    <div className="border rounded">
-      <Diff viewType="split" diffType="modify" files={files}>
-        {hunks => hunks.map(hunk => <Hunk key={hunk.content} hunk={hunk} />)}
-      </Diff>
+    <div className="border rounded font-mono text-sm">
+      <div className="bg-gray-50 px-4 py-2 border-b text-gray-600 font-semibold">
+        Diferencias: Esperado vs Recibido
+      </div>
+      <div className="grid grid-cols-2 divide-x">
+        <div className="p-4">
+          <div className="text-green-700 font-semibold mb-2">✓ Esperado:</div>
+          <pre className="whitespace-pre-wrap text-green-800 bg-green-50 p-2 rounded">
+            {expected || '<vacío>'}
+          </pre>
+        </div>
+        <div className="p-4">
+          <div className="text-red-700 font-semibold mb-2">✗ Recibido:</div>
+          <pre className="whitespace-pre-wrap text-red-800 bg-red-50 p-2 rounded">
+            {received || '<vacío>'}
+          </pre>
+        </div>
+      </div>
     </div>
   );
-}
-
-/* ---------- helpers ---------- */
-
-function generateUnifiedDiff(oldStr: string, newStr: string): string {
-  const oldLines = oldStr.split('\n');
-  const newLines = newStr.split('\n');
-
-  let diff = '--- expected\n+++ received\n';
-  let i = 0,
-    j = 0;
-
-  while (i < oldLines.length || j < newLines.length) {
-    const oldLine = oldLines[i] ?? '';
-    const newLine = newLines[j] ?? '';
-
-    if (oldLine === newLine) {
-      diff += ' ' + oldLine + '\n';
-      i++;
-      j++;
-    } else {
-      if (oldLine) diff += '-' + oldLine + '\n';
-      if (newLine) diff += '+' + newLine + '\n';
-      i++;
-      j++;
-    }
-  }
-  return diff;
 }

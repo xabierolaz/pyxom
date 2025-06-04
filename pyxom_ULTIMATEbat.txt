@@ -1,0 +1,283 @@
+@echo off
+setlocal ENABLEDELAYEDEXPANSION
+
+REM --- Configuración ---
+set "GIT_PRODUCTION_BRANCH=main"
+REM Cambia "main" arriba si tu rama de producción en GitHub/Vercel es diferente (ej. "master")
+
+REM --- Verificación Inicial del Entorno ---
+cls
+echo =============================================
+echo   VERIFICANDO ENTORNO REQUERIDO
+echo =============================================
+echo.
+
+REM Asegurarse de que estamos en el directorio del script
+cd /d "%~dp0"
+echo [INFO] Directorio de trabajo actual: %CD%
+echo.
+
+REM Verificar Node.js
+where node >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Node.js (node.exe) no se encuentra en el PATH.
+    echo         Por favor, instala Node.js y asegurate de que este en las variables de entorno del sistema.
+    echo         Descarga desde: https://nodejs.org/
+    pause
+    exit /b 1
+)
+echo [OK] Node.js encontrado en el PATH.
+
+REM Verificar npm
+where npm >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] npm no se encuentra en el PATH.
+    echo         npm usualmente se instala con Node.js. Revisa tu instalacion de Node.js.
+    pause
+    exit /b 1
+)
+echo [OK] npm encontrado en el PATH.
+
+REM Verificar Git
+where git >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Git no se encuentra en el PATH.
+    echo         Para desplegar online, Git es necesario.
+    echo         Descarga Git desde: https://git-scm.com/downloads
+    echo         Asegurate de seleccionar la opcion para anadir Git al PATH durante la instalacion.
+    set "GIT_MISSING=true"
+) else (
+    echo [OK] Git encontrado en el PATH.
+    set "GIT_MISSING=false"
+)
+echo.
+echo [INFO] Verificacion de entorno completada.
+pause
+cls
+
+:menu
+cls
+echo =============================================
+echo       PYXOM ROBUST PROJECT MANAGER
+echo =============================================
+echo.
+echo Directorio Actual: %CD%
+echo.
+echo Elija una opcion:
+echo ---------------------------------------------
+echo  1. Instalar/Actualizar Dependencias (npm install)
+echo  2. Ejecutar Servidor de Desarrollo (npm run dev)
+echo  3. Crear Build de Produccion (npm run build)
+echo  4. Desplegar Online en Vercel (Git Add, Commit, Push a '%GIT_PRODUCTION_BRANCH%')
+echo  5. Verificar Politica de Ejecucion de PowerShell
+echo  6. Salir
+echo ---------------------------------------------
+echo.
+set /p choice="Escriba el numero de la opcion y presione Enter: "
+
+if "%choice%"=="1" goto install_deps
+if "%choice%"=="2" goto run_dev
+if "%choice%"=="3" goto build_prod
+if "%choice%"=="4" goto deploy_vercel
+if "%choice%"=="5" goto check_policy
+if "%choice%"=="6" goto exit_script
+
+echo Opcion no valida.
+pause
+goto menu
+
+:install_deps
+cls
+echo =============================================
+echo   INSTALAR/ACTUALIZAR DEPENDENCIAS
+echo =============================================
+echo.
+if not exist "package.json" (
+    echo [ERROR] No se encontro 'package.json' en el directorio actual.
+    echo          Asegurate de estar en la raiz del proyecto PyXom.
+    pause
+    goto menu
+)
+echo [INFO] Ejecutando: npm install
+call npm install
+echo [DEBUG] Resultado de 'npm install' (errorlevel): %errorlevel%
+if %errorlevel% neq 0 (
+    echo [ERROR] 'npm install' fallo. Codigo de error: %errorlevel%
+    echo [ADVERTENCIA] Revisa los mensajes de error.
+    echo [ADVERTENCIA] Si el error menciona 'npm.ps1' o politicas de ejecucion,
+    echo             usa la opcion 5 del menu para verificar tu politica de PowerShell.
+) else (
+    echo [SUCCESS] Dependencias instaladas/actualizadas correctamente.
+)
+echo.
+pause
+goto menu
+
+:run_dev
+cls
+echo =============================================
+echo   EJECUTAR SERVIDOR DE DESARROLLO
+echo =============================================
+echo.
+if not exist "package.json" (
+    echo [ERROR] No se encontro 'package.json'. No se puede ejecutar 'npm run dev'.
+    pause
+    goto menu
+)
+echo [INFO] Iniciando el servidor de desarrollo (npm run dev)...
+echo [INFO] Se abrira una NUEVA ventana de consola para el servidor.
+echo [INFO] Para detener el servidor, presiona CTRL+C en ESA NUEVA VENTANA.
+echo [INFO] Despues de detener/cerrar la ventana del servidor, esta ventana del script volvera al menu.
+echo.
+start "PyXom Dev Server" cmd /k "npm run dev"
+echo.
+echo [INFO] El servidor de desarrollo deberia estar ejecutandose en una nueva ventana.
+echo [INFO] Si la ventana no aparecio o se cerro inmediatamente, hubo un error al iniciar 'npm run dev'.
+echo [INFO] Revisa cualquier mensaje en la nueva ventana (si permanecio abierta).
+echo.
+echo Presiona cualquier tecla para volver al menu principal (esto no detendra el servidor)...
+pause >nul
+goto menu
+
+:build_prod
+cls
+echo =============================================
+echo   CREAR BUILD DE PRODUCCION
+echo =============================================
+echo.
+if not exist "package.json" (
+    echo [ERROR] No se encontro 'package.json'. No se puede ejecutar 'npm run build'.
+    pause
+    goto menu
+)
+echo [INFO] Ejecutando: npm run build
+call npm run build
+echo [DEBUG] Resultado de 'npm run build' (errorlevel): %errorlevel%
+if %errorlevel% neq 0 (
+    echo [ERROR] 'npm run build' fallo. Codigo de error: %errorlevel%
+    echo [ADVERTENCIA] Revisa los mensajes de error.
+) else (
+    echo [SUCCESS] Build de produccion completado.
+    echo          Los archivos optimizados estan en la carpeta .next
+)
+echo.
+pause
+goto menu
+
+:deploy_vercel
+cls
+echo =============================================
+echo   DESPLEGAR ONLINE EN VERCEL (GIT)
+echo =============================================
+echo.
+if "%GIT_MISSING%"=="true" (
+    echo [ERROR] Git no esta instalado o no se encuentra en el PATH.
+    echo          No se puede continuar con el despliegue.
+    echo          Por favor, instala Git y asegurate de que este en el PATH.
+    pause
+    goto menu
+)
+
+REM Verificar si es un repositorio Git
+git rev-parse --is-inside-work-tree >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Esta carpeta no es un repositorio Git inicializado.
+    echo          Ejecuta 'git init' y configura tu remoto si es un proyecto nuevo,
+    echo          o asegurate de estar en la carpeta correcta.
+    pause
+    goto menu
+)
+
+echo [INFO] Este proceso anadira todos los cambios actuales,
+echo        hara un commit y luego un push a la rama '%GIT_PRODUCTION_BRANCH%'.
+echo        Asegurate de que todos los archivos que quieres subir
+echo        esten guardados y no haya cambios no deseados.
+echo.
+set /p confirm_deploy="Estas seguro de que quieres continuar? (S/N): "
+if /i not "%confirm_deploy%"=="S" (
+    echo Despliegue cancelado.
+    pause
+    goto menu
+)
+
+echo.
+echo [INFO] Anadiendo todos los cambios a Git...
+git add .
+if %errorlevel% neq 0 (
+    echo [ERROR] 'git add .' fallo. Codigo de error: %errorlevel%
+    pause
+    goto menu
+)
+echo [SUCCESS] Cambios anadidos.
+echo.
+
+set /p commit_message="Escribe un mensaje para el commit (ej: Actualizacion de interfaz): "
+if "%commit_message%"=="" set "commit_message=Deploy automatico desde script"
+
+echo [INFO] Haciendo commit con el mensaje: "%commit_message%"
+git commit -m "%commit_message%"
+if %errorlevel% neq 0 (
+    echo [ERROR] 'git commit' fallo. Codigo de error: %errorlevel%
+    echo          Puede que no haya cambios para commitear (ejecuta 'git status').
+    pause
+    goto menu
+)
+echo [SUCCESS] Commit realizado.
+echo.
+
+echo [INFO] Haciendo push a la rama '%GIT_PRODUCTION_BRANCH%' en 'origin'...
+git push origin %GIT_PRODUCTION_BRANCH%
+if %errorlevel% neq 0 (
+    echo [ERROR] 'git push origin %GIT_PRODUCTION_BRANCH%' fallo. Codigo de error: %errorlevel%
+    echo          Asegurate de tener conexion a internet, permisos para el repositorio,
+    echo          y que la rama '%GIT_PRODUCTION_BRANCH%' exista en el remoto y este actualizada localmente.
+    echo          Si es la primera vez o el historial difiere, podrias necesitar:
+    echo          git push -u -f origin %GIT_PRODUCTION_BRANCH% (USA --force CON PRECAUCION)
+    pause
+    goto menu
+)
+echo [SUCCESS] Push realizado a 'origin %GIT_PRODUCTION_BRANCH%'.
+echo.
+echo [INFO] Vercel deberia detectar estos cambios y comenzar el despliegue automaticamente.
+echo        Revisa tu dashboard de Vercel para ver el progreso: https://vercel.com
+echo.
+pause
+goto menu
+
+:check_policy
+cls
+echo =================================================================
+echo   VERIFICAR POLITICA DE EJECUCION DE POWERSHELL
+echo =================================================================
+echo.
+echo [INFO] Este comando te ayudara a verificar y, si es necesario,
+echo        cambiar la politica de ejecucion de PowerShell.
+echo        Si los comandos 'npm' fallan con un error sobre
+echo        'npm.ps1' y la ejecucion de scripts deshabilitada,
+echo        probablemente necesites cambiar esta politica.
+echo.
+echo [INFO] Politica recomendada para desarrollo: RemoteSigned
+echo.
+powershell -Command "Get-ExecutionPolicy -Scope CurrentUser; Get-ExecutionPolicy -Scope LocalMachine"
+echo.
+echo Si alguna politica (especialmente CurrentUser o LocalMachine si no hay una especifica para CurrentUser)
+echo es 'Restricted' o 'AllSigned', podrias necesitar cambiarla.
+echo.
+echo Para cambiarla para el USUARIO ACTUAL (generalmente mas seguro y no requiere admin siempre):
+echo   Abre PowerShell (NO como administrador) y ejecuta:
+echo   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+echo.
+echo Si eso no funciona o quieres cambiarla para TODA LA MAQUINA:
+echo   Abre PowerShell COMO ADMINISTRADOR y ejecuta:
+echo   Set-ExecutionPolicy RemoteSigned
+echo.
+echo Luego, responde 'S' (o 'Y') a la pregunta de confirmacion.
+echo Despues de cambiarla, puede que necesites cerrar y volver a abrir esta ventana de comandos.
+echo.
+pause
+goto menu
+
+:exit_script
+cls
+echo Saliendo del script.
+exit /b
