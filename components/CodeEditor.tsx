@@ -155,12 +155,11 @@ export default function CodeEditor({
             {isRunning ? (
               <>
                 <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-                <span>Running...</span>
+                <span>Ejecutando...</span>
               </>
-            ) : (
-              <>
+            ) : (              <>
                 <span>▶</span>
-                <span>Run Tests</span>
+                <span>Ejecutar Pruebas</span>
               </>
             )}
           </button>
@@ -170,7 +169,7 @@ export default function CodeEditor({
             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center space-x-2"
           >
             <span>📊</span>
-            <span>Visualize</span>
+            <span>Visualizar</span>
           </button>
         </div>
 
@@ -180,7 +179,7 @@ export default function CodeEditor({
             className="px-3 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 flex items-center space-x-1"
           >
             <span>💡</span>
-            <span>Hints</span>
+            <span>Pistas</span>
           </button>
           
           {exercise.modelSolution && (
@@ -189,7 +188,7 @@ export default function CodeEditor({
               className="px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center space-x-1"
             >
               <span>📖</span>
-              <span>Solution</span>
+              <span>Solución</span>
             </button>
           )}
         </div>

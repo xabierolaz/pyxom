@@ -46,8 +46,12 @@ const IconLightbulb = () => <svg xmlns="http://www.w3.org/2000/svg" className="h
 const IconWarning = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline mr-1 text-orange-600" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.216 3.031-1.742 3.031H4.42c-1.526 0-2.492-1.697-1.742-3.031l5.58-9.92zM10 13a1 1 0 100-2 1 1 0 000 2zm0-3.5a1 1 0 00-1 1v1.25a1 1 0 102 0V10.5a1 1 0 00-1-1z" clipRule="evenodd" /></svg>;
 
 
-export default function IntroPythonXom({ data }: { data: ExerciseData }) {
-  const [code, setCode] = useState<string>(data.starterCode);
+export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
+  if (!data) {
+    return <div className="p-4 text-red-600">Error: Datos del ejercicio no cargados.</div>;
+  }
+
+  const [code, setCode] = useState<string>(data.starterCode ?? '');
   const [isLoading, setIsLoading] = useState<boolean>(true); // Iniciar como true para Pyodide
   const [isPyodideReady, setIsPyodideReady] = useState<boolean>(false);
   const [currentAttempt, setCurrentAttempt] = useState<AttemptResult | null>(null);

@@ -58,9 +58,8 @@ export function TestResultsPanel({ result }: TestResultsPanelProps) {
             activeTab === 'tests'
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Tests ({result.testsPassedCount}/{result.totalTests})
+          }`}        >
+          Pruebas ({result.testsPassedCount}/{result.totalTests})
         </button>
         
         {result.staticCheckRunResults && result.staticCheckRunResults.length > 0 && (
@@ -70,21 +69,19 @@ export function TestResultsPanel({ result }: TestResultsPanelProps) {
               activeTab === 'checks'
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Static Checks ({result.staticChecksPassedCount}/{result.totalStaticChecks})
+            }`}            >
+            Comprobaciones Estáticas ({result.staticChecksPassedCount}/{result.totalStaticChecks})
           </button>
         )}
         
         <button
           onClick={() => setActiveTab('summary')}
           className={`px-4 py-2 text-sm font-medium border-b-2 ${
-            activeTab === 'summary'
-              ? 'border-blue-500 text-blue-600'
+            activeTab === 'summary'              ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700'
           }`}
         >
-          Summary
+          Resumen
         </button>
       </div>
 
@@ -125,9 +122,8 @@ export function TestResultsPanel({ result }: TestResultsPanelProps) {
                 {expandedTest === index && (
                   <div className="mt-3 space-y-3 pt-3 border-t">
                     {/* Input */}
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Input:
+                    <div>                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Entrada:
                       </label>
                       <div className="bg-gray-100 p-2 rounded text-xs font-mono">
                         {testResult.testCase.input || '(no input)'}

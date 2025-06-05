@@ -7,12 +7,11 @@ const courseParts = [
   { 
     id: 1, 
     title: "Introducción a Python", 
-    description: "Conceptos básicos de programación",    exercises: [
-      { id: "ej01", title: "Suma y Producto", description: "Operaciones básicas", difficulty: "easy", points: 10, path: "/01-introduccion/ej01_suma_producto" },
-      { id: "ej02", title: "Variables", description: "Tipos de datos", difficulty: "easy", points: 8, path: "/01-introduccion/ej02_variables" },
-      { id: "ej03", title: "Input/Output", description: "Entrada y salida", difficulty: "easy", points: 8, path: "/01-introduccion/ej03_input_output" },
-      { id: "ej04", title: "Condicionales", description: "Estructuras de decisión", difficulty: "medium", points: 12, path: "/01-introduccion/ej04_condicionales" },
-      { id: "ej05", title: "Bucles", description: "Estructuras de repetición", difficulty: "medium", points: 15, path: "/01-introduccion/ej05_bucles" }
+    description: "Conceptos básicos de programación",    exercises: [      { id: "ej01", title: "Suma y Producto", description: "Operaciones básicas", difficulty: "fácil", points: 10, path: "/01-introduccion/ej01_suma_producto" },
+      { id: "ej02", title: "Variables", description: "Tipos de datos", difficulty: "fácil", points: 8, path: "/01-introduccion/ej02_variables" },
+      { id: "ej03", title: "Input/Output", description: "Entrada y salida", difficulty: "fácil", points: 8, path: "/01-introduccion/ej03_input_output" },
+      { id: "ej04", title: "Condicionales", description: "Estructuras de decisión", difficulty: "medio", points: 12, path: "/01-introduccion/ej04_condicionales" },
+      { id: "ej05", title: "Bucles", description: "Estructuras de repetición", difficulty: "medio", points: 15, path: "/01-introduccion/ej05_bucles" }
     ],
     learningObjectives: [
       "Entender los conceptos básicos de Python",
@@ -25,13 +24,12 @@ const courseParts = [
     id: 2, 
     title: "Árboles", 
     description: "Estructuras de datos jerárquicas", 
-    exercises: [
-      { id: "tree01", title: "Árbol Básico", description: "Nodos y recorridos básicos", difficulty: "medium", points: 15, path: "/03-trees/ej01_tree_basico" },
-      { id: "tree02", title: "Altura de Árbol", description: "Cálculo de altura", difficulty: "medium", points: 12, path: "/03-trees/ej02_tree_altura" },
-      { id: "tree03", title: "Búsqueda BST", description: "Búsqueda en árboles binarios", difficulty: "hard", points: 20, path: "/03-trees/ej03_tree_busqueda" },
-      { id: "tree04", title: "Inserción BST", description: "Inserción en árboles binarios", difficulty: "hard", points: 18, path: "/03-trees/ej04_tree_insercion" },
-      { id: "tree05", title: "Recorrido Inorden", description: "Recorrido en orden", difficulty: "medium", points: 15, path: "/03-trees/ej05_tree_inorden" },
-      { id: "tree06", title: "Recorrido Postorden", description: "Recorrido post-orden", difficulty: "medium", points: 15, path: "/03-trees/ej06_tree_postorden" }
+    exercises: [      { id: "tree01", title: "Árbol Básico", description: "Nodos y recorridos básicos", difficulty: "medio", points: 15, path: "/03-trees/ej01_tree_basico" },
+      { id: "tree02", title: "Altura de Árbol", description: "Cálculo de altura", difficulty: "medio", points: 12, path: "/03-trees/ej02_tree_altura" },
+      { id: "tree03", title: "Búsqueda BST", description: "Búsqueda en árboles binarios", difficulty: "difícil", points: 20, path: "/03-trees/ej03_tree_busqueda" },
+      { id: "tree04", title: "Inserción BST", description: "Inserción en árboles binarios", difficulty: "difícil", points: 18, path: "/03-trees/ej04_tree_insercion" },
+      { id: "tree05", title: "Recorrido Inorden", description: "Recorrido en orden", difficulty: "medio", points: 15, path: "/03-trees/ej05_tree_inorden" },
+      { id: "tree06", title: "Recorrido Postorden", description: "Recorrido post-orden", difficulty: "medio", points: 15, path: "/03-trees/ej06_tree_postorden" }
     ],
     learningObjectives: [
       "Comprender estructuras de datos jerárquicas",
@@ -45,11 +43,10 @@ const courseParts = [
     id: 3, 
     title: "Recursividad", 
     description: "Algoritmos recursivos", 
-    exercises: [
-      { id: "rec01", title: "Recursividad Básica", description: "Conceptos fundamentales", difficulty: "medium", points: 12, path: "/04-recursividad/ej01_recursividad_basica" },
-      { id: "rec02", title: "Sumatoria", description: "Suma recursiva", difficulty: "medium", points: 10, path: "/04-recursividad/ej02_sumatoria" },
-      { id: "rec03", title: "Fibonacci", description: "Secuencia de Fibonacci", difficulty: "hard", points: 18, path: "/04-recursividad/ej03_fibonacci" },
-      { id: "rec04", title: "Potencia", description: "Cálculo de potencias", difficulty: "medium", points: 12, path: "/04-recursividad/ej04_potencia" }
+    exercises: [      { id: "rec01", title: "Recursividad Básica", description: "Conceptos fundamentales", difficulty: "medio", points: 12, path: "/04-recursividad/ej01_recursividad_basica" },
+      { id: "rec02", title: "Sumatoria", description: "Suma recursiva", difficulty: "medio", points: 10, path: "/04-recursividad/ej02_sumatoria" },
+      { id: "rec03", title: "Fibonacci", description: "Secuencia de Fibonacci", difficulty: "difícil", points: 18, path: "/04-recursividad/ej03_fibonacci" },
+      { id: "rec04", title: "Potencia", description: "Cálculo de potencias", difficulty: "medio", points: 12, path: "/04-recursividad/ej04_potencia" }
     ],
     learningObjectives: [
       "Entender el concepto de recursión",
@@ -57,17 +54,15 @@ const courseParts = [
       "Optimizar soluciones recursivas",
       "Resolver problemas complejos con recursión"
     ],
-    estimatedHours: 5
-  },
+    estimatedHours: 5  },
   { 
     id: 4, 
     title: "Archivos", 
     description: "Manejo de archivos en Python", 
-    exercises: [
-      { id: "file01", title: "Lectura Básica", description: "Lectura de archivos de texto", difficulty: "easy", points: 10, path: "/05-files/ej01_files_basico" },
-      { id: "file02", title: "Escritura", description: "Escritura de archivos", difficulty: "easy", points: 10, path: "/05-files/ej02_files_escritura" },
-      { id: "file03", title: "CSV", description: "Procesamiento de CSV", difficulty: "medium", points: 15, path: "/05-files/ej03_files_csv" },
-      { id: "file04", title: "Append", description: "Añadir contenido a archivos", difficulty: "easy", points: 8, path: "/05-files/ej04_files_append" }
+    exercises: [      { id: "file01", title: "Lectura Básica", description: "Lectura de archivos de texto", difficulty: "fácil", points: 10, path: "/05-files/ej01_files_basico" },
+      { id: "file02", title: "Escritura", description: "Escritura de archivos", difficulty: "fácil", points: 10, path: "/05-files/ej02_files_escritura" },
+      { id: "file03", title: "CSV", description: "Procesamiento de CSV", difficulty: "medio", points: 15, path: "/05-files/ej03_files_csv" },
+      { id: "file04", title: "Append", description: "Añadir contenido a archivos", difficulty: "fácil", points: 8, path: "/05-files/ej04_files_append" }
     ],
     learningObjectives: [
       "Leer y escribir archivos de texto",
@@ -76,6 +71,35 @@ const courseParts = [
       "Procesar datos de archivos"
     ],
     estimatedHours: 3
+  },
+  { 
+    id: 5, 
+    title: "Repaso - Ejercicios Avanzados", 
+    description: "Consolidación de conocimientos con ejercicios complejos", 
+    exercises: [      { id: "rep01", title: "Mutables vs Inmutables", description: "Tipos de datos fundamentales", difficulty: "medio", points: 12, path: "/06-repaso/ej01_mutables_inmutables" },
+      { id: "rep02", title: "Parámetros por Defecto", description: "Funciones y valores predeterminados", difficulty: "medio", points: 10, path: "/06-repaso/ej02_parametros_defecto" },
+      { id: "rep03", title: "Deep Copy", description: "Copia profunda vs superficial", difficulty: "difícil", points: 15, path: "/06-repaso/ej03_deep_copy" },
+      { id: "rep04", title: "Cuenta Bancaria", description: "POO aplicada", difficulty: "medio", points: 18, path: "/06-repaso/ej04_cuenta_bancaria" },
+      { id: "rep05", title: "Contador de Instancias", description: "Variables de clase", difficulty: "medio", points: 12, path: "/06-repaso/ej05_contador_instancias" },
+      { id: "rep06", title: "Verificador de Paréntesis", description: "Algoritmos con pilas", difficulty: "medio", points: 15, path: "/06-repaso/ej06_verificador_parentesis" },
+      { id: "rep07", title: "Sistema de Turnos", description: "Estructuras de datos avanzadas", difficulty: "difícil", points: 20, path: "/06-repaso/ej07_sistema_turnos" },
+      { id: "rep08", title: "Lista Enlazada", description: "Estructuras de datos personalizadas", difficulty: "difícil", points: 22, path: "/06-repaso/ej08_lista_enlazada" },
+      { id: "rep09", title: "Árbol de Búsqueda", description: "Árboles binarios de búsqueda", difficulty: "difícil", points: 25, path: "/06-repaso/ej09_arbol_busqueda" },
+      { id: "rep10", title: "Fibonacci Optimizado", description: "Algoritmos y complejidad", difficulty: "difícil", points: 20, path: "/06-repaso/ej10_fibonacci_optimizado" },
+      { id: "rep11", title: "Palíndromo Avanzado", description: "Procesamiento de strings", difficulty: "medio", points: 15, path: "/06-repaso/ej11_palindromo_mejorado" },
+      { id: "rep12", title: "Búsqueda Binaria", description: "Algoritmos de búsqueda", difficulty: "difícil", points: 18, path: "/06-repaso/ej12_busqueda_binaria" },
+      { id: "rep13", title: "Analizador de Texto", description: "Procesamiento de texto avanzado", difficulty: "medio", points: 16, path: "/06-repaso/ej13_analizador_texto" },
+      { id: "rep14", title: "Procesador de Logs", description: "Análisis de archivos de registro", difficulty: "difícil", points: 20, path: "/06-repaso/ej14_procesador_logs" },
+      { id: "rep15", title: "Sistema de Biblioteca", description: "Sistema completo con POO", difficulty: "difícil", points: 25, path: "/06-repaso/ej15_sistema_biblioteca" }
+    ],
+    learningObjectives: [
+      "Consolidar conocimientos de Python",
+      "Aplicar POO en proyectos complejos",
+      "Dominar estructuras de datos avanzadas",
+      "Optimizar algoritmos y rendimiento",
+      "Resolver problemas del mundo real"
+    ],
+    estimatedHours: 12
   }
 ];
 
@@ -101,10 +125,9 @@ export default function PartsPage() {
         </p>
       </div>
 
-      <div className="grid gap-6">
-        {courseParts.map((part, index) => {
+      <div className="grid gap-6">        {courseParts.map((part, index) => {
           const progress = getPartProgress(part.id);
-          const isLocked = index > 0 && getPartProgress(courseParts[index - 1].id) < 80;
+          const isLocked = false; // Desbloquear todos los ejercicios
           
           return (
             <div
@@ -171,11 +194,10 @@ export default function PartsPage() {
                     Ejercicios ({part.exercises.length})
                   </h3>
                   <div className="grid gap-2">                    {part.exercises.map((exercise) => {
-                      const isCompleted = completedExercises.includes(exercise.id);
-                      const difficultyColors: Record<string, string> = {
-                        easy: 'bg-green-100 text-green-800',
-                        medium: 'bg-yellow-100 text-yellow-800',
-                        hard: 'bg-red-100 text-red-800'
+                      const isCompleted = completedExercises.includes(exercise.id);                      const difficultyColors: Record<string, string> = {
+                        fácil: 'bg-green-100 text-green-800',
+                        medio: 'bg-yellow-100 text-yellow-800',
+                        difícil: 'bg-red-100 text-red-800'
                       };
 
                       return (

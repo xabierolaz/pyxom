@@ -28,7 +28,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
         <div className="flex items-center justify-between p-4 border-b bg-indigo-50">
           <div className="flex items-center space-x-2">
             <span className="text-xl">📖</span>
-            <h3 className="font-semibold text-gray-800">Model Solution</h3>
+            <h3 className="font-semibold text-gray-800">Solución Modelo</h3>
           </div>
           <button
             onClick={onClose}
@@ -43,7 +43,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
           <div className="max-w-md text-center">
             <div className="text-6xl mb-4">⚠️</div>
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Think Before You Look!
+              ¡Piensa antes de mirar!
             </h3>
             <div className="text-sm text-gray-600 space-y-3 mb-6">
               <p>
@@ -66,13 +66,13 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
                 onClick={confirmViewSolution}
                 className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
               >
-                I understand, show me the solution
+                Entiendo, muéstrame la solución
               </button>
               <button
                 onClick={onClose}
                 className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
               >
-                Let me try more first
+                Déjame intentarlo primero
               </button>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
       <div className="flex items-center justify-between p-4 border-b bg-indigo-50">
         <div className="flex items-center space-x-2">
           <span className="text-xl">📖</span>
-          <h3 className="font-semibold text-gray-800">Model Solution</h3>
+          <h3 className="font-semibold text-gray-800">Solución Modelo</h3>
         </div>
         <button
           onClick={onClose}
@@ -107,7 +107,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
               : 'border-transparent text-gray-500 hover:text-gray-700'
           }`}
         >
-          Solution Code
+          Código de la Solución
         </button>
         
         {solution.explanation && (
@@ -119,7 +119,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            Explanation
+            Explicación
           </button>
         )}
         
@@ -132,7 +132,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            Compare
+            Comparar
           </button>
         )}
       </div>
@@ -172,7 +172,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
               <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
                 <div className="flex items-center space-x-2 mb-2">
                   <span className="text-blue-600">📝</span>
-                  <h4 className="font-semibold text-blue-900">Solution Explanation</h4>
+                  <h4 className="font-semibold text-blue-900">Explicación de la Solución</h4>
                 </div>
                 <div className="text-blue-800 text-sm leading-relaxed whitespace-pre-wrap">
                   {solution.explanation}
@@ -181,7 +181,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
 
               <div className="space-y-4 text-sm text-gray-700">
                 <div className="bg-green-50 border-l-4 border-green-400 p-3">
-                  <h5 className="font-medium text-green-900 mb-1">💡 Key Learning Points</h5>
+                  <h5 className="font-medium text-green-900 mb-1">💡 Puntos Clave</h5>
                   <p className="text-green-800 text-xs">
                     Study how this solution approaches the problem. Consider the logic flow, 
                     variable naming, and code structure. Try to understand why this approach works.
@@ -189,7 +189,7 @@ export function ModelSolutionPanel({ solution, userCode, onClose }: ModelSolutio
                 </div>
 
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3">
-                  <h5 className="font-medium text-yellow-900 mb-1">🔄 Next Steps</h5>
+                  <h5 className="font-medium text-yellow-900 mb-1">🔄 Próximos Pasos</h5>
                   <p className="text-yellow-800 text-xs">
                     Try implementing this solution yourself without copying. See if you can 
                     explain each line and consider alternative approaches to the same problem.

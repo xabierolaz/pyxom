@@ -14,41 +14,40 @@ const PYTHON_MOOC_EXERCISES = [
 		sections: [
 			{
 				title: 'Conceptos Básicos',
-				exercises: [
-					{
+				exercises: [					{
 						id: 'ej01',
 						title: 'Suma y Producto',
 						description: 'Operaciones básicas',
 						points: 10,
-						difficulty: 'easy',
+						difficulty: 'fácil',
 					},
 					{
 						id: 'ej02',
 						title: 'Variables',
 						description: 'Tipos de datos',
 						points: 8,
-						difficulty: 'easy',
+						difficulty: 'fácil',
 					},
 					{
 						id: 'ej03',
 						title: 'Input/Output',
 						description: 'Entrada y salida',
 						points: 8,
-						difficulty: 'easy',
+						difficulty: 'fácil',
 					},
 					{
 						id: 'ej04',
 						title: 'Condicionales',
 						description: 'Estructuras de decisión',
 						points: 12,
-						difficulty: 'medium',
+						difficulty: 'medio',
 					},
 					{
 						id: 'ej05',
 						title: 'Bucles',
 						description: 'Estructuras de repetición',
 						points: 15,
-						difficulty: 'medium',
+						difficulty: 'medio',
 					},
 				],
 			},
@@ -61,27 +60,26 @@ const PYTHON_MOOC_EXERCISES = [
 		sections: [
 			{
 				title: 'Estructuras Jerárquicas',
-				exercises: [
-					{
+				exercises: [					{
 						id: 'tree01',
 						title: 'Árbol Básico',
 						description: 'Nodos y recorridos básicos',
 						points: 15,
-						difficulty: 'medium',
+						difficulty: 'medio',
 					},
 					{
 						id: 'tree02',
 						title: 'Altura de Árbol',
 						description: 'Cálculo de altura',
 						points: 12,
-						difficulty: 'medium',
+						difficulty: 'medio',
 					},
 					{
 						id: 'tree03',
 						title: 'Búsqueda BST',
 						description: 'Búsqueda en árboles binarios',
 						points: 20,
-						difficulty: 'hard',
+						difficulty: 'difícil',
 					},
 				],
 			},
@@ -201,11 +199,10 @@ export default function PartPage() {
 
 								<div className="grid gap-4">
 									{section.exercises.map((exercise) => {
-										const isCompleted = completedExercises.includes(exercise.id);
-										const difficultyColors: Record<string, string> = {
-											easy: 'bg-green-100 text-green-800',
-											medium: 'bg-yellow-100 text-yellow-800',
-											hard: 'bg-red-100 text-red-800',
+										const isCompleted = completedExercises.includes(exercise.id);										const difficultyColors: Record<string, string> = {
+											fácil: 'bg-green-100 text-green-800',
+											medio: 'bg-yellow-100 text-yellow-800',
+											difícil: 'bg-red-100 text-red-800',
 										};
 
 										return (
@@ -241,12 +238,11 @@ export default function PartPage() {
 													</span>
 													<span className="text-sm text-gray-600">
 														{exercise.points} pts
-													</span>
-													<Link
+													</span>													<Link
 														href={`/parts/${partId}/${exercise.id}`}
 														className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
 													>
-														{isCompleted ? 'Review' : 'Start'}
+														{isCompleted ? 'Revisar' : 'Empezar'}
 													</Link>
 												</div>
 											</div>
