@@ -3,22 +3,8 @@
 import React from 'react';
 import IntroPythonXom from '@/components/IntroPythonXom';
 
-export default function ArbolBusqueda() {
-  const description = `
-# Ejercicio 9: Árbol Binario de Búsqueda 🌳
+export default function ArbolBusqueda() {    const description = `Implementa un Árbol Binario de Búsqueda (BST) con operaciones fundamentales. Aprenderás sobre estructuras jerárquicas, recursión, y cómo mantener datos ordenados de forma eficiente con búsqueda logarítmica.
 
-## Concepto: Árboles Binarios de Búsqueda (BST)
-
-Un **Árbol Binario de Búsqueda** es una estructura de datos jerárquica donde cada nodo tiene como máximo dos hijos (izquierdo y derecho), y mantiene una propiedad especial de ordenamiento:
-
-### Propiedad BST:
-- **Todos los valores del subárbol izquierdo** son menores que el valor del nodo padre
-- **Todos los valores del subárbol derecho** son mayores que el valor del nodo padre
-- Esta propiedad se mantiene **recursivamente** en todos los nodos
-
-### Ventajas de los BST:
-- **Búsqueda eficiente**: O(log n) en promedio
-- **Inserción ordenada**: Mantiene elementos ordenados automáticamente
 - **Recorridos útiles**: In-order da elementos ordenados
 - **Operaciones dinámicas**: Inserción y eliminación flexibles
 
@@ -317,11 +303,11 @@ Búsquedas:
 **Espacio:** O(n) para almacenar n nodos
 `;
 
-  return (
-    <IntroPythonXom 
-      title="Ejercicio 9: Árbol Binario de Búsqueda" 
-      description={description}
-      codeExample={`class NodoArbol:
+  const exerciseData = {
+    id: 'ej09_arbol_busqueda',
+    title: 'Ejercicio 9: Árbol Binario de Búsqueda',
+    description,
+    starterCode: `class NodoArbol:
     def __init__(self, valor):
         # TODO: Inicializar valor, izquierdo y derecho
         pass
@@ -330,43 +316,17 @@ class ArbolBinarioBusqueda:
     def __init__(self):
         # TODO: Inicializar raíz como None
         pass
-    
+
     def insertar(self, valor):
         # TODO: Implementar inserción manteniendo propiedad BST
         pass
-    
+
     def _insertar_recursivo(self, nodo, valor):
         # TODO: Método auxiliar recursivo
-        pass
-    
-    def buscar(self, valor):
-        # TODO: Implementar búsqueda eficiente
-        pass
-    
-    def recorrido_inorder(self):
-        # TODO: Recorrido que retorna elementos ordenados
-        pass
-    
-    def altura(self):
-        # TODO: Calcular altura del árbol
-        pass
-    
-    def mostrar_estructura(self):
-        # TODO: Mostrar estructura visual del árbol
-        pass
+        pass`,
+    tests: [],
+    hints: []
+  };
 
-# Pruebas
-arbol = ArbolBinarioBusqueda()
-valores = [50, 30, 70, 20, 40, 60, 80]
-
-for valor in valores:
-    arbol.insertar(valor)
-
-print("In-order:", arbol.recorrido_inorder())
-print("Altura:", arbol.altura())
-print("¿Existe 40?", arbol.buscar(40))`}
-      exerciseNumber={9}
-      section="algorithms"
-    />
-  );
+  return <IntroPythonXom data={exerciseData} />;
 }

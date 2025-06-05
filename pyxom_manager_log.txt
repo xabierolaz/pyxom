@@ -1,2 +1,0 @@
-   REM Limpia/crea el archivo de log al inicio
-[ 9:35:32,52]  

@@ -1,0 +1,165 @@
+'use client';
+
+import React from 'react';
+import IntroPythonXom from '@/components/IntroPythonXom';
+
+export default function SistemaTurnos() {  
+  const description = `Implementa un sistema de turnos bancarios usando colas (queues). Aprenderás el concepto FIFO (primero en entrar, primero en salir) y cómo simular un sistema de atención al cliente con diferentes tipos de servicio y prioridades.
+
+- **Pila**: LIFO - como una pila de platos
+- **Cola**: FIFO - como una fila en el banco
+
+## ¿Qué vas a aprender?
+- Implementar una cola usando listas de Python
+- Entender el concepto FIFO en estructuras de datos
+- Diseñar un sistema de turnos realista
+- Manejar estados de clientes y prioridades
+- Aplicar patrones de simulación de procesos
+
+## Instrucciones Detalladas
+
+Implementa un **SistemaTurnos** que simule el sistema de turnos de un banco:
+
+1. **Cliente**: Clase que represente a un cliente con nombre, tipo de operación y tiempo de llegada
+2. **Cola de Turnos**: Implemente operaciones básicas de cola
+3. **Tipos de Operación**: Consulta (5 min), Depósito (3 min), Retiro (4 min), Préstamo (15 min)
+4. **Sistema de Prioridades**: Clientes premium tienen prioridad
+5. **Estadísticas**: Tiempo promedio de espera, cantidad de clientes atendidos
+
+### Funcionalidades Requeridas:
+- Agregar cliente a la cola
+- Atender próximo cliente
+- Ver estado actual de la cola
+- Calcular tiempos de espera
+- Generar reportes de actividad
+
+⚠️ **Errores Comunes a Evitar:**
+- Confundir el orden FIFO (primero en llegar, primero en ser atendido)
+- No manejar colas vacías al hacer dequeue
+- No calcular correctamente los tiempos de espera
+- Olvidar actualizar los estados de los clientes
+
+## Código Inicial
+
+\`\`\`python
+from datetime import datetime, timedelta
+from collections import deque
+
+class Cliente:
+    def __init__(self, nombre, operacion, es_premium=False):
+        # Inicializar cliente con datos y hora de llegada
+        pass
+    
+    def __str__(self):
+        # Representación legible del cliente
+        pass
+
+class SistemaTurnos:
+    def __init__(self):
+        # Inicializar colas y contadores
+        pass
+    
+    def agregar_cliente(self, cliente):
+        # Agregar cliente a la cola correspondiente
+        pass
+    
+    def atender_proximo(self):
+        # Atender el próximo cliente en la cola
+        pass
+    
+    def ver_estado_cola(self):
+        # Mostrar el estado actual de las colas
+        pass
+    
+    def calcular_tiempo_espera(self, cliente):
+        # Calcular tiempo de espera de un cliente
+        pass
+    
+    def generar_reporte(self):
+        # Generar estadísticas del sistema
+        pass
+    
+    def esta_vacia(self):
+        # Verificar si no hay clientes esperando
+        pass
+
+# Ejemplo de uso
+sistema = SistemaTurnos()
+
+# Agregar clientes
+cliente1 = Cliente("Juan Pérez", "consulta")
+cliente2 = Cliente("María García", "deposito", es_premium=True)
+cliente3 = Cliente("Carlos López", "retiro")
+
+# Probar el sistema
+sistema.agregar_cliente(cliente1)
+sistema.agregar_cliente(cliente2)
+sistema.agregar_cliente(cliente3)
+
+print("Estado inicial:")
+sistema.ver_estado_cola()
+\`\`\`
+
+## Casos de Prueba`;
+
+  const exerciseData = {
+    id: 'ej07_sistema_turnos',
+    title: 'Sistema de Turnos - Colas (FIFO)',
+    description: description,
+    starterCode: `# Ejercicio: Sistema de Turnos Bancarios
+# Tu tarea es implementar un sistema de colas (FIFO) para un banco que:
+# 1. Maneja dos tipos de clientes: regulares y premium
+# 2. Permite registrar clientes con operaciones distintas
+# 3. Calcula tiempos de espera y genera reportes
+
+from datetime import datetime, timedelta
+from collections import deque
+
+class Cliente:
+    def __init__(self, nombre, operacion, es_premium=False):
+        # TODO: Implementar inicialización del cliente
+        pass
+
+    def __str__(self):
+        # TODO: Implementar representación del cliente
+        pass
+
+class SistemaTurnos:
+    def __init__(self):
+        # TODO: Inicializar colas y contadores
+        pass
+    
+    def agregar_cliente(self, cliente):
+        # TODO: Agregar cliente a la cola apropiada
+        pass
+    
+    def atender_proximo(self):
+        # TODO: Atender siguiente cliente (priorizar premium)
+        pass
+    
+    def ver_estado_cola(self):
+        # TODO: Mostrar estado de las colas
+        pass
+    
+    def calcular_tiempo_espera(self, cliente):
+        # TODO: Calcular tiempo de espera aproximado
+        pass
+    
+    def esta_vacia(self):
+        # TODO: Verificar si ambas colas están vacías
+        pass
+
+# Código de prueba
+sistema = SistemaTurnos()
+cliente1 = Cliente("Juan Pérez", "consulta")
+cliente2 = Cliente("María VIP", "retiro", es_premium=True)
+
+sistema.agregar_cliente(cliente1)
+sistema.agregar_cliente(cliente2)
+sistema.ver_estado_cola()`,
+    tests: [],
+    hints: []
+  };
+
+  return <IntroPythonXom data={exerciseData} />;
+}

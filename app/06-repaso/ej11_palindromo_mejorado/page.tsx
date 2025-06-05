@@ -1,23 +1,8 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const palindromoExercise = {
-  id: 'ej11_palindromo_mejorado',
-  title: 'Palíndromo Mejorado - Procesamiento Avanzado de Texto',
-  description: `## 🎯 Concepto: Verificación Avanzada de Palíndromos
-
-### 📚 ¿Qué vas a aprender?
-Un palíndromo es una palabra, frase o secuencia que se lee igual hacia adelante y hacia atrás. En este ejercicio, crearás un verificador de palíndromos robusto que maneje texto real con espacios, puntuación y diferentes casos.
-
-### 📋 Instrucciones:
-Implementa un sistema completo de verificación de palíndromos:
-
-**Parte 1: Verificador Básico**
-- Función simple para palabras sin espacios
-- Manejo de casos (mayúsculas/minúsculas)
-
-**Parte 2: Preprocesamiento de Texto**
-- Eliminar espacios, puntuación y caracteres especiales
-- Normalizar acentos y caracteres Unicode
+  id: 'ej11_palindromo_mejorado',  title: 'Palíndromo Mejorado - Procesamiento Avanzado de Texto',  
+  description: `Desarrolla un verificador avanzado de palíndromos que maneja texto real con espacios, puntuación y acentos. Aprenderás técnicas de procesamiento de texto, normalización de strings y algoritmos eficientes de comparación.
 
 **Parte 3: Verificador Robusto**
 - Combinar preprocesamiento con verificación

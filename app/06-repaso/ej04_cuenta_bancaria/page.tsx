@@ -1,34 +1,10 @@
 // Ejercicio 4: Clase CuentaBancaria - Programación Orientada a Objetos
 import IntroPythonXom from '@/components/IntroPythonXom';
 
-const cuentaBancariaExercise = {
-  id: 'ej04_cuenta_bancaria',
-  title: 'Clase CuentaBancaria - Programación Orientada a Objetos',
-  description: `## 🎯 Concepto: Encapsulación y Métodos en Clases
+const cuentaBancariaExercise = {  id: 'ej04_cuenta_bancaria',
+  title: 'Clase CuentaBancaria - Programación Orientada a Objetos',    description: `Implementa una clase CuentaBancaria que demuestra conceptos fundamentales de programación orientada a objetos como encapsulación, atributos privados y métodos. Aprenderás a proteger datos sensibles como el saldo y controlar cómo se accede y modifica.
 
-### 📚 ¿Qué vas a aprender?
-La **Programación Orientada a Objetos (OOP)** te permite crear clases que encapsulen datos y comportamientos. En este ejercicio aprenderás sobre **encapsulación**, **atributos privados** y **métodos** de una clase.
-
-### 🔒 Encapsulación: Atributos Privados
-En Python, usamos **doble guión bajo** (\`__\`) para hacer atributos "privados":
-\`\`\`python
-self.__saldo = saldo_inicial  # Atributo privado
-\`\`\`
-
-### 🎯 ¿Por qué usar atributos privados?
-- **Protege los datos**: Nadie puede cambiar el saldo directamente
-- **Controla el acceso**: Solo los métodos de la clase pueden modificar el saldo
-- **Previene errores**: Evita que se asignen valores inválidos
-
-### 📝 Tu tarea: Implementar CuentaBancaria
-Completa la clase \`CuentaBancaria\` con estos requisitos:
-
-#### 🏗️ Constructor (\`__init__\`):
-- **titular**: Nombre del propietario (público)
-- **__saldo**: Saldo inicial (privado, protegido)
-
-#### 💰 Método \`depositar(cantidad)\`:
-- Solo acepta cantidades **positivas** (> 0)
+#### 💳 Método \`depositar(cantidad)\`:
 - Agrega la cantidad al saldo
 - Si la cantidad es negativa o cero, no hace nada
 

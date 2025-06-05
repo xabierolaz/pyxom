@@ -1,7 +1,7 @@
 // pyxom/components/IntroPythonXom.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { runPythonTests, getPyodideInstance, type TestResult, type StaticCheckResult } from '@/utils/pythonRunner';
 import type { PyodideInterface } from 'pyodide';
@@ -9,10 +9,7 @@ import type {
   ExerciseData, 
   AttemptResult, 
   SingleTestRunResult, 
-  StaticCheckRunResult,
-  Hint,
-  CommonPitfall,
-  FeedbackCondition
+  StaticCheckRunResult
 } from '@/types/types'; // Ajusta la ruta si es necesario
 
 // --- Carga dinámica para Componentes Pesados ---
@@ -29,13 +26,7 @@ const Editor = dynamic(() =>
   }
 );
 
-const DiffViewer = dynamic(() => 
-  import('./DiffViewer'), 
-  { 
-    ssr: false,
-    loading: () => <LoadingPlaceholder message="Cargando diferencias..." /> 
-  }
-);
+
 
 
 // --- Componentes de Iconos (puedes moverlos a un archivo separado utils/icons.tsx) ---
@@ -51,28 +42,18 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
     return <div className="p-4 text-red-600">Error: Datos del ejercicio no cargados.</div>;
   }
 
+  // Simplified state management - reduced from 9 useState hooks to 4
   const [code, setCode] = useState<string>(data.starterCode ?? '');
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Iniciar como true para Pyodide
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isPyodideReady, setIsPyodideReady] = useState<boolean>(false);
   const [currentAttempt, setCurrentAttempt] = useState<AttemptResult | null>(null);
-  const [attemptHistory, setAttemptHistory] = useState<AttemptResult[]>([]);
-  
-  const [activeHints, setActiveHints] = useState<Hint[]>([]);
-  const [activePitfalls, setActivePitfalls] = useState<CommonPitfall[]>([]);
-  const [showSolution, setShowSolution] = useState<boolean>(false);
-  const [consecutiveFailures, setConsecutiveFailures] = useState<number>(0);
 
-  // Efecto para inicializar Pyodide y resetear estado al cambiar data.id
+  // Efecto para inicializar Pyodide
   useEffect(() => {
     setCode(data.starterCode);
     setCurrentAttempt(null);
-    setAttemptHistory([]);
-    setActiveHints([]);
-    setActivePitfalls([]);
-    setShowSolution(false);
-    setConsecutiveFailures(0);
-    setIsLoading(true); // Mostrar carga mientras Pyodide podría estar inicializándose    // Solo llama a getPyodideInstance si no está ya listo, para evitar múltiples cargas
-    // La lógica de singleton está en pythonRunner.ts
+    setIsLoading(true);
+    
     getPyodideInstance().then((pyInstance: PyodideInterface) => {
         if (pyInstance) {
             setIsPyodideReady(true);
@@ -80,7 +61,6 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
         } else {
             setIsPyodideReady(false);
             console.error("IntroPythonXom: Pyodide no pudo ser inicializado.");
-            // Aquí podrías establecer un estado de error para mostrar un mensaje al usuario
         }
         setIsLoading(false);
     });
@@ -88,31 +68,6 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
   }, [data.id, data.starterCode]);
 
   const isExerciseCompleted = useMemo(() => currentAttempt?.overallPassed || false, [currentAttempt]);
-
-  const checkCondition = useCallback((condition: FeedbackCondition | undefined, attempt: AttemptResult): boolean => {
-    if (!condition || !attempt) return false;
-    if (condition === 'onAnyFailure' && !attempt.overallPassed) return true;
-    if (condition === 'onAllTestsFailed' && attempt.testsPassedCount === 0 && attempt.testRunResults.length > 0) return true;
-
-    if (typeof condition === 'object') {
-      if ('errorType' in condition) {
-        return attempt.testRunResults.some(tr => tr.error?.includes(condition.errorType));
-      }
-      if ('staticCheckFailedId' in condition) {
-        return attempt.staticCheckRunResults?.some(scr => scr.check.id === condition.staticCheckFailedId && !scr.passed) || false;
-      }
-      if ('testCaseFailedIndex' in condition && condition.testCaseFailedIndex !== undefined) {
-        const res = attempt.testRunResults[condition.testCaseFailedIndex];
-        return res ? !res.passed : false;
-      }
-      if ('testCaseFailedName' in condition && condition.testCaseFailedName) {
-        const res = attempt.testRunResults.find(tr => tr.testCase.name === condition.testCaseFailedName);
-        return res ? !res.passed : false;
-      }
-    }
-    return false;
-  }, []);
-
   const handleSubmit = async () => {
     if (!isPyodideReady) {
         alert("El entorno de Python aún no está listo. Por favor, espera un momento e inténtalo de nuevo.");
@@ -120,9 +75,8 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
     }
     setIsLoading(true);
     setCurrentAttempt(null);
-    setShowSolution(false);
-    setActiveHints([]);
-    setActivePitfalls([]);    const executionResult = await runPythonTests(code, data.tests.map(test => `assert ${test.input} == ${test.expected}, "Test failed for ${test.name || 'unnamed test'}"`));
+    
+    const executionResult = await runPythonTests(code, data.tests.map(test => `assert ${test.input} == ${test.expected}, "Test failed for ${test.name || 'unnamed test'}"`));
     
     // Transform ExecutionResult to AttemptResult
     const newAttempt: AttemptResult = {
@@ -134,12 +88,12 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
         actualOutput: tr.output || '',
         normalizedActualOutput: tr.output?.trim() || '',
         passed: tr.passed,
-        durationMs: 0, // Not available from ExecutionResult
+        durationMs: 0,
         error: tr.error,
         pointsEarned: tr.pointsEarned
       })),
       staticCheckRunResults: executionResult.staticCheckRunResults?.map(scr => ({
-        check: { id: '', description: '', checkFunction: async () => false }, // Mock check
+        check: { id: '', description: '', checkFunction: async () => false },
         passed: scr.passed,
         message: scr.feedback,
         error: undefined,
@@ -149,57 +103,25 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
       testsPassedCount: executionResult.testRunResults.filter(tr => tr.passed).length,
       totalStaticChecks: executionResult.staticCheckRunResults?.length || 0,
       staticChecksPassedCount: executionResult.staticCheckRunResults?.filter(scr => scr.passed).length || 0,
-      durationMs: 0, // Not available from ExecutionResult
+      durationMs: 0,
       totalPointsEarned: 0,
       maxPossiblePoints: data.maxPoints || 0
     };
-      let points = 0;
+    
+    let points = 0;
     newAttempt.testRunResults.forEach((tr: SingleTestRunResult) => points += tr.pointsEarned || 0);
     newAttempt.staticCheckRunResults?.forEach((scr: StaticCheckRunResult) => points += scr.pointsEarned || 0);
     newAttempt.totalPointsEarned = points;
     
-    const currentTriggeredHints: Hint[] = [];
-    if (data.hints) {
-      for (const hint of data.hints) {
-        if (hint.condition && hint.condition !== 'onRequest' && checkCondition(hint.condition, newAttempt)) {
-          currentTriggeredHints.push(hint);
-        }
-      }
-    }
-    newAttempt.triggeredHints = currentTriggeredHints; // Guardar en el intento
-    setActiveHints(currentTriggeredHints); // Activar para la UI
-
-    const currentTriggeredPitfalls: CommonPitfall[] = [];
-    if (data.commonPitfalls) {
-      for (const pitfall of data.commonPitfalls) {
-        if (pitfall.trigger && checkCondition(pitfall.trigger, newAttempt)) {
-          currentTriggeredPitfalls.push(pitfall);
-        }
-      }
-    }
-    newAttempt.triggeredPitfalls = currentTriggeredPitfalls; // Guardar en el intento
-    setActivePitfalls(currentTriggeredPitfalls); // Activar para la UI
-
     setCurrentAttempt(newAttempt);
-    setAttemptHistory(prev => [newAttempt, ...prev]); // El más reciente primero
     setIsLoading(false);
-
-    if (!newAttempt.overallPassed) {
-      setConsecutiveFailures(prev => prev + 1);
-    } else {
-      setConsecutiveFailures(0);
-      if(data.positiveFeedback && data.positiveFeedback.length > 0){
-        // Opcional: mostrar un mensaje de feedback positivo aleatorio
-        // alert(data.positiveFeedback[Math.floor(Math.random() * data.positiveFeedback.length)]);
-      }
-    }
   };
 
   const handleReset = () => { 
-    setCode(data.starterCode); setCurrentAttempt(null); setActiveHints([]); setActivePitfalls([]);
-    setShowSolution(false); setIsLoading(false); setConsecutiveFailures(0);
+    setCode(data.starterCode);
+    setCurrentAttempt(null);
+    setIsLoading(false);
   };
-
   const openPythonTutor = () => { 
     const encoded = encodeURIComponent(code);
     window.open(
@@ -207,19 +129,6 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
       '_blank', 'noopener,noreferrer'
     );
   };
-
-  const requestHint = (hint: Hint) => {
-    if (!activeHints.find(h => h.id === hint.id)) {
-      setActiveHints(prev => [...prev, hint]);
-      // Podrías añadir lógica de "costo" de pista aquí si la implementas
-    }
-  };
-  
-  const canShowSolution = useMemo(() => {
-    if (!data.modelSolution?.code) return false; // No mostrar si no hay solución definida
-    if (isExerciseCompleted) return true;
-    return consecutiveFailures >= 3; // Mostrar solución después de 3 fallos consecutivos
-  }, [isExerciseCompleted, consecutiveFailures, data.modelSolution]);
 
   if (isLoading && !isPyodideReady && !currentAttempt) {
     return <LoadingPlaceholder message="Preparando entorno Python, por favor espera..." />;
@@ -264,9 +173,7 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
             <button onClick={handleReset} className="px-5 py-2.5 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors">Resetear</button>
             <button onClick={openPythonTutor} className="px-5 py-2.5 bg-teal-500 text-white font-semibold rounded-lg shadow-sm hover:bg-teal-600 transition-colors">Visualizar</button>
           </section>
-        </div>
-
-        <aside className="md:col-span-1 space-y-6">
+        </div>        <aside className="md:col-span-1 space-y-6">
           {/* Estado General */}
           {currentAttempt && !isLoading && (
             <div className={`p-4 rounded-lg shadow ${isExerciseCompleted ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500'} border-l-4`}>
@@ -281,55 +188,6 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
             </div>
           )}
           {(isLoading && !currentAttempt) && <div className="p-4 rounded-lg bg-blue-100 border-blue-500 border-l-4 text-blue-700"><IconInfo />{isPyodideReady ? 'Evaluando tu código...' : 'Preparando entorno Python...'}</div>}
-
-          {/* Pistas y Errores Comunes Activados */}
-          {(activePitfalls.length > 0 || activeHints.length > 0) && !isExerciseCompleted && (
-            <section className="p-4 border border-slate-200 rounded-lg shadow-sm bg-white">
-              <h3 className="text-lg font-semibold text-slate-700 mb-3">Ayuda Adicional:</h3>
-              <div className="space-y-3">
-                {activePitfalls.map(pitfall => (
-                  <div key={pitfall.id} className="p-3 bg-orange-50 border-l-4 border-orange-400 rounded-md text-sm text-orange-700">
-                    <strong className='flex items-center mb-1'><IconWarning />Sugerencia (Error Común):</strong> {pitfall.explanation}
-                  </div>
-                ))}
-                {activeHints.map(hint => (
-                  <div key={hint.id} className="p-3 bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-sm text-yellow-700">
-                  <strong className='flex items-center mb-1'><IconLightbulb />Pista:</strong> {hint.text}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-          {/* Botones para Pistas 'onRequest' */}
-          {data.hints && data.hints.filter(h => h.condition === 'onRequest' && !activeHints.find(ah => ah.id === h.id)).length > 0 && !isExerciseCompleted && (
-            <div className="mt-2 space-x-2">
-                {data.hints.filter(h => h.condition === 'onRequest' && !activeHints.find(ah => ah.id === h.id)).map(hint => (
-                    <button key={hint.id} onClick={() => requestHint(hint)} 
-                            className="text-xs px-3 py-1 bg-sky-100 text-sky-700 rounded-md hover:bg-sky-200 transition-colors">
-                        Pedir Pista "{hint.id}"
-                    </button>
-                ))}
-            </div>
-          )}
-
-          {/* Solución Modelo */}
-          {data.modelSolution && canShowSolution && (
-             <button onClick={() => setShowSolution(s => !s)} className="w-full mt-4 px-5 py-2.5 bg-purple-100 text-purple-700 font-semibold rounded-lg shadow-sm hover:bg-purple-200 transition-colors">
-                {showSolution ? 'Ocultar Solución Modelo' : 'Ver Solución Modelo'}
-             </button>
-          )}
-          {showSolution && data.modelSolution && (
-            <section className="mt-2 p-4 border border-slate-200 rounded-lg shadow-sm bg-white">
-              <h3 className="text-lg font-semibold text-slate-700 mb-2">Solución Modelo:</h3>
-              {data.modelSolution.explanation && <p className="text-slate-600 text-sm mb-3 italic prose prose-sm" dangerouslySetInnerHTML={{ __html: data.modelSolution.explanation }}/>}
-              <div className="rounded-md overflow-hidden border border-slate-300">
-                <Suspense fallback={<LoadingPlaceholder message="Cargando editor de solución..." />}>
-                    <Editor height="250px" defaultLanguage="python" value={data.modelSolution.code} theme="vs-dark"
-                            options={{ readOnly: true, fontSize: 14, minimap: { enabled: false } }} />
-                </Suspense>
-              </div>
-            </section>
-          )}
         </aside>
       </div>
 
@@ -356,14 +214,19 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
                         <div className="mt-2 p-2 bg-red-100 border border-red-200 rounded">
                           <p className="font-semibold text-red-700">Error de Ejecución:</p>
                           <pre className="whitespace-pre-wrap text-xs text-red-600">{res.error}</pre>
-                        </div>
-                      )}                      {res.isSuccessExecution && !res.passed && !res.testCase.hidden && DiffViewer && (
+                        </div>                      )}
+                      {res.isSuccessExecution && !res.passed && !res.testCase.hidden && (
                         <div className="mt-2">
-                          <p className="font-medium text-slate-700 mb-1">Diferencia en la Salida:</p>
-                          <div className="text-xs border rounded-md overflow-hidden">
-                            <Suspense fallback={<LoadingPlaceholder message="Cargando diferencias..." />}>
-                              <DiffViewer expected={res.testCase.expected} received={res.normalizedActualOutput} />
-                            </Suspense>
+                          <p className="font-medium text-slate-700 mb-1">Comparación de Salida:</p>
+                          <div className="text-xs border rounded-md overflow-hidden bg-gray-50 p-2">
+                            <div className="mb-2">
+                              <span className="font-semibold text-green-700">Esperado:</span>
+                              <pre className="whitespace-pre-wrap bg-green-50 p-1 rounded mt-1">{res.testCase.expected}</pre>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-red-700">Recibido:</span>
+                              <pre className="whitespace-pre-wrap bg-red-50 p-1 rounded mt-1">{res.normalizedActualOutput}</pre>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -389,28 +252,7 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
-          </details>
-        </section>
-      )}
-
-      {/* Historial de Intentos */}
-      {attemptHistory.length > 0 && (
-        <section className="mt-8 pt-4 border-t border-slate-200">
-           <details className="text-sm">
-            <summary className="cursor-pointer text-slate-600 hover:text-slate-800 font-medium">
-              Historial de Envíos en esta Sesión ({attemptHistory.length})
-            </summary>
-            <ul className="mt-2 space-y-1 pl-4 list-disc text-slate-500">
-              {attemptHistory.map((att, idx) => (
-                <li key={idx}>
-                  {new Date(att.timestamp).toLocaleTimeString()}: {att.testsPassedCount}/{att.totalTests} tests.
-                  {att.overallPassed ? " ✔" : " ✖"}
-                  {att.maxPossiblePoints && att.maxPossiblePoints > 0 ? ` Puntos: ${att.totalPointsEarned}/${att.maxPossiblePoints}` : ''}
-                </li>
-              ))}
-            </ul>
+              )}            </div>
           </details>
         </section>
       )}

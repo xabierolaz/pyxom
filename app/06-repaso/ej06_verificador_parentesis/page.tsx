@@ -1,27 +1,10 @@
 'use client';
 
-import React from 'react';
 import IntroPythonXom from '@/components/IntroPythonXom';
 
-export default function VerificadorParentesis() {
-  const description = `
-# Ejercicio 6: Verificador de Paréntesis Balanceados 🔍
+const description = `# Verificador de Paréntesis - Pilas
 
-## Concepto: Pilas (Stacks) y su Implementación
-
-Las **pilas** son una estructura de datos fundamental en programación que sigue el principio **LIFO** (Last In, First Out - Último en entrar, primero en salir). Imagina una pila de platos: solo puedes añadir o quitar platos desde arriba.
-
-### Características de las Pilas:
-- **Push**: Agregar un elemento al tope
-- **Pop**: Remover el elemento del tope
-- **Peek/Top**: Ver el elemento del tope sin removerlo
-- **Empty**: Verificar si la pila está vacía
-
-### Aplicación: Verificación de Paréntesis
-La verificación de paréntesis balanceados es un problema clásico que demuestra la utilidad de las pilas:
-- Cuando encontramos un paréntesis de apertura, lo agregamos a la pila
-- Cuando encontramos uno de cierre, verificamos que coincida con el último de apertura
-- Si al final la pila está vacía, los paréntesis están balanceados
+Implementa un verificador de paréntesis balanceados usando el concepto de pilas (stacks). Aprenderás a usar listas como pilas y la lógica para verificar que los símbolos de apertura y cierre estén correctamente emparejados en expresiones matemáticas.
 
 ## ¿Qué vas a aprender?
 - Implementar una pila usando listas de Python
@@ -157,49 +140,53 @@ Siempre verifica si la pila está vacía antes de hacer pop() para evitar excepc
 1. **Contador de Errores**: Reportar cuántos símbolos están desbalanceados
 2. **Posición del Error**: Indicar dónde ocurre el primer error
 3. **Soporte para Más Símbolos**: Añadir soporte para <> u otros símbolos
-4. **Modo Detallado**: Mostrar el estado de la pila en cada paso
-`;
+4. **Modo Detallado**: Mostrar el estado de la pila en cada paso`;
 
-  return (
-    <IntroPythonXom 
-      title="Ejercicio 6: Verificador de Paréntesis Balanceados" 
-      description={description}
-      codeExample={`class VerificadorParentesis:
+const exerciseData = {
+  id: 'ej06_verificador_parentesis',
+  title: 'Verificador de Paréntesis - Pilas',
+  description: description,
+        starterCode: `# Verificador de Paréntesis usando Pilas
+# Tu tarea es implementar una clase que verifique si los paréntesis, corchetes y llaves
+# están correctamente balanceados en una expresión
+
+class VerificadorParentesis:
     def __init__(self):
-        # TODO: Implementar inicialización de la pila
+        # Inicializa la pila aquí (usa una lista de Python)
         pass
-    
+
     def push(self, elemento):
-        # TODO: Implementar push
+        # Implementa el método para agregar elementos a la pila
         pass
-    
+
     def pop(self):
-        # TODO: Implementar pop
+        # Implementa el método para quitar y devolver el elemento superior
         pass
-    
+
     def is_empty(self):
-        # TODO: Implementar verificación de pila vacía
+        # Implementa el método para verificar si la pila está vacía
         pass
     
     def peek(self):
-        # TODO: Implementar peek
+        # Implementa el método para ver el elemento superior sin quitarlo
         pass
     
     def es_par_valido(self, apertura, cierre):
-        # TODO: Verificar si forman un par válido
+        # Implementa el método para verificar si los símbolos forman un par válido
+        # Ejemplo: '(' y ')' forman un par válido
         pass
     
     def verificar_balanceados(self, cadena):
-        # TODO: Implementar algoritmo principal
-        pass
+        # Implementa el algoritmo principal para verificar si los símbolos están balanceados
+        # 1. Recorre cada carácter de la cadena
+        # 2. Si es símbolo de apertura, agrégalo a la pila
+        # 3. Si es símbolo de cierre, verifica que coincida con el tope de la pila
+        # 4. Al final, la pila debe estar vacía
+        pass`,
+  tests: [],
+  hints: []
+};
 
-# Pruebas
-verificador = VerificadorParentesis()
-print(verificador.verificar_balanceados("()"))      # True
-print(verificador.verificar_balanceados("([)]"))    # False
-print(verificador.verificar_balanceados("{[()]}"))  # True`}
-      exerciseNumber={6}
-      section="data-structures"
-    />
-  );
+export default function VerificadorParentesis() {
+  return <IntroPythonXom data={exerciseData} />;
 }

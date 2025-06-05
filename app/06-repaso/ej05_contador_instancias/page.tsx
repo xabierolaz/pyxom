@@ -3,25 +3,7 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 
 const contadorInstanciasExercise = {
   id: 'ej05_contador_instancias',
-  title: 'Contador de Instancias - Atributos y Métodos de Clase',
-  description: `## 🎯 Concepto: Atributos de Clase vs Atributos de Instancia
-
-### 📚 ¿Qué vas a aprender?
-En Python, hay una diferencia importante entre **atributos de instancia** (únicos para cada objeto) y **atributos de clase** (compartidos por todos los objetos de la clase).
-
-### 🔍 Diferencias Clave:
-
-#### 👤 **Atributos de Instancia**:
-\`\`\`python
-def __init__(self, nombre):
-    self.nombre = nombre  # Cada estudiante tiene su propio nombre
-\`\`\`
-
-#### 👥 **Atributos de Clase**:
-\`\`\`python
-class Estudiante:
-    contador = 0  # Compartido por TODOS los estudiantes
-\`\`\`
+  title: 'Contador de Instancias - Atributos y Métodos de Clase',    description: `Aprende la diferencia entre atributos de instancia y atributos de clase. Implementarás una clase Estudiante que cuenta cuántos objetos se han creado usando variables de clase, y métodos de clase para acceder a información compartida.
 
 #### 🏫 **Métodos de Clase**:
 \`\`\`python

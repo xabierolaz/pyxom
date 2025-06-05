@@ -1,24 +1,8 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const procesadorLogsExercise = {
-  id: 'ej14_procesador_logs',
-  title: 'Procesador de Logs - Análisis de Archivos de Sistema',
-  description: `## 🎯 Concepto: Procesamiento y Análisis de Logs
-
-### 📚 ¿Qué vas a aprender?
-El análisis de logs es crucial en administración de sistemas, debugging y monitoreo. Crearás un procesador que analice logs de aplicaciones, detecte patrones, identifique errores y genere reportes útiles para administradores y desarrolladores.
-
-### 📋 Instrucciones:
-Desarrolla un sistema completo de procesamiento de logs:
-
-**Parte 1: Parser de Logs**
-- Parsear diferentes formatos de log (Apache, Python, custom)
-- Extraer timestamp, nivel, mensaje, IP, etc.
-- Manejar formatos inconsistentes
-
-**Parte 2: Análisis de Patrones**
-- Detectar errores y warnings frecuentes
-- Identificar IPs sospechosas
+  id: 'ej14_procesador_logs',  title: 'Procesador de Logs - Análisis de Archivos de Sistema',  
+  description: `Construye un procesador de logs para analizar archivos de sistema. Aprenderás parsing de texto estructurado, detección de patrones, análisis de errores, expresiones regulares y generación de reportes para administración de sistemas.
 - Analizar tendencias temporales
 
 **Parte 3: Filtrado y Búsqueda**

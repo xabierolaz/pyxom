@@ -1,23 +1,8 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const busquedaBinariaExercise = {
-  id: 'ej12_busqueda_binaria',
-  title: 'Búsqueda Binaria - Algoritmos de Búsqueda Eficiente',
-  description: `## 🎯 Concepto: Búsqueda Binaria
-
-### 📚 ¿Qué vas a aprender?
-La búsqueda binaria es uno de los algoritmos más eficientes para encontrar elementos en listas ordenadas. Con complejidad O(log n), es fundamental en programación competitiva y sistemas que requieren búsquedas rápidas.
-
-### 📋 Instrucciones:
-Implementa un sistema completo de búsqueda binaria:
-
-**Parte 1: Búsqueda Binaria Iterativa**
-- Implementar versión iterativa clásica
-- Manejo de casos borde (elemento no encontrado)
-
-**Parte 2: Búsqueda Binaria Recursiva**
-- Versión recursiva del algoritmo
-- Comparación de rendimiento
+  id: 'ej12_busqueda_binaria',  title: 'Búsqueda Binaria - Algoritmos de Búsqueda Eficiente',  
+  description: `Implementa el algoritmo de búsqueda binaria en versiones iterativa y recursiva. Aprenderás sobre algoritmos de búsqueda eficiente, complejidad logarítmica y técnicas de divide y vencerás en listas ordenadas.
 
 **Parte 3: Variantes Especializadas**
 - Encontrar primera/última ocurrencia

@@ -1,23 +1,8 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const fibonacciExercise = {
-  id: 'ej10_fibonacci_optimizado',
-  title: 'Fibonacci Optimizado - Algoritmos y Complejidad',
-  description: `## 🎯 Concepto: Algoritmos de Fibonacci y Optimización
-
-### 📚 ¿Qué vas a aprender?
-El cálculo de números de Fibonacci es un excelente ejemplo para comparar diferentes estrategias de programación: recursión básica, memoización y programación dinámica.
-
-### 📋 Instrucciones:
-Implementa tres versiones del cálculo de Fibonacci y compara su rendimiento:
-
-**Parte 1: Versión Recursiva Básica**
-- Implementa una función recursiva simple
-- Mide el tiempo de ejecución para números pequeños
-
-**Parte 2: Versión con Memoización**
-- Implementa usando un diccionario para almacenar resultados
-- Compara el rendimiento con la versión recursiva
+  id: 'ej10_fibonacci_optimizado',  title: 'Fibonacci Optimizado - Algoritmos y Complejidad',  
+  description: `Compara diferentes algoritmos para calcular números de Fibonacci: recursión básica, memoización y programación dinámica. Aprenderás sobre optimización de algoritmos, complejidad temporal y técnicas para mejorar el rendimiento.
 
 **Parte 3: Versión Iterativa**
 - Implementa usando un bucle

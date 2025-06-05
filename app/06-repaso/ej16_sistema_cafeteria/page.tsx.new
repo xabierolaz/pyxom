@@ -1,0 +1,190 @@
+import IntroPythonXom from '@/components/IntroPythonXom';
+
+const sistemaCafeteriaExercise = {
+  id: 'ej16_sistema_cafeteria',
+  title: 'Sistema de Cafetería (Proyecto Final Integrador)',  
+  description: `Proyecto final integrador que combina todos los conceptos del curso. Desarrollarás un sistema completo de gestión para una cafetería universitaria incluyendo POO, estructuras de datos, manejo de archivos, algoritmos, validaciones y cálculos.
+
+**🏗️ Parte 1: Entidades Principales**
+- Clase \`Producto\` (nombre, precio, categoría, ingredientes, stock)
+- Clase \`Pedido\` (items, cliente, total, estado, timestamp)  
+- Clase \`Cliente\` (ID, nombre, tipo, historial, descuentos)
+- Clase \`Cafeteria\` (gestión central del sistema)
+
+**💰 Parte 2: Sistema de Ventas**
+- Catálogo de productos (bebidas, comidas, snacks, postres)
+- Carrito de compras con modificaciones
+- Cálculo de totales con descuentos e impuestos
+- Métodos de pago y cambio
+
+**📊 Parte 3: Gestión de Inventario**
+- Control de stock en tiempo real
+- Alertas de productos agotados
+- Reabastecimiento automático
+- Costos y márgenes de ganancia
+
+**👥 Parte 4: Sistema de Clientes**
+- Registro de clientes (estudiantes, profesores, visitantes)
+- Programa de fidelidad con puntos
+- Descuentos por tipo de cliente
+- Historial de compras
+
+**⏰ Parte 5: Gestión de Pedidos**
+- Cola de pedidos con prioridades
+- Tiempos de preparación estimados
+- Estados: pendiente, preparando, listo, entregado
+- Sistema de turnos y notificaciones
+
+**📈 Parte 6: Reportes y Análisis**
+- Ventas diarias, semanales, mensuales
+- Productos más vendidos
+- Ingresos y ganancias
+- Análisis de clientes frecuentes
+- Exportación a CSV/JSON
+
+**💾 Parte 7: Persistencia**
+- Guardar/cargar datos del sistema
+- Backup automático de transacciones
+- Configuración de la cafetería
+- Logs de actividad`,
+
+  starterCode: `# Proyecto Final: Sistema de Cafetería
+# Implementa un sistema completo para gestionar una cafetería universitaria
+# Este es un esqueleto básico, debes expandirlo con todas las funcionalidades
+# descritas en las especificaciones
+
+import json
+import csv
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+class Producto:
+    def __init__(self, codigo, nombre, precio, categoria, ingredientes=None, stock=0):
+        # TODO: Implementar inicialización de producto
+        pass
+        
+    def __str__(self):
+        # TODO: Representación del producto
+        pass
+        
+    def actualizar_stock(self, cantidad):
+        # TODO: Aumentar o disminuir stock
+        pass
+        
+    def esta_disponible(self, cantidad=1):
+        # TODO: Verificar si hay stock suficiente
+        pass
+
+class Cliente:
+    def __init__(self, id, nombre, tipo="visitante"):
+        # TODO: Implementar inicialización de cliente
+        pass
+        
+    def aplicar_descuento(self, subtotal):
+        # TODO: Calcular descuento según tipo de cliente
+        pass
+        
+    def agregar_puntos(self, puntos):
+        # TODO: Agregar puntos de fidelidad
+        pass
+        
+    def canjear_puntos(self, puntos):
+        # TODO: Canjear puntos por descuentos
+        pass
+
+class Pedido:
+    def __init__(self, cliente, items=None):
+        # TODO: Implementar inicialización de pedido
+        pass
+        
+    def agregar_item(self, producto, cantidad=1):
+        # TODO: Agregar producto al pedido
+        pass
+        
+    def quitar_item(self, producto):
+        # TODO: Quitar producto del pedido
+        pass
+        
+    def calcular_total(self):
+        # TODO: Calcular total con descuentos
+        pass
+        
+    def procesar_pago(self, metodo_pago, monto):
+        # TODO: Procesar pago y calcular cambio
+        pass
+        
+    def cambiar_estado(self, nuevo_estado):
+        # TODO: Actualizar estado del pedido
+        pass
+
+class Cafeteria:
+    def __init__(self, nombre):
+        # TODO: Implementar inicialización del sistema
+        pass
+        
+    def agregar_producto(self, producto):
+        # TODO: Agregar producto al catálogo
+        pass
+        
+    def registrar_cliente(self, cliente):
+        # TODO: Registrar nuevo cliente
+        pass
+        
+    def crear_pedido(self, cliente_id):
+        # TODO: Crear nuevo pedido
+        pass
+        
+    def atender_siguiente_pedido(self):
+        # TODO: Atender pedido siguiente en la cola
+        pass
+        
+    def buscar_producto(self, criterio):
+        # TODO: Buscar producto por nombre, código o categoría
+        pass
+        
+    def generar_reporte_ventas(self, periodo="diario"):
+        # TODO: Generar reporte de ventas
+        pass
+        
+    def guardar_datos(self, archivo):
+        # TODO: Guardar estado del sistema
+        pass
+        
+    def cargar_datos(self, archivo):
+        # TODO: Cargar estado del sistema
+        pass
+
+# Código de prueba
+cafeteria = Cafeteria("CaféXOM")
+
+# Crear productos
+cafe = Producto("B001", "Café Americano", 2.50, "bebidas", ["café", "agua"], 100)
+sandwich = Producto("C001", "Sandwich Vegetal", 4.75, "comidas", ["pan", "lechuga", "tomate"], 20)
+
+# Registrar productos
+cafeteria.agregar_producto(cafe)
+cafeteria.agregar_producto(sandwich)
+
+# Registrar clientes
+cliente1 = Cliente("E001", "Ana García", "estudiante")
+cafeteria.registrar_cliente(cliente1)
+
+# Crear pedido
+pedido = cafeteria.crear_pedido("E001")
+pedido.agregar_item(cafe, 2)
+pedido.agregar_item(sandwich)
+
+# Procesar pedido
+total = pedido.calcular_total()
+print(f"Total a pagar: ${total:.2f}")
+pedido.procesar_pago("efectivo", 10.00)
+
+# Cambiar estado
+pedido.cambiar_estado("preparando")`,
+  tests: [],
+  hints: []
+};
+
+export default function SistemaCafeteria() {
+  return <IntroPythonXom data={sistemaCafeteriaExercise} />;
+}

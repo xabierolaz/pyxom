@@ -14,22 +14,33 @@ const routes = ['/', '/06-repaso', ...repasoPaths];
 test.describe('Verificación automatizada de PyXom', () => {
   for (const route of routes) {
     test(`Cargar y testear ruta ${route}`, async ({ page }) => {
-      await page.goto(`http://localhost:3000${route}`, { waitUntil: 'networkidle' });
-      // Comprobar carga sin errores
-      await expect(page).toHaveURL(new RegExp(route));
-      // Verificar editor cargado
+      // Navegar usando baseURL configurado - OPTIMIZADO: load en lugar de networkidle
+      await page.goto(route, { waitUntil: 'load' });
+      // Comprobar URL
+      await expect(page).toHaveURL(new RegExp(`${route}$`));
+
+      // Páginas sin editor (home y listado repaso)
+      if (route === '/' || route === '/06-repaso') {
+        if (route === '/') {
+          await expect(page.getByText('Convocatoria Extraordinaria 2025')).toBeVisible({ timeout: 10000 });
+          await expect(page.getByRole('link', { name: /Ejercicios de Repaso/ })).toBeVisible({ timeout: 10000 });        } else {
+          await expect(page.getByRole('heading', { name: /Ejercicios de Repaso/ })).toBeVisible({ timeout: 10000 });
+        }
+        return;
+      }      // Ejercicios individuales - OPTIMIZADO: 15 segundos en lugar de 60
+      await page.waitForSelector('.monaco-editor', { timeout: 15000 });
       const editor = page.locator('.monaco-editor');
       await expect(editor).toBeVisible({ timeout: 10000 });
-      // Botón ejecutar
       const runBtn = page.getByRole('button', { name: /Ejecutar y Comprobar|Preparando entorno Python/ });
-      await expect(runBtn).toBeVisible();
-      // Si está habilitado, ejecutar y esperar resultado
-      if (!await runBtn.getAttribute('disabled')) {
+      await expect(runBtn).toBeVisible({ timeout: 10000 });
+      const isDisabled = await runBtn.getAttribute('disabled');
+      if (!isDisabled) {
         await runBtn.click();
-        // Esperar feedback de éxito o fallo
-        await page.locator('text=¡Completado!').first().waitFor({ timeout: 20000 }).catch(() =>
-          page.locator('text=Intento Fallido').first().waitFor({ timeout: 20000 })
-        );
+        // Esperar éxito o fallo (el que ocurra primero) - OPTIMIZADO: 15 segundos
+        await Promise.race([
+          page.locator('text=¡Completado!').first().waitFor({ timeout: 15000 }),
+          page.locator('text=Intento Fallido').first().waitFor({ timeout: 15000 }),
+        ]);
       }
     });
   }

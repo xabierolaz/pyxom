@@ -5,8 +5,6 @@ import Editor from '@monaco-editor/react';
 import { ExerciseData, AttemptResult, SingleTestRunResult, StaticCheckRunResult, TestCase } from '@/types/types';
 import { runPythonTests, type ExecutionResult } from '@/utils/pythonRunner';
 import { TestResultsPanel } from './TestResultsPanel';
-import { HintsPanel } from './HintsPanel';
-import { ModelSolutionPanel } from './ModelSolutionPanel';
 
 interface CodeEditorProps {
   exercise: ExerciseData;
@@ -20,12 +18,9 @@ export default function CodeEditor({
   onSubmit, 
   onCodeChange, 
   initialCode 
-}: CodeEditorProps) {
-  const [code, setCode] = useState(initialCode || exercise.starterCode);
+}: CodeEditorProps) {  const [code, setCode] = useState(initialCode || exercise.starterCode);
   const [isRunning, setIsRunning] = useState(false);
   const [lastResult, setLastResult] = useState<AttemptResult | null>(null);
-  const [showHints, setShowHints] = useState(false);
-  const [showModelSolution, setShowModelSolution] = useState(false);
   const editorRef = useRef<any>(null);
 
   useEffect(() => {
@@ -171,26 +166,7 @@ export default function CodeEditor({
             <span>📊</span>
             <span>Visualizar</span>
           </button>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setShowHints(!showHints)}
-            className="px-3 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 flex items-center space-x-1"
-          >
-            <span>💡</span>
-            <span>Pistas</span>
-          </button>
-          
-          {exercise.modelSolution && (
-            <button
-              onClick={() => setShowModelSolution(!showModelSolution)}
-              className="px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center space-x-1"
-            >
-              <span>📖</span>
-              <span>Solución</span>
-            </button>
-          )}
+        </div>        <div className="flex items-center space-x-2">
         </div>
       </div>
 
@@ -229,26 +205,7 @@ export default function CodeEditor({
           {lastResult && (
             <TestResultsPanel result={lastResult} />
           )}
-        </div>
-
-        {/* Side Panels */}
-        <div className="w-80 flex flex-col border-l bg-gray-50">
-          {showHints && exercise.hints && (
-            <HintsPanel 
-              hints={exercise.hints}
-              result={lastResult}
-              onClose={() => setShowHints(false)}
-            />
-          )}
-          
-          {showModelSolution && exercise.modelSolution && (
-            <ModelSolutionPanel
-              solution={exercise.modelSolution}
-              onClose={() => setShowModelSolution(false)}
-            />
-          )}
-        </div>
-      </div>
+        </div>      </div>
     </div>
   );
 }

@@ -16,27 +16,17 @@ export default function Header() {
                 PyXom <span className="text-blue-600 text-sm">λ</span>
               </span>
             </Link>
-          </div><nav className="hidden md:flex space-x-8">
+          </div>          <nav className="hidden md:flex space-x-8">
             <Link href="/" className="text-slate-600 hover:text-slate-900">
               Inicio
             </Link>
-            <Link href="/parts" className="text-slate-600 hover:text-slate-900">
-              Partes del Curso
+            <Link href="/sugerencias" className="text-slate-600 hover:text-slate-900">
+              Sugerencias
             </Link>
-            <Link href="/06-repaso" className="text-slate-600 hover:text-slate-900">
-              Ejercicios de Repaso
-            </Link>
-            <Link href="/progress" className="text-slate-600 hover:text-slate-900">
-              Mi Progreso
-            </Link>
-            <Link href="/support" className="text-slate-600 hover:text-slate-900">
-              Soporte
-            </Link>
-          </nav>          <div className="flex items-center space-x-4">
+          </nav><div className="flex items-center space-x-4">
             <div className="text-slate-600 text-sm">
               Plataforma de Aprendizaje Python
-            </div>
-            <div className="text-slate-500 text-xs font-medium">
+            </div>            <div className="text-slate-500 text-xs font-medium">
               Desarrollado por Xabier Olaz
             </div>
           </div>

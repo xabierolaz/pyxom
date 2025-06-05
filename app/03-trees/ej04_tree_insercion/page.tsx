@@ -1,115 +1,95 @@
-// Ejercicio de inserción en árbol binario de búsqueda (BST) para el módulo Trees
+'use client';
+
 import IntroPythonXom from '@/components/IntroPythonXom';
+import type { ExerciseData } from '@/types/types';
 
-// Orden recomendado para el módulo Árboles (Mooc):
-// 1. ej01_tree_basico (Nodo y preorden)
-// 2. ej05_tree_inorden (Inorden)
-// 3. ej06_tree_postorden (Postorden)
-// 4. ej02_tree_altura (Altura)
-// 5. ej04_tree_insercion (Inserción BST)
-// 6. ej03_tree_busqueda (Búsqueda BST)
-
-const treeInsertExercise = {
+const exerciseData: ExerciseData = {
   id: 'ej04_tree_insercion',
-  title: 'Inserción BST - Validación y Return Correctos',
-  description: `En este ejercicio, aprenderás a insertar valores en un BST evitando errores comunes de validación y return.
+  title: "Inserción en Árbol Binario",
+  description: `Implementa un árbol binario que permita insertar elementos manteniendo un orden.
 
-### Instrucciones:
-1. Implementa una función llamada \`insertar_bst\` que reciba el nodo raíz de un BST y un valor a insertar.
-2. La función debe insertar el valor en la posición correcta manteniendo las propiedades del BST.
-3. Devuelve el nodo raíz actualizado después de la inserción.
+### Especificaciones:
 
-### ⚠️ Errores Comunes a Evitar:
-1. **NO accedas a atributos de nodos nulos**: Verifica antes de acceder a \`.izq\` o \`.der\`
-2. **Validación local BST incorrecta**: Mantén las propiedades BST en cada inserción
-3. **Falta el return**: SIEMPRE retorna el nodo raíz actualizado
-4. **Lógica de inserción incorrecta**: Usa comparación correcta para decidir izq/der
+1. **Clase TreeNode**: Representa un nodo del árbol
+   - Tiene propiedades: value, left, right
+   
+2. **Clase BinaryTree**: Representa el árbol completo
+   - Método insert(value): Inserta un nuevo valor en el árbol
+   - Los valores menores van a la izquierda, mayores a la derecha
 
-### Ejemplo:
-BST inicial:
-\`\`\`
-    10
-   / \\
-  5   15
-\`\`\`
-Insertar \`12\` → Resultado:
-\`\`\`
-    10
-   / \\
-  5   15
-     /
-    12
-\`\`\`
+### Reglas de inserción:
+- Si el valor es menor que el nodo actual, va a la izquierda
+- Si el valor es mayor o igual, va a la derecha
+- Si no existe el nodo hijo correspondiente, se crea uno nuevo
 
-### 🔍 Consejos para Evitar Errores:
-- **SIEMPRE** retorna \`Nodo(valor)\` cuando \`nodo is None\` (caso base)
-- **NUNCA** modifiques nodos sin verificar que no sean None
-- Mantén propiedades BST: valor < nodo.valor → izquierda, valor > nodo.valor → derecha
-- **SIEMPRE** retorna el nodo raíz actualizado
+### Ejemplos:
+- tree.insert(5) → raíz = 5
+- tree.insert(3) → 3 a la izquierda de 5
+- tree.insert(7) → 7 a la derecha de 5
+- tree.insert(1) → 1 a la izquierda de 3`,
+  starterCode: `class TreeNode:
+    def __init__(self, value):
+        # TODO: Inicializar nodo con value, left y right
+        pass
 
-### Recursos Adicionales:
-- [Documentación sobre BST](https://en.wikipedia.org/wiki/Binary_search_tree)`,
-  starterCode: `class Nodo:
-    def __init__(self, valor):
-        self.valor = valor
-        self.izq = None
-        self.der = None
-
-def insertar_bst(nodo, valor):
-    # ⚠️ ERROR COMÚN: Caso base - crear nuevo nodo cuando llegamos a None
-    if nodo is None:
-        return Nodo(valor)
+class BinaryTree:
+    def __init__(self):
+        # TODO: Inicializar árbol vacío
+        pass
     
-    # ⚠️ ERROR COMÚN: Validación BST correcta
-    if valor < nodo.valor:
-        # ⚠️ ERROR COMÚN: SIEMPRE asignar el resultado de la recursión
-        nodo.izq = insertar_bst(nodo.izq, valor)
-    elif valor > nodo.valor:
-        # ⚠️ ERROR COMÚN: SIEMPRE asignar el resultado de la recursión
-        nodo.der = insertar_bst(nodo.der, valor)
-    # else: valor == nodo.valor (duplicado, no insertamos)
+    def insert(self, value):
+        # TODO: Insertar valor en el árbol
+        # Si el árbol está vacío, crear la raíz
+        # Sino, usar _insert_recursive
+        pass
     
-    # ⚠️ ERROR COMÚN: SIEMPRE retornar el nodo raíz
-    return nodo
+    def _insert_recursive(self, node, value):
+        # TODO: Insertar recursivamente
+        # Si value < node.value, ir a la izquierda
+        # Si value >= node.value, ir a la derecha
+        pass
 
-# Ejemplo de uso:
-# raiz = None
-# raiz = insertar_bst(raiz, 10)
-# raiz = insertar_bst(raiz, 5)
-# raiz = insertar_bst(raiz, 15)`,
+# Escribe tu código aquí:
+
+
+`,
   tests: [
-    { name: 'Insertar en árbol vacío', input: '', expected: '10', points: 3, feedback: 'ERROR COMÚN #3: Debe crear un nuevo nodo cuando el árbol está vacío y retornarlo.' },
-    { name: 'Insertar a la izquierda', input: '', expected: '5 10', points: 3, feedback: 'ERROR COMÚN #2: valor < nodo.valor debe insertarse en subárbol izquierdo.' },
-    { name: 'Insertar a la derecha', input: '', expected: '10 15', points: 3, feedback: 'ERROR COMÚN #2: valor > nodo.valor debe insertarse en subárbol derecho.' },
-    { name: 'Mantener estructura BST', input: '', expected: '5 10 12 15', points: 3, feedback: 'ERROR COMÚN #2: Debe mantener propiedades BST después de múltiples inserciones.' },
-    { name: 'Return correcto', input: '', expected: 'root_updated', points: 2, feedback: 'ERROR COMÚN #3: La función debe retornar el nodo raíz actualizado.' },
-    { name: 'No duplicados', input: '', expected: '10', points: 1, feedback: 'ERROR COMÚN #4: No debe insertar valores duplicados en el BST.' }
+    {
+      name: "Test Inserción Básica",
+      input: "",
+      expected: "",
+      points: 5,
+      feedback: "Implementa la inserción básica en el árbol."
+    }
   ],
   hints: [
-    { id: 'h1', text: '🚨 ERROR #3: SIEMPRE retorna Nodo(valor) cuando nodo is None' },
-    { id: 'h2', text: '🚨 ERROR #2: Usa valor < nodo.valor para decidir ir a izquierda' },
-    { id: 'h3', text: '🚨 ERROR #3: ASIGNA el resultado: nodo.izq = insertar_bst(nodo.izq, valor)' },
-    { id: 'h4', text: '🚨 ERROR #3: SIEMPRE retorna nodo al final de la función' }
+    {
+      id: 'h1',
+      text: "Usa recursión para encontrar la posición correcta de inserción"
+    },
+    {
+      id: 'h2',
+      text: "Compara el valor a insertar con el valor del nodo actual"
+    },
+    {
+      id: 'h3',
+      text: "Crea un nuevo nodo cuando llegues a una posición vacía"
+    }
   ],
-  efficiencyFeedback: 'La inserción BST debe ser O(h) donde h es la altura. Evita recorrer ramas innecesarias.',
-  styleFeedback: 'Sigue PEP8: funciones en snake_case. Usa nombres descriptivos como insertar_bst.',
+  maxPoints: 10,
+  globalTimeoutMs: 5000,
+  efficiencyFeedback: 'Enfócate en la implementación correcta de la lógica de inserción.',
+  styleFeedback: 'Usa nombres descriptivos para métodos y variables.',
   suggestions: [
-    '🔍 ¿Retornas Nodo(valor) cuando nodo is None?',
-    '🔍 ¿Asignas el resultado de la recursión: nodo.izq = insertar_bst(...)?',
-    '🔍 ¿Usas valor < nodo.valor para decidir ir a la izquierda?',
-    '🔍 ¿Tu función SIEMPRE retorna el nodo raíz al final?',
-    '🔍 ¿Manejas el caso de valores duplicados correctamente?'
+    '¿Has implementado correctamente el método insert?',
+    '¿Tu árbol mantiene las propiedades de un BST?'
   ],
   bestPractices: [
-    '✅ SIEMPRE retorna el nodo raíz actualizado en funciones de inserción',
-    '✅ Asigna el resultado de llamadas recursivas a nodo.izq/nodo.der',
-    '✅ Mantén las propiedades BST en cada inserción',
-    '✅ Maneja correctamente el caso base (nodo None)',
-    '✅ Considera cómo manejar valores duplicados',
-    '✅ Incluye docstrings que expliquen el comportamiento de retorno'
+    'Documenta tus métodos con docstrings',
+    'Maneja casos especiales como árbol vacío'
   ]
 };
 
-export default function Page() {
-  return <IntroPythonXom data={treeInsertExercise} />;
+export default function TreeInsercionPage() {
+  return <IntroPythonXom data={exerciseData} />;
 }

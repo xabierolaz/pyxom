@@ -65,21 +65,15 @@ Producto: 15
 
 ### Consejos:
 - Usa f-strings para formatear la salida de manera clara y precisa.
-- Prueba tu código con diferentes entradas para asegurarte de que funciona correctamente.`,
-  starterCode: `num1_str = input("Ingresa el primer número: ")
-num2_str = input("Ingresa el segundo número: ")
+- Prueba tu código con diferentes entradas para asegurarte de que funciona correctamente.`,  starterCode: `# Ejercicio: Suma y Producto
+# En este ejercicio, tu tarea es crear un programa que:
+# 1. Solicite dos números al usuario
+# 2. Calcule su suma y su producto
+# 3. Muestre los resultados en pantalla
 
-# Convierte las entradas a enteros
-num1 = int(num1_str)
-num2 = int(num2_str)
+# Escribe tu código aquí:
 
-# Calcula la suma y el producto
-suma = num1 + num2
-producto = num1 * num2
 
-# Imprime los resultados en el formato especificado
-print(f"Suma: {suma}")
-print(f"Producto: {producto}")
 `,
   tests: [
     { name: "Test Básico", input: "5\n3", expected: "Suma: 8\nProducto: 15", points: 5, feedback: "¡Bien! Este test verifica la suma y producto básicos." },

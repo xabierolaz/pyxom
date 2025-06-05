@@ -1,24 +1,8 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const analizadorTextoExercise = {
-  id: 'ej13_analizador_texto',
-  title: 'Analizador de Texto - Procesamiento Avanzado de Cadenas',
-  description: `## 🎯 Concepto: Análisis Integral de Texto
-
-### 📚 ¿Qué vas a aprender?
-El análisis de texto es fundamental en procesamiento de lenguaje natural, minería de datos y análisis de contenido. Crearás un analizador completo que extraiga estadísticas, patrones y métricas avanzadas de cualquier texto.
-
-### 📋 Instrucciones:
-Desarrolla un sistema completo de análisis de texto:
-
-**Parte 1: Estadísticas Básicas**
-- Conteo de caracteres, palabras, párrafos
-- Frecuencia de caracteres y palabras
-- Longitud promedio de palabras
-
-**Parte 2: Análisis Avanzado**
-- Detección de idioma (básica)
-- Análisis de legibilidad
+  id: 'ej13_analizador_texto',  title: 'Analizador de Texto - Procesamiento Avanzado de Cadenas',  
+  description: `Desarrolla un analizador completo de texto que extrae estadísticas, patrones y métricas avanzadas. Aprenderás procesamiento de strings, análisis de frecuencias, expresiones regulares y técnicas de procesamiento de lenguaje natural.
 - Extracción de patrones (emails, URLs, teléfonos)
 
 **Parte 3: Métricas de Complejidad**

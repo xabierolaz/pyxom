@@ -23,6 +23,17 @@ let pyodide: any = null;
 let pyodideLoadPromise: Promise<any> | null = null;
 let isLoading = false;
 
+// Start loading Pyodide immediately when module loads
+if (typeof window !== 'undefined') {
+  console.log('🚀 Starting eager Pyodide initialization...');
+  loadPyodide().catch(error => {
+    console.error('Failed to preload Pyodide:', error);
+    // Reset state on failure to allow retry
+    pyodideLoadPromise = null;
+    isLoading = false;
+  });
+}
+
 async function loadPyodide() {
   if (pyodide) return pyodide;
   
@@ -45,25 +56,24 @@ async function loadPyodide() {
   }
 
   isLoading = true;
-  
-  try {
+    try {
     pyodideLoadPromise = (async () => {
+      console.log('🚀 Loading Pyodide...');
       const { loadPyodide: load } = await import('pyodide');
       
+      console.log('⚙️ Initializing Pyodide runtime...');
       pyodide = await load({
         indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/',
         stdout: (text: string) => console.log('Python stdout:', text),
         stderr: (text: string) => console.error('Python stderr:', text)
       });
       
+      console.log('📦 Loading core packages...');
+      // Load only essential packages initially
       await pyodide.loadPackage(['micropip']);
       
-      await pyodide.runPython(`
-        import micropip
-        await micropip.install(['typing-extensions'])
-      `);
-      
-      // Set up Python utilities
+      console.log('🐍 Setting up Python environment...');
+      // Set up essential Python utilities only
       pyodide.runPython(`
 import sys
 import traceback
@@ -216,9 +226,9 @@ def analyze_code(code):
             'valid': False,
             'error': str(e),
             'line': e.lineno
-        }
-      `);
+        }      `);
       
+      console.log('✅ Pyodide ready for use!');
       return pyodide;
     })();
     

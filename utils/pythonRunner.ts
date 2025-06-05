@@ -46,28 +46,36 @@ export async function getPyodideInstance(): Promise<PyodideInterface> {
   if (pyodidePromise) {
     return pyodidePromise;
   }
-
   pyodidePromise = (async () => {
     try {
-      // Load Pyodide
-      if (typeof window !== 'undefined' && !window.loadPyodide) {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
-        document.head.appendChild(script);
-        
-        await new Promise((resolve) => {
-          script.onload = resolve;
-        });
+      // Wait for Pyodide to be globally available (loaded by layout.tsx)
+      if (typeof window === 'undefined') {
+        throw new Error('Pyodide can only be loaded in browser environment');
       }
 
+      // Wait for global loadPyodide to be available
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds timeout
+      while (!window.loadPyodide && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+
+      if (!window.loadPyodide) {
+        throw new Error('Pyodide script not loaded after 5 seconds. Check your internet connection.');
+      }
+
+      console.log('Loading Pyodide instance...');
       const pyodide = await window.loadPyodide({
-        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
+        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/',
       });
 
+      console.log('Pyodide loaded successfully, installing packages...');
       // Install required packages
       await pyodide.loadPackage(['micropip']);
       
       pyodideInstance = pyodide;
+      console.log('Pyodide fully initialized');
       return pyodide;
     } catch (error) {
       console.error('Failed to load Pyodide:', error);

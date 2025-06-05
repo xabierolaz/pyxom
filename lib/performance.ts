@@ -1,16 +1,10 @@
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
 export interface PerformanceMetrics {
-  userId?: string;
   sessionId: string;
   exerciseId?: string;
   metrics: {
     pyodideLoadTime?: number;
     codeExecutionTime: number;
     testExecutionTime?: number;
-    memoryUsage?: number;
-    cpuUsage?: number;
     errorCount: number;
     hintsUsed: number;
     debugSteps: number;
@@ -21,10 +15,6 @@ export interface PerformanceMetrics {
 
 export interface SystemPerformance {
   pyodideStatus: 'loading' | 'ready' | 'error';
-  memoryUsage: number;
-  executionQueue: number;
-  activeUsers: number;
-  averageResponseTime: number;
 }
 
 class PerformanceMonitor {
@@ -45,9 +35,6 @@ class PerformanceMonitor {
         this.recordMetric('pageLoadTime', navigation.loadEventEnd - navigation.fetchStart);
       });
 
-      // Monitor memory usage
-      this.monitorMemoryUsage();
-      
       // Monitor errors
       window.addEventListener('error', (event) => {
         this.recordError('javascript_error', event.error);
@@ -95,64 +82,11 @@ class PerformanceMonitor {
     });
   }
 
-  // Monitor memory usage
-  private monitorMemoryUsage(): void {
-    if ('memory' in performance) {
-      setInterval(() => {
-        const memory = (performance as any).memory;
-        this.recordMetric('memoryUsage', {
-          used: memory.usedJSHeapSize,
-          total: memory.totalJSHeapSize,
-          limit: memory.jsHeapSizeLimit
-        });
-      }, 30000); // Every 30 seconds
-    }
-  }
-
   // Get current performance snapshot
   getPerformanceSnapshot(): SystemPerformance {
-    const memoryMetric = this.metrics.get('memoryUsage');
-    const memoryUsage = memoryMetric ? memoryMetric.value.used / memoryMetric.value.limit : 0;
-
     return {
       pyodideStatus: this.metrics.get('pyodideStatus')?.value || 'loading',
-      memoryUsage,
-      executionQueue: this.metrics.get('executionQueue')?.value || 0,
-      activeUsers: this.metrics.get('activeUsers')?.value || 1,
-      averageResponseTime: this.metrics.get('averageResponseTime')?.value || 0
     };
-  }
-
-  // Send performance data to Firebase
-  async sendPerformanceData(userId?: string, exerciseId?: string): Promise<void> {
-    try {
-      const performanceData: PerformanceMetrics = {
-        userId,
-        sessionId: this.sessionId,
-        exerciseId,
-        metrics: {
-          codeExecutionTime: this.metrics.get('code_execution_duration')?.value || 0,
-          testExecutionTime: this.metrics.get('test_execution_duration')?.value || 0,
-          pyodideLoadTime: this.metrics.get('pyodide_load_duration')?.value || 0,
-          memoryUsage: this.metrics.get('memoryUsage')?.value?.used || 0,
-          errorCount: this.metrics.get('errorCount') || 0,
-          hintsUsed: this.metrics.get('hintsUsed') || 0,
-          debugSteps: this.metrics.get('debugSteps') || 0
-        },
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString()
-      };
-
-      await addDoc(collection(db, 'performance_metrics'), {
-        ...performanceData,
-        createdAt: serverTimestamp()
-      });
-
-      // Clear metrics after sending
-      this.metrics.clear();
-    } catch (error) {
-      console.error('Failed to send performance data:', error);
-    }
   }
 
   // Generate performance report

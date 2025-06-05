@@ -1,24 +1,8 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const bibliotecaExercise = {
-  id: 'ej15_sistema_biblioteca',
-  title: 'Sistema de Biblioteca (Proyecto Integrador)',
-  description: `## 🎯 Concepto: Sistema de Gestión de Biblioteca Completo
-
-### 📚 ¿Qué vas a aprender?
-Este es el proyecto integrador del módulo de repaso. Desarrollarás un sistema completo de gestión de biblioteca que incorpora todos los conceptos aprendidos: POO, estructuras de datos, manejo de archivos, análisis de datos y más.
-
-### 📋 Instrucciones:
-Implementa un sistema completo de biblioteca con las siguientes funcionalidades:
-
-**Parte 1: Entidades Principales**
-- Clase Libro (ISBN, título, autor, categoría, estado)
-- Clase Usuario (ID, nombre, email, tipo, historial)
-- Clase Prestamo (libro, usuario, fechas, multas)
-- Clase Biblioteca (gestión central)
-
-**Parte 2: Funcionalidades Core**
-- Gestión de inventario (agregar, editar, eliminar libros)
+  id: 'ej15_sistema_biblioteca',  title: 'Sistema de Biblioteca (Proyecto Avanzado)',  
+  description: `Proyecto avanzado de sistema de gestión de biblioteca que integra múltiples conceptos: POO, estructuras de datos, manejo de archivos y análisis de datos. Desarrollarás un sistema completo con gestión de inventario, usuarios y préstamos.
 - Registro y gestión de usuarios
 - Sistema de préstamos y devoluciones
 - Cálculo automático de multas
