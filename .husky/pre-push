@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Temporalmente deshabilitado para poder hacer push
-# npm run test:e2e
-echo "Pre-push hook: tests disabled temporarily"
+npm run test:e2e
