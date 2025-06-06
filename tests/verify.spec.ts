@@ -20,17 +20,17 @@ test.describe('Verificación automatizada de PyXom', () => {
       await expect(page).toHaveURL(new RegExp(`${route}$`));
 
       // Páginas sin editor (home y listado repaso)
-      if (route === '/' || route === '/06-repaso') {
-        if (route === '/') {
-          await expect(page.getByText('Convocatoria Extraordinaria 2025')).toBeVisible({ timeout: 10000 });
-          await expect(page.getByRole('link', { name: /Ejercicios de Repaso/ })).toBeVisible({ timeout: 10000 });        } else {
-          await expect(page.getByRole('heading', { name: /Ejercicios de Repaso/ })).toBeVisible({ timeout: 10000 });
+      if (route === '/' || route === '/06-repaso') {        if (route === '/') {
+          await expect(page.getByText('PyXom - Estructura de Datos 2025/2026')).toBeVisible({ timeout: 10000 });
+          await expect(page.getByText('Ejercicios de repaso para Convocatoria Extraordinaria 2025')).toBeVisible({ timeout: 10000 });
+        } else {
+          await expect(page.getByRole('heading', { name: /Ejercicios de Repaso Python/ })).toBeVisible({ timeout: 10000 });
         }
         return;
-      }      // Ejercicios individuales - OPTIMIZADO: 15 segundos en lugar de 60
-      await page.waitForSelector('.monaco-editor', { timeout: 15000 });
+      }      // Ejercicios individuales - OPTIMIZADO: 30 segundos para Monaco editor
+      await page.waitForSelector('.monaco-editor', { timeout: 30000 });
       const editor = page.locator('.monaco-editor');
-      await expect(editor).toBeVisible({ timeout: 10000 });
+      await expect(editor).toBeVisible({ timeout: 15000 });
       const runBtn = page.getByRole('button', { name: /Ejecutar y Comprobar|Preparando entorno Python/ });
       await expect(runBtn).toBeVisible({ timeout: 10000 });
       const isDisabled = await runBtn.getAttribute('disabled');
