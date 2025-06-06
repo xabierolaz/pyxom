@@ -20,30 +20,7 @@ arbol.insertar_raiz(10)
 arbol.insertar_hijo(5)
 arbol.mostrar()
 \`\`\``,
-
-  starterCode: `# Ejercicio: Árbol Básico
-# Implementa una estructura de árbol básica
-
-class Nodo:
-    def __init__(self, valor):
-        # TODO: Implementar constructor del nodo
-        pass
-
-class Arbol:
-    def __init__(self):
-        # TODO: Implementar constructor del árbol
-        pass
-    
-    def insertar_raiz(self, valor):
-        # TODO: Insertar nodo raíz
-        pass
-    
-    def mostrar(self):
-        # TODO: Mostrar el árbol
-        pass
-
-# Escribe tu código aquí:
-
+  starterCode: `# Escribe tu código aquí
 
 `,
 

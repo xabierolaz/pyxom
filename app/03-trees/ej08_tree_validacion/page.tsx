@@ -36,30 +36,26 @@ Un árbol binario de búsqueda (BST) válido debe cumplir:
   3   7
  / \\   \\
 1   6   9  ← 6 > 5 pero está en subárbol izquierdo
-\`\`\``,
-  starterCode: `class TreeNode:
-    def __init__(self, value, left=None, right=None):
+\`\`\``,  starterCode: `class TreeNode:
+    def __init__(self, value):
         self.value = value
-        self.left = left
-        self.right = right
+        self.left = None
+        self.right = None
 
-def is_valid_bst(root):
-    # TODO: Determinar si el árbol es un BST válido
-    # Usar función auxiliar con límites mínimo y máximo
-    # Inicialmente: mínimo = -infinito, máximo = +infinito
+def es_bst_valido(nodo, min_val=float('-inf'), max_val=float('inf')):
+    """
+    Verifica si un árbol binario es un árbol binario de búsqueda válido.
+    
+    Args:
+        nodo (TreeNode): La raíz del árbol o subárbol a validar
+        min_val: El valor mínimo permitido en el subárbol actual
+        max_val: El valor máximo permitido en el subárbol actual
+    
+    Returns:
+        bool: True si es un BST válido, False si no lo es
+    """
+    # Escribe tu código aquí
     pass
-
-def validate_bst_helper(node, min_val, max_val):
-    # TODO: Función recursiva auxiliar
-    # node: nodo actual
-    # min_val: valor mínimo permitido
-    # max_val: valor máximo permitido
-    # Retornar True si el subárbol es válido
-    pass
-
-# Escribe tu código aquí:
-
-
 `,
   tests: [
     {

@@ -306,24 +306,9 @@ Búsquedas:
   const exerciseData = {
     id: 'ej09_arbol_busqueda',
     title: 'Ejercicio 9: Árbol Binario de Búsqueda',
-    description,
-    starterCode: `class NodoArbol:
-    def __init__(self, valor):
-        # TODO: Inicializar valor, izquierdo y derecho
-        pass
+    description,    starterCode: `# Escribe tu código aquí
 
-class ArbolBinarioBusqueda:
-    def __init__(self):
-        # TODO: Inicializar raíz como None
-        pass
-
-    def insertar(self, valor):
-        # TODO: Implementar inserción manteniendo propiedad BST
-        pass
-
-    def _insertar_recursivo(self, nodo, valor):
-        # TODO: Método auxiliar recursivo
-        pass`,
+`,
     tests: [],
     hints: []
   };

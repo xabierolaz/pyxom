@@ -30,24 +30,7 @@ Para el árbol:
 1   4   9
 \`\`\`
 
-El recorrido inorden sería: [1, 3, 4, 5, 7, 9]`,
-  starterCode: `class TreeNode:
-    def __init__(self, value, left=None, right=None):
-        self.value = value
-        self.left = left
-        self.right = right
-
-def inorder_traversal(root):
-    # TODO: Implementar recorrido inorden
-    # Devolver una lista con los valores en orden inorden
-    # Usar recursión:
-    # 1. Recorrer subárbol izquierdo
-    # 2. Agregar valor de la raíz
-    # 3. Recorrer subárbol derecho
-    pass
-
-# Escribe tu código aquí:
-
+El recorrido inorden sería: [1, 3, 4, 5, 7, 9]`,  starterCode: `# Escribe tu código aquí
 
 `,
   tests: [

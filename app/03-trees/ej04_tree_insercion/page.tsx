@@ -26,32 +26,26 @@ const exerciseData: ExerciseData = {
 - tree.insert(5) → raíz = 5
 - tree.insert(3) → 3 a la izquierda de 5
 - tree.insert(7) → 7 a la derecha de 5
-- tree.insert(1) → 1 a la izquierda de 3`,
-  starterCode: `class TreeNode:
+- tree.insert(1) → 1 a la izquierda de 3`,  starterCode: `class TreeNode:
     def __init__(self, value):
-        # TODO: Inicializar nodo con value, left y right
-        pass
+        self.value = value
+        self.left = None
+        self.right = None
 
 class BinaryTree:
     def __init__(self):
-        # TODO: Inicializar árbol vacío
-        pass
+        self.root = None
     
     def insert(self, value):
-        # TODO: Insertar valor en el árbol
-        # Si el árbol está vacío, crear la raíz
-        # Sino, usar _insert_recursive
+        """
+        Inserta un nuevo valor en el árbol manteniendo el orden BST.
+        Los valores menores van a la izquierda, mayores o iguales a la derecha.
+        
+        Args:
+            value: El valor a insertar en el árbol
+        """
+        # Escribe tu código aquí
         pass
-    
-    def _insert_recursive(self, node, value):
-        # TODO: Insertar recursivamente
-        # Si value < node.value, ir a la izquierda
-        # Si value >= node.value, ir a la derecha
-        pass
-
-# Escribe tu código aquí:
-
-
 `,
   tests: [
     {

@@ -32,39 +32,50 @@ const exerciseData: ExerciseData = {
 │       └── image.jpg (2000 bytes)
 └── music/
     └── song.mp3 (5000 bytes)
-\`\`\``,
-  starterCode: `class FileNode:
+\`\`\``,  starterCode: `class FileNode:
     def __init__(self, name, is_directory=False, size=0):
-        # TODO: Inicializar nodo del sistema de archivos
-        # name: nombre del archivo/directorio
-        # is_directory: True si es directorio, False si es archivo
-        # size: tamaño del archivo (0 para directorios)
-        # children: diccionario de hijos (solo para directorios)
-        pass
+        self.name = name
+        self.is_directory = is_directory
+        self.size = size
+        self.children = {} if is_directory else None
 
 class FileSystem:
     def __init__(self):
-        # TODO: Inicializar con directorio raíz
+        self.root = FileNode("/", is_directory=True)
+    
+    def create_file(self, path: str, size: int):
+        """
+        Crea un archivo en la ruta especificada.
+        
+        Args:
+            path (str): La ruta completa del archivo (ej: /docs/file.txt)
+            size (int): El tamaño del archivo en bytes
+        """
+        # Escribe tu código aquí
         pass
     
-    def create_file(self, path, size):
-        # TODO: Crear archivo en la ruta especificada
-        # path: ruta como "/documents/file.txt"
-        # size: tamaño del archivo
+    def create_directory(self, path: str):
+        """
+        Crea un directorio en la ruta especificada.
+        
+        Args:
+            path (str): La ruta completa del directorio (ej: /docs/images)
+        """
+        # Escribe tu código aquí
         pass
     
-    def create_directory(self, path):
-        # TODO: Crear directorio en la ruta especificada
+    def get_total_size(self, path: str) -> int:
+        """
+        Calcula el tamaño total de un archivo o directorio.
+        
+        Args:
+            path (str): La ruta del archivo o directorio
+        
+        Returns:
+            int: El tamaño total en bytes (incluyendo subdirectorios)
+        """
+        # Escribe tu código aquí
         pass
-    
-    def get_total_size(self, path):
-        # TODO: Calcular tamaño total de archivos en ruta
-        # Para directorios, sumar tamaños de todos los archivos hijos
-        pass
-
-# Escribe tu código aquí:
-
-
 `,
   tests: [
     {

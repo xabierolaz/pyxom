@@ -1,522 +1,202 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const procesadorLogsExercise = {
-  id: 'ej14_procesador_logs',  title: 'Procesador de Logs - Análisis de Archivos de Sistema',  
-  description: `Construye un procesador de logs para analizar archivos de sistema. Aprenderás parsing de texto estructurado, detección de patrones, análisis de errores, expresiones regulares y generación de reportes para administración de sistemas.
-- Analizar tendencias temporales
+  id: 'ej14_procesador_logs',
+  title: 'Procesador de Logs - Análisis de Archivos de Sistema',
+  description: `Implementa un procesador para analizar archivos de logs de sistema. Los logs pueden venir en diferentes formatos (Apache, Python, etc.) y contienen información sobre eventos, errores, y accesos al sistema.
 
-**Parte 3: Filtrado y Búsqueda**
-- Filtrar por nivel de severidad
-- Búsqueda por rango de tiempo
-- Filtros por IP, usuario o módulo
+Para estructurar la información, debes implementar:
 
-**Parte 4: Generación de Reportes**
-- Estadísticas de errores
-- Top de IPs más activas
-- Gráficos de actividad temporal`,
+1. Clase \`LogEntry\` para representar una entrada individual de log con:
+   - timestamp: Fecha y hora del evento
+   - level: Nivel de severidad (INFO, WARN, ERROR, etc.)
+   - message: Mensaje descriptivo
+   - ip: Dirección IP (opcional)
+   - status_code: Código de estado HTTP (opcional)
+
+2. Clase \`LogProcessor\` para procesar y analizar logs con:
+   - Parseo de logs en diferentes formatos
+   - Filtrado por nivel, tiempo, IP
+   - Detección de actividad sospechosa
+   - Generación de reportes estadísticos
+
+El ejercicio se centra en el procesamiento de texto estructurado, análisis de patrones y generación de informes útiles para administración de sistemas.`,
   starterCode: `import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from collections import defaultdict, Counter
-import json
 
 class LogEntry:
     """
     Representa una entrada individual de log
+    
+    Atributos:
+        timestamp (datetime): Fecha y hora del evento
+        level (str): Nivel de severidad (INFO, WARN, ERROR, etc.)
+        message (str): Mensaje descriptivo
+        ip (str, optional): Dirección IP de origen
+        status_code (int, optional): Código de estado HTTP
     """
-    def __init__(self, timestamp, level, message, ip=None, user=None):
-        # TODO: Implementar constructor
+    def __init__(self, timestamp, level, message, ip=None, status_code=None):
         pass
     
-    def __str__(self):
-        # TODO: Implementar representación string
+    def to_dict(self):
+        """
+        Convierte la entrada a un diccionario
+        
+        Returns:
+            dict: Representación de la entrada como diccionario
+        """
         pass
 
 class LogProcessor:
     """
-    Procesador principal de logs
+    Procesa y analiza archivos de logs
     """
     def __init__(self):
-        # TODO: Inicializar estructuras de datos
+        self.entries = []  # Lista de LogEntry
+        self.stats = {     # Estadísticas globales
+            'total_entries': 0,
+            'levels': Counter(),
+            'ips': Counter()
+        }
+    
+    def parse_line(self, line, format='apache'):
+        """
+        Parsea una línea de log según el formato especificado
+        
+        Args:
+            line (str): Línea de texto a parsear
+            format (str): Formato del log ('apache', 'python', 'simple')
+            
+        Returns:
+            LogEntry: Entrada de log parseada o None si no se pudo parsear
+        """
         pass
     
-    def parse_line(self, line, log_format='apache'):
+    def load_from_file(self, filename, format='apache'):
         """
-        Parsea una línea de log según el formato
+        Carga logs desde un archivo
+        
+        Args:
+            filename (str): Ruta al archivo de logs
+            format (str): Formato esperado del log
+            
+        Returns:
+            int: Número de entradas cargadas exitosamente
+            
+        Raises:
+            FileNotFoundError: Si el archivo no existe
+            Exception: Si hay error al procesar el archivo
         """
-        # TODO: Implementar parser flexible
         pass
-    
-    def load_from_file(self, filename):
-        """
-        Carga logs desde archivo
-        """
-        # TODO: Implementar carga desde archivo
-        pass
-    
-    def load_from_string(self, log_data):
-        """
-        Carga logs desde string
-        """
-        # TODO: Implementar carga desde string
-        pass
-    
+
     def filter_by_level(self, level):
         """
         Filtra entradas por nivel de severidad
+        
+        Args:
+            level (str): Nivel a filtrar (INFO, WARN, ERROR, etc.)
+            
+        Returns:
+            list: Lista de LogEntry que coinciden con el nivel
         """
-        # TODO: Implementar filtro por nivel
-        pass
-    
-    def filter_by_timerange(self, start_time, end_time):
-        """
-        Filtra entradas por rango de tiempo
-        """
-        # TODO: Implementar filtro temporal
         pass
     
     def detect_suspicious_ips(self, threshold=100):
         """
-        Detecta IPs con actividad sospechosa
+        Identifica IPs con comportamiento sospechoso
+        
+        Args:
+            threshold (int): Número de requests que hacen sospechosa una IP
+            
+        Returns:
+            dict: Diccionario {ip: stats} con estadísticas de IPs sospechosas:
+                - total_requests: Total de peticiones
+                - error_count: Número de errores
+                - error_rate: Tasa de error (0 a 1)
+                - risk_level: Nivel de riesgo (LOW, MEDIUM, HIGH)
         """
-        # TODO: Implementar detección de IPs sospechosas
         pass
     
     def generate_report(self):
         """
-        Genera reporte completo del análisis
+        Genera un reporte estadístico de los logs
+        
+        Returns:
+            dict: Diccionario con estadísticas:
+                - total_entries: Total de entradas
+                - levels: Conteo por nivel
+                - top_ips: Top 5 IPs más activas
+                - suspicious_ips: IPs con actividad sospechosa
+                - errors: Top 3 mensajes de error más comunes
         """
-        # TODO: Implementar generación de reporte
         pass`,
   tests: [
     {
-      input: "2023-12-01 10:30:15 INFO Application started successfully",
-      expected: "LogEntry(level='INFO', message='Application started successfully')",
-      description: "Parseo básico de log con formato simple"
+      name: "logentry_atributos",
+      input: 'entry = LogEntry(datetime(2023,12,1,10,30), "INFO", "Test", "1.1.1.1", 200); sorted([entry.timestamp.year, entry.level, entry.message, entry.ip, entry.status_code])',
+      expected: '[200, 2023, "1.1.1.1", "INFO", "Test"]',
+      points: 2
     },
     {
-      input: "192.168.1.1 - - [01/Dec/2023:10:30:15] \"GET /index.html HTTP/1.1\" 200 1234",
-      expected: "LogEntry(ip='192.168.1.1', timestamp='2023-12-01 10:30:15')",
-      description: "Parseo de log formato Apache"
+      name: "logentry_to_dict",
+      input: 'entry = LogEntry(datetime(2023,12,1,10,30), "INFO", "Test"); sorted(entry.to_dict().keys())',
+      expected: '["ip", "level", "message", "status_code", "timestamp"]',
+      points: 2
     },
     {
-      input: "Logs con nivel ERROR",
-      expected: "Filtro devuelve solo entradas ERROR",
-      description: "Filtrado por nivel de severidad"
+      name: "parse_apache_log",
+      input: 'processor = LogProcessor(); entry = processor.parse_line(\'192.168.1.1 - - [01/Dec/2023:10:30:15 +0000] "GET /index.html HTTP/1.1" 200 1234\'); [entry.ip, entry.status_code]',
+      expected: '["192.168.1.1", 200]',
+      points: 3
     },
     {
-      input: "100+ requests desde misma IP",
-      expected: "IP marcada como sospechosa",
-      description: "Detección de actividad sospechosa"
+      name: "parse_simple_log",
+      input: 'processor = LogProcessor(); entry = processor.parse_line("2023-12-01 10:30:15 ERROR Failed to connect", "simple"); [entry.level, entry.message]',
+      expected: '["ERROR", "Failed to connect"]',
+      points: 3
     },
     {
-      input: "Logs entre 10:00 y 11:00",
-      expected: "Solo entradas en ese rango temporal",
-      description: "Filtrado por rango de tiempo"
+      name: "filter_by_level",
+      input: 'processor = LogProcessor(); processor.entries = [LogEntry(datetime.now(), "ERROR", "e1"), LogEntry(datetime.now(), "INFO", "i1")]; len(processor.filter_by_level("ERROR"))',
+      expected: "1",
+      points: 3
     },
     {
-      input: "Logs vacíos o malformados",
-      expected: "Manejo graceful de errores",
-      description: "Robustez ante datos inconsistentes"
+      name: "detect_suspicious",
+      input: 'processor = LogProcessor(); processor.stats["ips"] = Counter({"1.1.1.1": 150, "2.2.2.2": 50}); len(processor.detect_suspicious_ips(threshold=100))',
+      expected: "1",
+      points: 3
+    },
+    {
+      name: "generate_report",
+      input: 'processor = LogProcessor(); processor.stats = {"total_entries": 10, "levels": Counter({"INFO": 8, "ERROR": 2})}; "total_entries" in processor.generate_report()',
+      expected: "True",
+      points: 4
     }
   ],
   hints: [
     {
-      id: "regex-apache",
-      text: "Formato Apache: r'^(\\S+) \\S+ \\S+ \\[(.*?)\\] \"(\\S+) (\\S+) \\S+\" (\\d+) (\\d+)$'",
-      type: "syntax"
-    },
-    {
-      id: "timestamp-parsing",
-      text: "Usa datetime.strptime() para convertir strings de fecha a objetos datetime",
+      id: "hint1",
+      text: "Expresión regular para logs Apache: ^(\\S+) \\S+ \\S+ \\[(.*?)\\] \"\\S+ \\S+ \\S+\" (\\d+)",
       type: "implementation"
     },
     {
-      id: "contadores-eficientes",
-      text: "Counter y defaultdict son perfectos para contar ocurrencias y agrupar datos",
-      type: "optimization"
+      id: "hint2",
+      text: "Para parsear timestamps de Apache: datetime.strptime('01/Dec/2023:10:30:15', '%d/%b/%Y:%H:%M:%S')",
+      type: "syntax"
     },
     {
-      id: "patron-factory",
-      text: "Usa un diccionario de patrones regex para soportar múltiples formatos de log",
-      type: "design"
+      id: "hint3",
+      text: "Usa defaultdict y Counter para facilitar el conteo de ocurrencias y agrupación",
+      type: "strategy"
+    },
+    {
+      id: "hint4",
+      text: "Para detectar IPs sospechosas, considera tanto la cantidad de requests como la tasa de error",
+      type: "optimization"
     }
-  ],
-  modelSolution: {
-    code: `import re
-from datetime import datetime, timedelta
-from collections import defaultdict, Counter
-import json
-
-class LogEntry:
-    """
-    Representa una entrada individual de log
-    """
-    def __init__(self, timestamp, level, message, ip=None, user=None, status_code=None, size=None):
-        self.timestamp = timestamp
-        self.level = level
-        self.message = message
-        self.ip = ip
-        self.user = user
-        self.status_code = status_code
-        self.size = size
-    
-    def __str__(self):
-        return f"LogEntry({self.timestamp} [{self.level}] {self.message[:50]}...)"
-    
-    def __repr__(self):
-        return self.__str__()
-    
-    def to_dict(self):
-        return {
-            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
-            'level': self.level,
-            'message': self.message,
-            'ip': self.ip,
-            'user': self.user,
-            'status_code': self.status_code,
-            'size': self.size
-        }
-
-class LogProcessor:
-    """
-    Procesador principal de logs
-    """
-    def __init__(self):
-        self.entries = []
-        self.log_patterns = {
-            'apache': r'^(\\S+) \\S+ \\S+ \\[(.*?)\\] "(\\S+) (\\S+) \\S+)" (\\d+) (\\d+)',
-            'python': r'^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) - (\\w+) - (.*)$',
-            'simple': r'^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) (\\w+) (.*)$',
-            'nginx': r'^(\\S+) - \\S+ \\[(.*?)\\] "(.*?)" (\\d+) (\\d+) "(.*?)" "(.*?)"'
-        }
-        self.stats = {
-            'total_entries': 0,
-            'levels': Counter(),
-            'ips': Counter(),
-            'status_codes': Counter(),
-            'errors': []
-        }
-    
-    def parse_line(self, line, log_format='apache'):
-        """
-        Parsea una línea de log según el formato
-        """
-        line = line.strip()
-        if not line:
-            return None
-        
-        if log_format not in self.log_patterns:
-            raise ValueError(f"Formato no soportado: {log_format}")
-        
-        pattern = self.log_patterns[log_format]
-        match = re.match(pattern, line)
-        
-        if not match:
-            # Intentar con formato simple como fallback
-            simple_pattern = r'^(.*?) (ERROR|WARN|INFO|DEBUG) (.*)$'
-            simple_match = re.search(simple_pattern, line)
-            if simple_match:
-                timestamp_str, level, message = simple_match.groups()
-                try:
-                    timestamp = self._parse_timestamp(timestamp_str)
-                    return LogEntry(timestamp, level, message)
-                except:
-                    return LogEntry(None, 'UNKNOWN', line)
-            return LogEntry(None, 'UNPARSED', line)
-        
-        try:
-            if log_format == 'apache':
-                ip, timestamp_str, method, url, status_code, size = match.groups()
-                timestamp = self._parse_apache_timestamp(timestamp_str)
-                message = f"{method} {url}"
-                return LogEntry(
-                    timestamp=timestamp,
-                    level=self._status_to_level(int(status_code)),
-                    message=message,
-                    ip=ip,
-                    status_code=int(status_code),
-                    size=int(size)
-                )
-            
-            elif log_format == 'python':
-                timestamp_str, level, message = match.groups()
-                timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S,%f')
-                return LogEntry(timestamp, level, message)
-            
-            elif log_format == 'simple':
-                timestamp_str, level, message = match.groups()
-                timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
-                return LogEntry(timestamp, level, message)
-            
-        except Exception as e:
-            return LogEntry(None, 'ERROR', f"Parse error: {str(e)} - {line}")
-    
-    def _parse_timestamp(self, timestamp_str):
-        """
-        Intenta parsear timestamp en múltiples formatos
-        """
-        formats = [
-            '%Y-%m-%d %H:%M:%S',
-            '%Y-%m-%d %H:%M:%S,%f',
-            '%d/%b/%Y:%H:%M:%S',
-            '%Y-%m-%d %H:%M:%S.%f'
-        ]
-        
-        for fmt in formats:
-            try:
-                return datetime.strptime(timestamp_str, fmt)
-            except ValueError:
-                continue
-        
-        raise ValueError(f"No se pudo parsear timestamp: {timestamp_str}")
-    
-    def _parse_apache_timestamp(self, timestamp_str):
-        """
-        Parsea timestamp en formato Apache
-        """
-        return datetime.strptime(timestamp_str, '%d/%b/%Y:%H:%M:%S %z').replace(tzinfo=None)
-    
-    def _status_to_level(self, status_code):
-        """
-        Convierte código de estado HTTP a nivel de log
-        """
-        if status_code < 300:
-            return 'INFO'
-        elif status_code < 400:
-            return 'WARN'
-        elif status_code < 500:
-            return 'ERROR'
-        else:
-            return 'CRITICAL'
-    
-    def load_from_file(self, filename, log_format='apache'):
-        """
-        Carga logs desde archivo
-        """
-        try:
-            with open(filename, 'r', encoding='utf-8') as file:
-                for line_num, line in enumerate(file, 1):
-                    entry = self.parse_line(line, log_format)
-                    if entry:
-                        self.entries.append(entry)
-                        self._update_stats(entry)
-            return len(self.entries)
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Archivo no encontrado: {filename}")
-        except Exception as e:
-            raise Exception(f"Error al cargar archivo: {str(e)}")
-    
-    def load_from_string(self, log_data, log_format='apache'):
-        """
-        Carga logs desde string
-        """
-        lines = log_data.strip().split('\\n')
-        for line in lines:
-            entry = self.parse_line(line, log_format)
-            if entry:
-                self.entries.append(entry)
-                self._update_stats(entry)
-        return len(self.entries)
-    
-    def _update_stats(self, entry):
-        """
-        Actualiza estadísticas internas
-        """
-        self.stats['total_entries'] += 1
-        self.stats['levels'][entry.level] += 1
-        if entry.ip:
-            self.stats['ips'][entry.ip] += 1
-        if entry.status_code:
-            self.stats['status_codes'][entry.status_code] += 1
-        if entry.level in ['ERROR', 'CRITICAL']:
-            self.stats['errors'].append(entry)
-    
-    def filter_by_level(self, level):
-        """
-        Filtra entradas por nivel de severidad
-        """
-        return [entry for entry in self.entries if entry.level == level]
-    
-    def filter_by_timerange(self, start_time, end_time):
-        """
-        Filtra entradas por rango de tiempo
-        """
-        if isinstance(start_time, str):
-            start_time = datetime.fromisoformat(start_time)
-        if isinstance(end_time, str):
-            end_time = datetime.fromisoformat(end_time)
-        
-        return [
-            entry for entry in self.entries 
-            if entry.timestamp and start_time <= entry.timestamp <= end_time
-        ]
-    
-    def filter_by_ip(self, ip):
-        """
-        Filtra entradas por IP específica
-        """
-        return [entry for entry in self.entries if entry.ip == ip]
-    
-    def detect_suspicious_ips(self, threshold=100):
-        """
-        Detecta IPs con actividad sospechosa
-        """
-        suspicious = {}
-        
-        for ip, count in self.stats['ips'].items():
-            if count >= threshold:
-                ip_entries = self.filter_by_ip(ip)
-                error_count = sum(1 for e in ip_entries if e.level in ['ERROR', 'CRITICAL'])
-                error_rate = error_count / count if count > 0 else 0
-                
-                suspicious[ip] = {
-                    'total_requests': count,
-                    'error_count': error_count,
-                    'error_rate': round(error_rate, 3),
-                    'risk_level': self._calculate_risk_level(count, error_rate)
-                }
-        
-        return suspicious
-    
-    def _calculate_risk_level(self, request_count, error_rate):
-        """
-        Calcula nivel de riesgo basado en actividad
-        """
-        if request_count > 1000 or error_rate > 0.5:
-            return 'HIGH'
-        elif request_count > 500 or error_rate > 0.2:
-            return 'MEDIUM'
-        else:
-            return 'LOW'
-    
-    def get_hourly_distribution(self):
-        """
-        Obtiene distribución por horas del día
-        """
-        hourly = defaultdict(int)
-        for entry in self.entries:
-            if entry.timestamp:
-                hour = entry.timestamp.hour
-                hourly[hour] += 1
-        return dict(hourly)
-    
-    def get_top_errors(self, top_n=10):
-        """
-        Obtiene los errores más frecuentes
-        """
-        error_messages = [e.message for e in self.stats['errors']]
-        return Counter(error_messages).most_common(top_n)
-    
-    def generate_report(self):
-        """
-        Genera reporte completo del análisis
-        """
-        print("=" * 80)
-        print("📊 REPORTE DE ANÁLISIS DE LOGS")
-        print("=" * 80)
-        
-        # Estadísticas generales
-        print(f"\\n📈 ESTADÍSTICAS GENERALES:")
-        print(f"  • Total de entradas: {self.stats['total_entries']}")
-        print(f"  • Rango temporal: {self._get_time_range()}")
-        
-        # Distribución por niveles
-        print(f"\\n🚨 DISTRIBUCIÓN POR NIVELES:")
-        for level, count in self.stats['levels'].most_common():
-            percentage = (count / self.stats['total_entries']) * 100
-            print(f"  • {level}: {count} ({percentage:.1f}%)")
-        
-        # Top IPs
-        print(f"\\n🌐 TOP 5 IPs MÁS ACTIVAS:")
-        for ip, count in self.stats['ips'].most_common(5):
-            print(f"  • {ip}: {count} requests")
-        
-        # IPs sospechosas
-        suspicious = self.detect_suspicious_ips()
-        if suspicious:
-            print(f"\\n⚠️ IPs SOSPECHOSAS:")
-            for ip, data in suspicious.items():
-                print(f"  • {ip}: {data['total_requests']} requests, "
-                      f"{data['error_rate']*100:.1f}% errores, "
-                      f"riesgo {data['risk_level']}")
-        
-        # Top errores
-        top_errors = self.get_top_errors(3)
-        if top_errors:
-            print(f"\\n❌ ERRORES MÁS FRECUENTES:")
-            for error, count in top_errors:
-                print(f"  • {error[:100]}... ({count} veces)")
-        
-        # Distribución horaria
-        hourly = self.get_hourly_distribution()
-        if hourly:
-            peak_hour = max(hourly, key=hourly.get)
-            print(f"\\n⏰ ACTIVIDAD TEMPORAL:")
-            print(f"  • Hora pico: {peak_hour:02d}:00 ({hourly[peak_hour]} requests)")
-            print(f"  • Distribución: {dict(sorted(hourly.items()))}")
-        
-        return "Reporte generado exitosamente"
-    
-    def _get_time_range(self):
-        """
-        Obtiene el rango temporal de los logs
-        """
-        timestamps = [e.timestamp for e in self.entries if e.timestamp]
-        if not timestamps:
-            return "No disponible"
-        
-        start = min(timestamps)
-        end = max(timestamps)
-        return f"{start.strftime('%Y-%m-%d %H:%M:%S')} - {end.strftime('%Y-%m-%d %H:%M:%S')}"
-    
-    def export_to_json(self, filename):
-        """
-        Exporta análisis a archivo JSON
-        """
-        data = {
-            'stats': {
-                'total_entries': self.stats['total_entries'],
-                'levels': dict(self.stats['levels']),
-                'top_ips': dict(self.stats['ips'].most_common(10)),
-                'time_range': self._get_time_range()
-            },
-            'suspicious_ips': self.detect_suspicious_ips(),
-            'hourly_distribution': self.get_hourly_distribution(),
-            'top_errors': dict(self.get_top_errors())
-        }
-        
-        with open(filename, 'w') as f:
-            json.dump(data, f, indent=2, default=str)
-
-# Ejemplo de uso
-if __name__ == "__main__":
-    # Datos de ejemplo
-    sample_logs = '''
-192.168.1.1 - - [01/Dec/2023:10:30:15 +0000] "GET /index.html HTTP/1.1" 200 1234
-192.168.1.2 - - [01/Dec/2023:10:30:16 +0000] "POST /login HTTP/1.1" 401 567
-192.168.1.1 - - [01/Dec/2023:10:30:17 +0000] "GET /admin HTTP/1.1" 403 890
-192.168.1.3 - - [01/Dec/2023:10:30:18 +0000] "GET /api/data HTTP/1.1" 500 234
-192.168.1.1 - - [01/Dec/2023:10:30:19 +0000] "GET /dashboard HTTP/1.1" 200 5678
-    '''
-    
-    processor = LogProcessor()
-    processor.load_from_string(sample_logs, 'apache')
-    processor.generate_report()`,
-    explanation: `**🔍 Explicación de la Solución:**
-
-1. **Clase LogEntry**: Encapsula información de cada entrada con métodos útiles
-2. **Parser Flexible**: Soporta múltiples formatos usando patrones regex
-3. **Filtros Avanzados**: Por tiempo, nivel, IP con estructuras de datos eficientes
-4. **Detección de Anomalías**: Identifica patrones sospechosos usando umbrales y tasas de error
-5. **Reportes Comprehensivos**: Estadísticas completas con análisis temporal y de tendencias
-
-**🚀 Conceptos Clave:**
-- Parsing con expresiones regulares
-- Análisis estadístico de logs
-- Detección de patrones anómalos
-- Manejo de timestamps y rangos temporales
-- Generación de reportes y exportación de datos`
-  }
+  ]
 };
 
 export default function Page() {

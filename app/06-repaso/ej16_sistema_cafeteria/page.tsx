@@ -10,25 +10,8 @@ const sistemaCafeteriaExercise = {
 - Gestión de productos: agregar, quitar, buscar
 - Sistema de pedidos: crear, modificar, calcular totales
 - Clientes: registro, historial, puntos fidelidad`,
+  starterCode: `# Escribe tu código aquí
 
-  starterCode: `class Producto:
-    def __init__(self, nombre, precio, categoria="General"):
-        # TODO: Implementar inicialización del producto
-        pass
-    
-    def esta_disponible(self):
-        # TODO: Implementar verificación de disponibilidad
-        pass
-
-class Cliente:
-    def __init__(self, nombre, email):
-        # TODO: Implementar inicialización del cliente
-        pass
-
-class Cafeteria:
-    def __init__(self, nombre):
-        # TODO: Implementar inicialización de la cafetería
-        pass
 `,
 
   tests: [

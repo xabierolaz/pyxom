@@ -1,313 +1,146 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const busquedaBinariaExercise = {
-  id: 'ej12_busqueda_binaria',  title: 'Búsqueda Binaria - Algoritmos de Búsqueda Eficiente',  
-  description: `Implementa el algoritmo de búsqueda binaria en versiones iterativa y recursiva. Aprenderás sobre algoritmos de búsqueda eficiente, complejidad logarítmica y técnicas de divide y vencerás en listas ordenadas.
+  id: 'ej12_busqueda_binaria',
+  title: 'Búsqueda Binaria - Algoritmos de Búsqueda Eficiente',
+  description: `Implementa diferentes versiones del algoritmo de búsqueda binaria para listas ordenadas. La búsqueda binaria es un algoritmo eficiente que encuentra elementos dividiendo repetidamente el espacio de búsqueda a la mitad.
 
-**Parte 3: Variantes Especializadas**
-- Encontrar primera/última ocurrencia
-- Búsqueda en rango de valores
-- Búsqueda por predicado
+Debes implementar las siguientes funciones:
 
-**Parte 4: Análisis de Rendimiento**
-- Comparar con búsqueda lineal
-- Medir tiempos de ejecución
-- Visualizar complejidad algorítmica`,
-  starterCode: `import time
-import random
+1. \`busqueda_binaria_iterativa(lista, objetivo)\`: Implementación básica usando un bucle
+2. \`busqueda_binaria_recursiva(lista, objetivo)\`: Implementación usando recursión
+3. \`buscar_primera_ocurrencia(lista, objetivo)\`: Encuentra la primera aparición del elemento
+4. \`buscar_ultima_ocurrencia(lista, objetivo)\`: Encuentra la última aparición del elemento
 
-def busqueda_binaria_iterativa(lista, objetivo):
+Todas las funciones deben:
+- Asumir que la lista de entrada está ordenada de menor a mayor
+- Retornar el índice donde se encuentra el elemento (0-based)
+- Retornar -1 si el elemento no se encuentra en la lista`,
+  starterCode: `def busqueda_binaria_iterativa(lista, objetivo):
     """
-    Búsqueda binaria iterativa clásica
+    Implementa búsqueda binaria usando un bucle
+    
+    Args:
+        lista (list): Lista ordenada donde buscar
+        objetivo: Elemento a encontrar
+        
+    Returns:
+        int: Índice del elemento si se encuentra, -1 si no
     """
-    # TODO: Implementar versión iterativa
     pass
 
 def busqueda_binaria_recursiva(lista, objetivo, inicio=0, fin=None):
     """
-    Búsqueda binaria recursiva
+    Implementa búsqueda binaria usando recursión
+    
+    Args:
+        lista (list): Lista ordenada donde buscar
+        objetivo: Elemento a encontrar
+        inicio (int): Índice inicial del rango actual
+        fin (int): Índice final del rango actual (None para usar len(lista)-1)
+        
+    Returns:
+        int: Índice del elemento si se encuentra, -1 si no
     """
-    # TODO: Implementar versión recursiva
     pass
 
 def buscar_primera_ocurrencia(lista, objetivo):
     """
-    Encuentra la primera ocurrencia de un elemento
+    Encuentra la primera ocurrencia del elemento
+    
+    Args:
+        lista (list): Lista ordenada donde buscar
+        objetivo: Elemento a encontrar
+        
+    Returns:
+        int: Índice de la primera ocurrencia, -1 si no existe
     """
-    # TODO: Implementar búsqueda de primera ocurrencia
     pass
 
 def buscar_ultima_ocurrencia(lista, objetivo):
     """
-    Encuentra la última ocurrencia de un elemento
+    Encuentra la última ocurrencia del elemento
+    
+    Args:
+        lista (list): Lista ordenada donde buscar
+        objetivo: Elemento a encontrar
+        
+    Returns:
+        int: Índice de la última ocurrencia, -1 si no existe
     """
-    # TODO: Implementar búsqueda de última ocurrencia
-    pass
-
-def buscar_en_rango(lista, minimo, maximo):
-    """
-    Encuentra todos los elementos en un rango [minimo, maximo]
-    """
-    # TODO: Implementar búsqueda en rango
-    pass
-
-def comparar_rendimiento(lista, objetivo):
-    """
-    Compara rendimiento entre búsqueda lineal y binaria
-    """
-    # TODO: Implementar comparación de rendimiento
     pass`,
   tests: [
     {
-      input: "[1, 3, 5, 7, 9, 11, 13], 7",
+      name: "busqueda_iterativa_encontrado",
+      input: "busqueda_binaria_iterativa([1, 3, 5, 7, 9, 11, 13], 7)",
       expected: "3",
-      description: "Búsqueda exitosa en lista impar"
+      points: 2
     },
     {
-      input: "[2, 4, 6, 8, 10, 12], 8",
+      name: "busqueda_iterativa_no_encontrado",
+      input: "busqueda_binaria_iterativa([1, 2, 3, 4, 5], 6)",
+      expected: "-1",
+      points: 2  
+    },
+    {
+      name: "busqueda_recursiva_encontrado",
+      input: "busqueda_binaria_recursiva([2, 4, 6, 8, 10, 12], 8)",
       expected: "3",
-      description: "Búsqueda exitosa en lista par"
+      points: 2
     },
     {
-      input: "[1, 2, 3, 4, 5], 6",
+      name: "busqueda_recursiva_no_encontrado", 
+      input: "busqueda_binaria_recursiva([1, 2, 3, 4, 5], 0)",
       expected: "-1",
-      description: "Elemento no encontrado (mayor que todos)"
+      points: 2
     },
     {
-      input: "[1, 2, 3, 4, 5], 0",
-      expected: "-1",
-      description: "Elemento no encontrado (menor que todos)"
-    },
-    {
-      input: "[1, 3, 3, 3, 5, 7], 3",
+      name: "primera_ocurrencia",
+      input: "buscar_primera_ocurrencia([1, 3, 3, 3, 5, 7], 3)",
       expected: "1",
-      description: "Primera ocurrencia de elemento repetido"
+      points: 3
     },
     {
-      input: "[1, 3, 3, 3, 5, 7], 3 (última)",
+      name: "ultima_ocurrencia",
+      input: "buscar_ultima_ocurrencia([1, 3, 3, 3, 5, 7], 3)",
       expected: "3",
-      description: "Última ocurrencia de elemento repetido"
+      points: 3
     },
     {
-      input: "[], 5",
+      name: "caso_lista_vacia",
+      input: "busqueda_binaria_iterativa([], 5)",
       expected: "-1",
-      description: "Lista vacía"
+      points: 2
     },
     {
-      input: "[5], 5",
+      name: "caso_unico_elemento",
+      input: "busqueda_binaria_iterativa([5], 5)",
       expected: "0",
-      description: "Lista con un solo elemento (encontrado)"
+      points: 2
     }
   ],
   hints: [
     {
-      id: "indices-medio",
-      text: "Para encontrar el índice medio: medio = (inicio + fin) // 2",
+      id: "hint1",
+      text: "El índice medio se calcula como: medio = (inicio + fin) // 2",
       type: "implementation"
     },
     {
-      id: "condicion-parada",
-      text: "La condición de parada es inicio <= fin para la versión iterativa",
+      id: "hint2",
+      text: "Para la versión iterativa, el bucle continúa mientras inicio <= fin",
       type: "concept"
     },
     {
-      id: "actualizacion-limites",
-      text: "Si objetivo < lista[medio]: fin = medio - 1, sino: inicio = medio + 1",
+      id: "hint3",
+      text: "Si lista[medio] < objetivo, busca en la mitad derecha (inicio = medio + 1)",
       type: "strategy"
     },
     {
-      id: "primera-ocurrencia",
-      text: "Para primera ocurrencia: cuando encuentres el elemento, sigue buscando hacia la izquierda",
+      id: "hint4",
+      text: "Para primera/última ocurrencia, cuando encuentres el elemento no pares, sigue buscando en la dirección correspondiente",
       type: "optimization"
     }
-  ],  modelSolution: {
-    code: `import time
-import random
-
-def busqueda_binaria_iterativa(lista, objetivo):
-    """
-    Búsqueda binaria iterativa clásica
-    """
-    inicio = 0
-    fin = len(lista) - 1
-    
-    while inicio <= fin:
-        medio = (inicio + fin) // 2
-        
-        if lista[medio] == objetivo:
-            return medio
-        elif lista[medio] < objetivo:
-            inicio = medio + 1
-        else:
-            fin = medio - 1
-    
-    return -1
-
-def busqueda_binaria_recursiva(lista, objetivo, inicio=0, fin=None):
-    """
-    Búsqueda binaria recursiva
-    """
-    if fin is None:
-        fin = len(lista) - 1
-    
-    if inicio > fin:
-        return -1
-    
-    medio = (inicio + fin) // 2
-    
-    if lista[medio] == objetivo:
-        return medio
-    elif lista[medio] < objetivo:
-        return busqueda_binaria_recursiva(lista, objetivo, medio + 1, fin)
-    else:
-        return busqueda_binaria_recursiva(lista, objetivo, inicio, medio - 1)
-
-def buscar_primera_ocurrencia(lista, objetivo):
-    """
-    Encuentra la primera ocurrencia de un elemento
-    """
-    inicio = 0
-    fin = len(lista) - 1
-    resultado = -1
-    
-    while inicio <= fin:
-        medio = (inicio + fin) // 2
-        
-        if lista[medio] == objetivo:
-            resultado = medio
-            fin = medio - 1  # Seguir buscando hacia la izquierda
-        elif lista[medio] < objetivo:
-            inicio = medio + 1
-        else:
-            fin = medio - 1
-    
-    return resultado
-
-def buscar_ultima_ocurrencia(lista, objetivo):
-    """
-    Encuentra la última ocurrencia de un elemento
-    """
-    inicio = 0
-    fin = len(lista) - 1
-    resultado = -1
-    
-    while inicio <= fin:
-        medio = (inicio + fin) // 2
-        
-        if lista[medio] == objetivo:
-            resultado = medio
-            inicio = medio + 1  # Seguir buscando hacia la derecha
-        elif lista[medio] < objetivo:
-            inicio = medio + 1
-        else:
-            fin = medio - 1
-    
-    return resultado
-
-def buscar_en_rango(lista, minimo, maximo):
-    """
-    Encuentra todos los elementos en un rango [minimo, maximo]
-    """
-    inicio_rango = buscar_primera_ocurrencia(lista, minimo)
-    if inicio_rango == -1:
-        # Buscar el primer elemento >= minimo
-        inicio_rango = buscar_insercion(lista, minimo)
-    
-    fin_rango = buscar_ultima_ocurrencia(lista, maximo)
-    if fin_rango == -1:
-        # Buscar el último elemento <= maximo
-        fin_rango = buscar_insercion(lista, maximo + 1) - 1
-    
-    if inicio_rango <= fin_rango:
-        return lista[inicio_rango:fin_rango + 1]
-    return []
-
-def buscar_insercion(lista, objetivo):
-    """
-    Encuentra la posición donde se debería insertar el elemento
-    """
-    inicio = 0
-    fin = len(lista)
-    
-    while inicio < fin:
-        medio = (inicio + fin) // 2
-        if lista[medio] < objetivo:
-            inicio = medio + 1
-        else:
-            fin = medio
-    
-    return inicio
-
-def busqueda_lineal(lista, objetivo):
-    """
-    Búsqueda lineal para comparación
-    """
-    for i, elemento in enumerate(lista):
-        if elemento == objetivo:
-            return i
-    return -1
-
-def comparar_rendimiento(lista, objetivo):
-    """
-    Compara rendimiento entre búsqueda lineal y binaria
-    """
-    # Búsqueda lineal
-    inicio_lineal = time.time()
-    resultado_lineal = busqueda_lineal(lista, objetivo)
-    tiempo_lineal = time.time() - inicio_lineal
-    
-    # Búsqueda binaria
-    inicio_binaria = time.time()
-    resultado_binaria = busqueda_binaria_iterativa(lista, objetivo)
-    tiempo_binaria = time.time() - inicio_binaria
-    
-    return {
-        'lineal': {'tiempo': tiempo_lineal, 'resultado': resultado_lineal},
-        'binaria': {'tiempo': tiempo_binaria, 'resultado': resultado_binaria},
-        'factor_mejora': tiempo_lineal / tiempo_binaria if tiempo_binaria > 0 else float('inf')
-    }
-
-# Ejemplos de uso y pruebas
-if __name__ == "__main__":
-    # Lista de prueba ordenada
-    lista_prueba = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
-    
-    print("=== Búsqueda Binaria Iterativa ===")
-    print(f"Buscar 7: {busqueda_binaria_iterativa(lista_prueba, 7)}")
-    print(f"Buscar 2: {busqueda_binaria_iterativa(lista_prueba, 2)}")
-    
-    print("\\n=== Búsqueda Binaria Recursiva ===")
-    print(f"Buscar 13: {busqueda_binaria_recursiva(lista_prueba, 13)}")
-    print(f"Buscar 20: {busqueda_binaria_recursiva(lista_prueba, 20)}")
-    
-    # Lista con elementos repetidos
-    lista_repetidos = [1, 3, 3, 3, 3, 5, 7, 7, 9]
-    print("\\n=== Búsqueda de Ocurrencias ===")
-    print(f"Primera ocurrencia de 3: {buscar_primera_ocurrencia(lista_repetidos, 3)}")
-    print(f"Última ocurrencia de 3: {buscar_ultima_ocurrencia(lista_repetidos, 3)}")
-    
-    # Prueba de rendimiento
-    lista_grande = list(range(0, 100000, 2))  # Lista grande ordenada
-    objetivo = 50000
-    
-    print("\\n=== Comparación de Rendimiento ===")
-    rendimiento = comparar_rendimiento(lista_grande, objetivo)
-    print(f"Tiempo búsqueda lineal: {rendimiento['lineal']['tiempo']:.6f}s")
-    print(f"Tiempo búsqueda binaria: {rendimiento['binaria']['tiempo']:.6f}s")
-    print(f"Factor de mejora: {rendimiento['factor_mejora']:.2f}x")`,
-    explanation: `**🔍 Explicación de la Solución:**
-
-1. **Búsqueda Iterativa**: Usa un bucle while con límites que se van ajustando
-2. **Búsqueda Recursiva**: Divide el problema en subproblemas más pequeños
-3. **Primera/Última Ocurrencia**: Modifica la lógica para seguir buscando después de encontrar
-4. **Análisis de Rendimiento**: Demuestra la eficiencia O(log n) vs O(n)
-
-**🚀 Conceptos Clave:**
-- Divide y vencerás
-- Complejidad logarítmica
-- Invariantes de bucle
-- Casos borde y validación`
-  }
+  ]
 };
 
 export default function Page() {

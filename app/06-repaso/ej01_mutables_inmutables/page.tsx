@@ -14,40 +14,30 @@ def demostrar_mutabilidad():
     Returns:
         dict: Un diccionario con las variables originales y sus copias
     """
-    # Crea una variable string con el valor "hola"
-    
-    # Crea una variable lista con los valores [1, 2, 3]
-    
-    # Haz "copias" de ambas variables
-    
-    # Modifica las variables originales:
-    # - Añade " mundo" al string original
-    # - Añade el número 4 a la lista original
-    
-    # Retorna un diccionario con las cuatro variables:
-    # string_original, string_copia, lista_original, lista_copia
-    
-    return {}
+    # Escribe tu código aquí
+    pass
 `,
-
   tests: [
     {
-      name: 'String inmutable - no afecta la copia',
-      input: 'resultado = demostrar_mutabilidad(); print(resultado["string_original"], resultado["string_copia"])',
-      expected: 'hola mundo hola',
-      points: 3
+      name: "String inmutable - no afecta la copia",
+      input: "resultado = demostrar_mutabilidad()\nso, sc = resultado['string_original'], resultado['string_copia']\nprint(f'{so} {sc}')",
+      expected: "hola mundo hola",
+      points: 3,
+      feedback: "El string original se modifica pero la copia permanece igual"
     },
     {
-      name: 'Lista mutable - afecta la copia',
-      input: 'resultado = demostrar_mutabilidad(); print(resultado["lista_original"], resultado["lista_copia"])',
-      expected: '[1, 2, 3, 4] [1, 2, 3, 4]',
-      points: 3
+      name: "Lista mutable - afecta la copia",
+      input: "resultado = demostrar_mutabilidad()\nlo, lc = resultado['lista_original'], resultado['lista_copia']\nprint(f'{lo} {lc}')",
+      expected: "[1, 2, 3, 4] [1, 2, 3, 4]",
+      points: 3,
+      feedback: "Tanto la lista original como su copia se modifican"
     },
     {
-      name: 'Función retorna diccionario completo',
-      input: 'resultado = demostrar_mutabilidad(); print(len(resultado))',
-      expected: '4',
-      points: 2
+      name: "Función retorna diccionario completo",
+      input: "resultado = demostrar_mutabilidad()\nkeys = sorted(resultado.keys())\nprint(len(keys))",
+      expected: "4",
+      points: 2,
+      feedback: "El diccionario debe contener las 4 variables requeridas"
     }
   ],
 

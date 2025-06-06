@@ -145,46 +145,87 @@ Siempre verifica si la pila está vacía antes de hacer pop() para evitar excepc
 const exerciseData = {
   id: 'ej06_verificador_parentesis',
   title: 'Verificador de Paréntesis - Pilas',
-  description: description,
-        starterCode: `# Verificador de Paréntesis usando Pilas
-# Tu tarea es implementar una clase que verifique si los paréntesis, corchetes y llaves
-# están correctamente balanceados en una expresión
+  description: `Implementa un verificador de expresiones matemáticas que valide el balanceo de paréntesis, corchetes y llaves usando una pila (stack) como estructura de datos.
 
-class VerificadorParentesis:
+### Requisitos:
+1. Los símbolos son: (), [], {}
+2. Cada símbolo de apertura debe tener su correspondiente cierre en el orden correcto
+3. Las expresiones vacías o sin símbolos son válidas
+
+### Ejemplo:
+\`\`\`python
+verificador = VerificadorParentesis()
+print(verificador.verificar_balanceados("([{}])"))  # True
+print(verificador.verificar_balanceados("([)]"))    # False
+\`\`\``,
+  starterCode: `class VerificadorParentesis:
     def __init__(self):
-        # Inicializa la pila aquí (usa una lista de Python)
+        """
+        Inicializa el verificador con una pila vacía para almacenar símbolos.
+        """
         pass
 
-    def push(self, elemento):
-        # Implementa el método para agregar elementos a la pila
+    def verificar_balanceados(self, cadena: str) -> bool:
+        """
+        Verifica si los símbolos () [] {} en una cadena están correctamente balanceados.
+        
+        Args:
+            cadena (str): La expresión a verificar
+            
+        Returns:
+            bool: True si los símbolos están balanceados, False en caso contrario
+        """
         pass
-
-    def pop(self):
-        # Implementa el método para quitar y devolver el elemento superior
-        pass
-
-    def is_empty(self):
-        # Implementa el método para verificar si la pila está vacía
-        pass
-    
-    def peek(self):
-        # Implementa el método para ver el elemento superior sin quitarlo
-        pass
-    
-    def es_par_valido(self, apertura, cierre):
-        # Implementa el método para verificar si los símbolos forman un par válido
-        # Ejemplo: '(' y ')' forman un par válido
-        pass
-    
-    def verificar_balanceados(self, cadena):
-        # Implementa el algoritmo principal para verificar si los símbolos están balanceados
-        # 1. Recorre cada carácter de la cadena
-        # 2. Si es símbolo de apertura, agrégalo a la pila
-        # 3. Si es símbolo de cierre, verifica que coincida con el tope de la pila
-        # 4. Al final, la pila debe estar vacía
-        pass`,
-  tests: [],
-  hints: []
+`,
+  tests: [
+    {
+      name: "paréntesis simples",
+      input: 'verificador = VerificadorParentesis(); verificador.verificar_balanceados("()")',
+      expected: "True",
+      points: 1
+    },
+    {
+      name: "símbolos anidados",
+      input: 'verificador = VerificadorParentesis(); verificador.verificar_balanceados("([{}])")',
+      expected: "True", 
+      points: 2
+    },
+    {
+      name: "orden incorrecto",
+      input: 'verificador = VerificadorParentesis(); verificador.verificar_balanceados("([)]")',
+      expected: "False",
+      points: 2
+    },
+    {
+      name: "cadena vacía",
+      input: 'verificador = VerificadorParentesis(); verificador.verificar_balanceados("")',
+      expected: "True",
+      points: 1
+    },
+    {
+      name: "texto plano",
+      input: 'verificador = VerificadorParentesis(); verificador.verificar_balanceados("hola mundo")',
+      expected: "True",
+      points: 1
+    }
+  ],
+  hints: [
+    {
+      id: "h1",
+      text: "Usa una lista de Python como pila. append() es push y pop() es pop",
+      type: "concept"
+    },
+    {
+      id: "h2", 
+      text: "Usa un diccionario para mapear pares: {')':'(', ']':'[', '}':'{'}", 
+      type: "implementation"
+    },
+    {
+      id: "h3",
+      text: "Cada símbolo de apertura va a la pila. Cada cierre debe corresponder con el último abierto",
+      type: "strategy"
+    }
+  ]
 };
 
 export default function VerificadorParentesis() {

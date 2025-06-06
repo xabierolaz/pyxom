@@ -19,21 +19,7 @@ const treeAlturaExerciseData: ExerciseData = {
 altura = calcular_altura(raiz)
 print(altura)  # 3
 \`\`\``,
-
-  starterCode: `# Ejercicio: Altura de Árbol
-# Calcula la altura de un árbol binario
-
-class Nodo:
-    def __init__(self, valor):
-        # TODO: Implementar nodo
-        pass
-
-def calcular_altura(nodo):
-    # TODO: Implementar cálculo de altura
-    pass
-
-# Escribe tu código aquí:
-
+  starterCode: `# Escribe tu código aquí
 
 `,
 

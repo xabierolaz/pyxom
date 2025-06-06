@@ -1,76 +1,71 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const fibonacciExercise = {
-  id: 'ej10_fibonacci_optimizado',  title: 'Fibonacci Optimizado - Algoritmos y Complejidad',  
-  description: `Compara diferentes algoritmos para calcular números de Fibonacci: recursión básica, memoización y programación dinámica. Aprenderás sobre optimización de algoritmos, complejidad temporal y técnicas para mejorar el rendimiento.
+  id: 'ej10_fibonacci_optimizado',
+  title: 'Fibonacci Optimizado - Algoritmos y Complejidad',
+  description: `Implementa diferentes versiones de la función de Fibonacci para explorar optimización de algoritmos, complejidad y técnicas de mejora del rendimiento.
 
-**Parte 3: Versión Iterativa**
-- Implementa usando un bucle
-- Optimiza el uso de memoria
+Para cada número de Fibonacci F(n):
+- F(0) = 0
+- F(1) = 1
+- F(n) = F(n-1) + F(n-2) para n > 1
 
-**Parte 4: Análisis Comparativo**
-- Mide y compara los tiempos de ejecución
-- Documenta las diferencias de rendimiento`,
-  starterCode: `import time
-from functools import lru_cache
-
-def fibonacci_recursivo(n):
+Implementa las siguientes funciones:
+1. \`fibonacci_recursivo(n)\`: Versión recursiva básica
+2. \`fibonacci_memoizado(n)\`: Versión optimizada con memoización
+3. \`fibonacci_iterativo(n)\`: Versión iterativa eficiente
+4. \`fibonacci_lru_cache(n)\`: Versión usando @lru_cache`,
+  starterCode: `def fibonacci_recursivo(n):
     """
-    Versión recursiva básica de Fibonacci
-    Complejidad: O(2^n)
+    Versión recursiva básica de Fibonacci - O(2^n)
+    
+    Args:
+        n (int): El número de Fibonacci a calcular (n >= 0)
+    
+    Returns:
+        int: El n-ésimo número de Fibonacci
     """
-    # TODO: Implementar versión recursiva
     pass
 
 def fibonacci_memoizado(n, memo={}):
     """
-    Versión con memoización usando diccionario
-    Complejidad: O(n)
+    Versión con memoización usando diccionario - O(n)
+    
+    Args:
+        n (int): El número de Fibonacci a calcular (n >= 0)
+        memo (dict): Diccionario para almacenar resultados ya calculados
+    
+    Returns:
+        int: El n-ésimo número de Fibonacci
     """
-    # TODO: Implementar versión con memoización
     pass
 
 def fibonacci_iterativo(n):
     """
-    Versión iterativa de Fibonacci
-    Complejidad: O(n), Espacio: O(1)
+    Versión iterativa - O(n), Espacio: O(1)
+    
+    Args:
+        n (int): El número de Fibonacci a calcular (n >= 0)
+    
+    Returns:
+        int: El n-ésimo número de Fibonacci
     """
-    # TODO: Implementar versión iterativa
     pass
+
+from functools import lru_cache
 
 @lru_cache(maxsize=None)
 def fibonacci_lru_cache(n):
     """
     Versión usando decorador lru_cache
-    """
-    # TODO: Implementar usando lru_cache
-    pass
-
-def medir_tiempo_fibonacci(funcion, n):
-    """
-    Mide el tiempo de ejecución de una función de Fibonacci
-    """
-    inicio = time.time()
-    resultado = funcion(n)
-    fin = time.time()
-    tiempo = fin - inicio
-    return resultado, tiempo
-
-def comparar_algoritmos(n):
-    """
-    Compara el rendimiento de todos los algoritmos
-    """
-    print(f"\\nComparando algoritmos para F({n}):")
     
-    # TODO: Comparar tiempos de todos los algoritmos
-    # y mostrar los resultados
-    pass
-
-# Pruebas
-if __name__ == "__main__":
-    # Probar con números pequeños
-    for i in [10, 15, 20]:
-        comparar_algoritmos(i)`,
+    Args:
+        n (int): El número de Fibonacci a calcular (n >= 0)
+    
+    Returns:
+        int: El n-ésimo número de Fibonacci
+    """
+    pass`,
   tests: [
     {
       name: "fibonacci_recursivo_basico",
@@ -120,7 +115,8 @@ if __name__ == "__main__":
       expected: "75025",
       points: 3
     }
-  ],  hints: [
+  ],
+  hints: [
     {
       id: "hint1",
       text: "Para la versión recursiva, usa la definición matemática directamente: F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)",
@@ -141,70 +137,7 @@ if __name__ == "__main__":
       text: "lru_cache es un decorador que implementa memoización automáticamente",
       type: "syntax"
     }
-  ],
-  modelSolution: {
-    code: `import time
-from functools import lru_cache
-
-def fibonacci_recursivo(n):
-    """Versión recursiva básica de Fibonacci - O(2^n)"""
-    if n <= 1:
-        return n
-    return fibonacci_recursivo(n-1) + fibonacci_recursivo(n-2)
-
-def fibonacci_memoizado(n, memo={}):
-    """Versión con memoización usando diccionario - O(n)"""
-    if n in memo:
-        return memo[n]
-    if n <= 1:
-        memo[n] = n
-        return n
-    memo[n] = fibonacci_memoizado(n-1, memo) + fibonacci_memoizado(n-2, memo)
-    return memo[n]
-
-def fibonacci_iterativo(n):
-    """Versión iterativa - O(n), Espacio: O(1)"""
-    if n <= 1:
-        return n
-    a, b = 0, 1
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-    return b
-
-@lru_cache(maxsize=None)
-def fibonacci_lru_cache(n):
-    """Versión usando decorador lru_cache"""
-    if n <= 1:
-        return n
-    return fibonacci_lru_cache(n-1) + fibonacci_lru_cache(n-2)
-
-def medir_tiempo_fibonacci(funcion, n):
-    """Mide el tiempo de ejecución de una función de Fibonacci"""
-    inicio = time.time()
-    resultado = funcion(n)
-    fin = time.time()
-    tiempo = fin - inicio
-    return resultado, tiempo
-
-def comparar_algoritmos(n):
-    """Compara el rendimiento de todos los algoritmos"""
-    print(f"\\nComparando algoritmos para F({n}):")
-    
-    # Solo recursivo para números pequeños
-    if n <= 30:
-        resultado, tiempo = medir_tiempo_fibonacci(fibonacci_recursivo, n)
-        print(f"Recursivo: {resultado}, Tiempo: {tiempo:.6f}s")
-    
-    resultado, tiempo = medir_tiempo_fibonacci(fibonacci_memoizado, n)
-    print(f"Memoizado: {resultado}, Tiempo: {tiempo:.6f}s")
-    
-    resultado, tiempo = medir_tiempo_fibonacci(fibonacci_iterativo, n)
-    print(f"Iterativo: {resultado}, Tiempo: {tiempo:.6f}s")
-    
-    resultado, tiempo = medir_tiempo_fibonacci(fibonacci_lru_cache, n)
-    print(f"LRU Cache: {resultado}, Tiempo: {tiempo:.6f}s")`,
-    explanation: "Esta solución muestra cuatro enfoques diferentes para calcular Fibonacci, demostrando cómo la optimización puede reducir drásticamente el tiempo de ejecución."
-  }
+  ]
 };
 
 export default function Ejercicio10() {

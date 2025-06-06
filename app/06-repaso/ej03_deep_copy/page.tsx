@@ -4,40 +4,18 @@ import IntroPythonXom from '@/components/IntroPythonXom';
 const deepCopyExercise = {
   id: 'ej03_deep_copy',
   title: 'Deep Copy - Copia Profunda vs Superficial',
-  description: `Implementa una función que realice una copia profunda (deep copy) de estructuras de datos anidadas. Aprenderás la diferencia entre copias superficiales y profundas, un concepto fundamental para evitar efectos secundarios no deseados al modificar datos.
+  description: `Implementa una función que realice una copia profunda (deep copy) de estructuras de datos anidadas. Debe manejar tipos básicos (int, str, bool), listas, diccionarios y tuplas.
 
-#### 🔄 Función \`deep_copy(obj)\`:
-- Debe funcionar con listas, diccionarios, tuplas y tipos básicos
-- Crear copias completamente independientes de estructuras anidadas
-- No debe modificar el objeto original cuando se modifica la copia
+La copia debe ser completamente independiente, de modo que modificar la copia no afecte al original, incluso con estructuras anidadas.
 
-#### 📝 Casos que debe manejar:
-1. **Tipos básicos**: números, strings, booleanos → retornar tal como están
-2. **Listas**: crear nueva lista con elementos copiados profundamente
-3. **Diccionarios**: crear nuevo diccionario con claves y valores copiados profundamente  
-4. **Tuplas**: crear nueva tupla con elementos copiados profundamente
-
-### 💭 Ejemplo de uso esperado:
+#### Ejemplo:
 \`\`\`python
-# Lista anidada
 original = [[1, 2], [3, 4]]
 copia = deep_copy(original)
 copia[0][0] = 999
 print(original)  # [[1, 2], [3, 4]] - sin cambios
 print(copia)     # [[999, 2], [3, 4]] - solo la copia cambió
-
-# Diccionario anidado
-datos = {'user': {'name': 'Ana', 'scores': [10, 20]}}
-copia_datos = deep_copy(datos)
-copia_datos['user']['name'] = 'Luis'
-print(datos['user']['name'])       # 'Ana' - original intacto
-print(copia_datos['user']['name']) # 'Luis' - solo la copia cambió
-\`\`\`
-
-### 🚨 Puntos clave:
-- **Recursión**: la función debe llamarse a sí misma para elementos anidados
-- **Independencia**: modificar la copia no debe afectar el original
-- **Tipos básicos**: no necesitan copia, se pueden retornar directamente`,
+\`\`\``,
 
   starterCode: `def deep_copy(obj):
     """
@@ -49,36 +27,7 @@ print(copia_datos['user']['name']) # 'Luis' - solo la copia cambió
     Returns:
         Una copia profunda completamente independiente del objeto original
     """
-    # TODO: Implementa la lógica de copia profunda
-    # Hint: Usa isinstance() para verificar el tipo del objeto
-    # Hint: Para listas y diccionarios, necesitarás iterar y copiar cada elemento
     pass
-
-# Casos de prueba para verificar tu implementación
-def test_deep_copy():
-    # Prueba con lista anidada
-    original_list = [[1, 2], [3, [4, 5]]]
-    copied_list = deep_copy(original_list)
-    copied_list[0][0] = 999
-    copied_list[1][1][0] = 888
-    
-    print("Lista original:", original_list)  # No debe cambiar
-    print("Lista copiada:", copied_list)     # Debe tener los cambios
-    
-    # Prueba con diccionario anidado
-    original_dict = {
-        'user': {'name': 'Ana', 'data': [1, 2, 3]},
-        'config': {'theme': 'dark'}
-    }
-    copied_dict = deep_copy(original_dict)
-    copied_dict['user']['name'] = 'Luis'
-    copied_dict['user']['data'].append(4)
-    
-    print("Dict original:", original_dict)   # No debe cambiar
-    print("Dict copiado:", copied_dict)      # Debe tener los cambios
-
-# Ejecuta las pruebas
-test_deep_copy()
 `,
 
   tests: [

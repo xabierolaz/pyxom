@@ -30,24 +30,7 @@ Para el árbol:
 1   4   9
 \`\`\`
 
-El recorrido postorden sería: [1, 4, 3, 9, 7, 5]`,
-  starterCode: `class TreeNode:
-    def __init__(self, value, left=None, right=None):
-        self.value = value
-        self.left = left
-        self.right = right
-
-def postorder_traversal(root):
-    # TODO: Implementar recorrido postorden
-    # Devolver una lista con los valores en orden postorden
-    # Usar recursión:
-    # 1. Recorrer subárbol izquierdo
-    # 2. Recorrer subárbol derecho
-    # 3. Agregar valor de la raíz
-    pass
-
-# Escribe tu código aquí:
-
+El recorrido postorden sería: [1, 4, 3, 9, 7, 5]`,  starterCode: `# Escribe tu código aquí
 
 `,
   tests: [

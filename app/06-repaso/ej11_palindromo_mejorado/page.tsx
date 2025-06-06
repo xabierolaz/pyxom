@@ -1,202 +1,139 @@
 import IntroPythonXom from '@/components/IntroPythonXom';
 
 const palindromoExercise = {
-  id: 'ej11_palindromo_mejorado',  title: 'Palíndromo Mejorado - Procesamiento Avanzado de Texto',  
-  description: `Desarrolla un verificador avanzado de palíndromos que maneja texto real con espacios, puntuación y acentos. Aprenderás técnicas de procesamiento de texto, normalización de strings y algoritmos eficientes de comparación.
+  id: 'ej11_palindromo_mejorado',
+  title: 'Palíndromo Mejorado - Procesamiento Avanzado de Texto',
+  description: `Un palíndromo es una secuencia de caracteres que se lee igual hacia adelante que hacia atrás. En este ejercicio, implementarás un verificador avanzado de palíndromos que debe:
+- Ignorar espacios y puntuación
+- No distinguir entre mayúsculas y minúsculas
+- Manejar caracteres acentuados (á = a, é = e, etc.)
+- Encontrar y analizar palíndromos en textos
 
-**Parte 3: Verificador Robusto**
-- Combinar preprocesamiento con verificación
-- Manejar diferentes idiomas y caracteres especiales
-
-**Parte 4: Análisis y Estadísticas**
-- Encontrar el palíndromo más largo en un texto
-- Generar estadísticas de palíndromos`,
+Debes implementar las siguientes funciones:
+1. limpiar_texto(texto): Preprocesa el texto eliminando caracteres irrelevantes
+2. es_palindromo(texto): Verifica si un texto es palíndromo
+3. encontrar_palindromos(texto): Encuentra todas las palabras palíndromas en un texto
+4. estadisticas_palindromos(texto): Genera estadísticas de los palíndromos encontrados`,
   starterCode: `import re
 import unicodedata
 
-def es_palindromo_basico(texto):
-    """
-    Verificador básico de palíndromos (solo letras, sin espacios)
-    """
-    # TODO: Implementar verificación básica
-    pass
-
 def limpiar_texto(texto):
     """
-    Preprocesa texto eliminando espacios, puntuación y normalizando
+    Preprocesa texto eliminando espacios, puntuación y normalizando acentos
+    
+    Args:
+        texto (str): El texto a limpiar
+    
+    Returns:
+        str: El texto limpio en minúsculas, sin espacios, puntuación ni acentos
     """
-    # TODO: Implementar limpieza de texto
     pass
-
-def es_palindromo_avanzado(texto):
+    
+def es_palindromo(texto):
     """
-    Verificador avanzado que maneja espacios, puntuación y acentos
+    Verifica si un texto es palíndromo, ignorando espacios, puntuación y acentos
+    
+    Args:
+        texto (str): El texto a verificar
+        
+    Returns:
+        bool: True si el texto es palíndromo, False si no lo es
     """
-    # TODO: Combinar limpieza con verificación
     pass
 
 def encontrar_palindromos(texto):
     """
-    Encuentra todos los palíndromos en un texto
+    Encuentra todas las palabras que son palíndromos en un texto
+    
+    Args:
+        texto (str): El texto donde buscar palíndromos
+        
+    Returns:
+        list: Lista de palabras que son palíndromas
     """
-    # TODO: Implementar búsqueda de palíndromos
     pass
 
 def estadisticas_palindromos(texto):
     """
-    Genera estadísticas sobre palíndromos en el texto
+    Genera estadísticas sobre los palíndromos encontrados en el texto
+    
+    Args:
+        texto (str): El texto a analizar
+        
+    Returns:
+        dict: Diccionario con estadísticas:
+            - total_palindromos: Número total de palíndromos encontrados
+            - palindromos_encontrados: Lista de palíndromos
+            - longitud_promedio: Longitud promedio de los palíndromos
+            - palindromo_mas_largo: El palíndromo más largo encontrado
     """
-    # TODO: Implementar análisis estadístico
     pass`,
   tests: [
     {
-      input: "ana",
+      name: "limpiar_texto_basico",
+      input: "limpiar_texto('Hola, Mundo!')",
+      expected: "'holamundo'",
+      points: 2
+    },
+    {
+      name: "limpiar_texto_acentos",
+      input: "limpiar_texto('José María')",
+      expected: "'josemaria'",
+      points: 2
+    },
+    {
+      name: "es_palindromo_basico",
+      input: "es_palindromo('ana')",
       expected: "True",
-      description: "Palabra simple en minúsculas"
+      points: 2
     },
     {
-      input: "A man a plan a canal Panama",
-      expected: "True", 
-      description: "Frase famosa con espacios y mayúsculas"
-    },
-    {
-      input: "race a car",
-      expected: "False",
-      description: "Frase que no es palíndromo"
-    },
-    {
-      input: "12321",
+      name: "es_palindromo_frase",
+      input: "es_palindromo('A man a plan a canal Panama')",
       expected: "True",
-      description: "Palíndromo numérico"
+      points: 3
     },
     {
-      input: "hello world",
-      expected: "False",
-      description: "Texto regular que no es palíndromo"
-    },
-    {
-      input: "",
+      name: "es_palindromo_acentos",
+      input: "es_palindromo('Ánita lavó la tina')",
       expected: "True",
-      description: "Cadena vacía (se considera palíndromo)"
+      points: 3
+    },
+    {
+      name: "encontrar_palindromos",
+      input: "encontrar_palindromos('ana oso level radar hello world civic')",
+      expected: "['ana', 'oso', 'level', 'radar', 'civic']",
+      points: 4
+    },
+    {
+      name: "estadisticas_palindromos",
+      input: "stats = estadisticas_palindromos('ana oso level'); [stats['total_palindromos'], stats['longitud_promedio']]",
+      expected: "[3, 3.33]",
+      points: 4
     }
   ],
   hints: [
     {
-      id: "palindromo-basico",
-      text: "Para el verificador básico, convierte a minúsculas y compara con la cadena invertida usando slicing [::-1]",
+      id: "hint1",
+      text: "Usa unicodedata.normalize('NFD', texto) para separar los caracteres de sus acentos",
       type: "concept"
     },
     {
-      id: "regex-limpieza",
-      text: "Usa re.sub(r'[^a-zA-Z0-9]', '', texto) para eliminar caracteres no alfanuméricos",
+      id: "hint2",
+      text: "Para limpiar el texto, elimina todo lo que no sea letra usando re.sub(r'[^a-zA-Z0-9]', '', texto)",
       type: "implementation"
     },
     {
-      id: "unicode-normalizacion",
-      text: "unicodedata.normalize('NFD', texto) ayuda a normalizar caracteres con acentos",
-      type: "syntax"
+      id: "hint3",
+      text: "Después de limpiar el texto, un palíndromo se detecta comparando texto == texto[::-1]",
+      type: "implementation"
     },
     {
-      id: "ventana-deslizante",
-      text: "Para encontrar palíndromos, puedes usar ventanas deslizantes de diferentes tamaños",
+      id: "hint4",
+      text: "Para encontrar_palindromos, divide el texto en palabras con texto.split() y verifica cada una",
       type: "strategy"
     }
-  ],
-  modelSolution: {
-    code: `import re
-import unicodedata
-
-def es_palindromo_basico(texto):
-    """
-    Verificador básico de palíndromos (solo letras, sin espacios)
-    """
-    texto = texto.lower()
-    return texto == texto[::-1]
-
-def limpiar_texto(texto):
-    """
-    Preprocesa texto eliminando espacios, puntuación y normalizando
-    """
-    # Normalizar caracteres Unicode (separar acentos)
-    texto = unicodedata.normalize('NFD', texto)
-    
-    # Eliminar caracteres de marcas diacríticas (acentos)
-    texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
-    
-    # Eliminar todo lo que no sea letra o número
-    texto = re.sub(r'[^a-zA-Z0-9]', '', texto)
-    
-    # Convertir a minúsculas
-    return texto.lower()
-
-def es_palindromo_avanzado(texto):
-    """
-    Verificador avanzado que maneja espacios, puntuación y acentos
-    """
-    texto_limpio = limpiar_texto(texto)
-    return texto_limpio == texto_limpio[::-1]
-
-def encontrar_palindromos(texto):
-    """
-    Encuentra todos los palíndromos en un texto
-    """
-    palabras = texto.split()
-    palindromos = []
-    
-    for palabra in palabras:
-        if len(palabra) > 1 and es_palindromo_avanzado(palabra):
-            palindromos.append(palabra)
-    
-    return palindromos
-
-def estadisticas_palindromos(texto):
-    """
-    Genera estadísticas sobre palíndromos en el texto
-    """
-    palindromos = encontrar_palindromos(texto)
-    
-    stats = {
-        'total_palindromos': len(palindromos),
-        'palindromos_encontrados': palindromos,
-        'longitud_promedio': sum(len(p) for p in palindromos) / len(palindromos) if palindromos else 0,
-        'palindromo_mas_largo': max(palindromos, key=len) if palindromos else None
-    }
-    
-    return stats
-
-# Ejemplos de uso
-if __name__ == "__main__":
-    # Pruebas básicas
-    print("=== Verificador Básico ===")
-    print(f"'ana': {es_palindromo_basico('ana')}")
-    print(f"'hola': {es_palindromo_basico('hola')}")
-    
-    # Pruebas avanzadas
-    print("\\n=== Verificador Avanzado ===")
-    frase1 = "A man a plan a canal Panama"
-    print(f"'{frase1}': {es_palindromo_avanzado(frase1)}")
-    
-    frase2 = "A mama Roma le aviva el amor a papa"
-    print(f"'{frase2}': {es_palindromo_avanzado(frase2)}")
-    
-    # Análisis de texto
-    print("\\n=== Análisis de Texto ===")
-    texto = "ana oso level radar hello world civic"
-    stats = estadisticas_palindromos(texto)
-    print(f"Estadísticas: {stats}")`,
-    explanation: `**🔍 Explicación de la Solución:**
-
-1. **Verificador Básico**: Convierte a minúsculas y compara con la versión invertida
-2. **Limpieza de Texto**: Usa unicodedata para manejar acentos y regex para limpiar
-3. **Verificador Avanzado**: Combina limpieza con verificación básica
-4. **Análisis**: Encuentra palíndromos y calcula estadísticas útiles
-
-**🚀 Conceptos Clave:**
-- Normalización Unicode para acentos
-- Expresiones regulares para limpieza
-- Slicing de strings para inversión
-- Análisis estadístico de texto`
-  }
+  ]
 };
 
 export default function Page() {
