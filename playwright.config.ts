@@ -6,10 +6,10 @@ export default defineConfig({
   expect: {
     timeout: 15000 // Aumentado para elementos lentos
   },
-  fullyParallel: false, // Deshabilitado para evitar conflictos
+  fullyParallel: true, // Habilitado para paralelizar tests
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0, // Sin retries en local
-  workers: process.env.CI ? 1 : 1, // Un solo worker para evitar conflictos
+  workers: process.env.CI ? 4 : 4, // Aumentado a 4 workers
   reporter: [['list'], ['html', { open: 'never' }]],  use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
