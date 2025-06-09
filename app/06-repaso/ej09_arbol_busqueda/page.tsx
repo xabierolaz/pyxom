@@ -3,7 +3,8 @@
 import React from 'react';
 import IntroPythonXom from '@/components/IntroPythonXom';
 
-export default function ArbolBusqueda() {    const description = `Implementa un Árbol Binario de Búsqueda (BST) con operaciones fundamentales. Aprenderás sobre estructuras jerárquicas, recursión, y cómo mantener datos ordenados de forma eficiente con búsqueda logarítmica.
+export default function ArbolBusqueda() {
+    const description = `Implementa un Árbol Binario de Búsqueda (BST) con operaciones fundamentales. Aprenderás sobre estructuras jerárquicas, recursión, y cómo mantener datos ordenados de forma eficiente con búsqueda logarítmica.
 
 - **Recorridos útiles**: In-order da elementos ordenados
 - **Operaciones dinámicas**: Inserción y eliminación flexibles
@@ -22,9 +23,9 @@ export default function ArbolBusqueda() {    const description = `Implementa un 
 
 ## Instrucciones Detalladas
 
-Implementa un **ArbolBinarioBusqueda** con las siguientes funcionalidades:
+Implementa un **BinarySearchTree** con las siguientes funcionalidades:
 
-1. **Clase NodoArbol**: Represente un nodo con valor y referencias a hijos
+1. **Clase TreeNode**: Represente un nodo con valor y referencias a hijos
 2. **Inserción**: Agregar elementos manteniendo la propiedad BST
 3. **Búsqueda**: Encontrar elementos eficientemente
 4. **Eliminación**: Remover elementos preservando la estructura
@@ -32,14 +33,14 @@ Implementa un **ArbolBinarioBusqueda** con las siguientes funcionalidades:
 6. **Utilidades**: Altura, tamaño, mínimo, máximo
 
 ### Operaciones Requeridas:
-- \`insertar(valor)\`: Agregar nuevo valor
-- \`buscar(valor)\`: Verificar si existe un valor
-- \`eliminar(valor)\`: Remover valor del árbol
-- \`recorrido_inorder()\`: Recorrido en orden
-- \`recorrido_preorder()\`: Recorrido pre-orden
-- \`recorrido_postorder()\`: Recorrido post-orden
-- \`altura()\`: Calcular altura del árbol
-- \`minimo()\` y \`maximo()\`: Encontrar valores extremos
+- \`insert(value)\`: Agregar nuevo valor
+- \`search(value)\`: Verificar si existe un valor
+- \`delete(value)\`: Remover valor del árbol
+- \`inorder_traversal()\`: Recorrido en orden
+- \`preorder_traversal()\`: Recorrido pre-orden
+- \`postorder_traversal()\`: Recorrido post-orden
+- \`height()\`: Calcular altura del árbol
+- \`minimum()\` y \`maximum()\`: Encontrar valores extremos
 
 ⚠️ **Errores Comunes a Evitar:**
 - No mantener la propiedad BST al insertar
@@ -51,196 +52,200 @@ Implementa un **ArbolBinarioBusqueda** con las siguientes funcionalidades:
 ## Código Inicial
 
 \`\`\`python
-class NodoArbol:
-    def __init__(self, valor):
-        # Inicializar nodo con valor y sin hijos
+class TreeNode:
+    def __init__(self, value):
+        # Inicializar nodo con value y sin hijos
         pass
     
     def __str__(self):
         # Representación del nodo
         pass
 
-class ArbolBinarioBusqueda:
+class BinarySearchTree:
     def __init__(self):
         # Inicializar árbol vacío
         pass
     
-    def insertar(self, valor):
-        # Insertar valor manteniendo propiedad BST
+    def insert(self, value):
+        # Insertar value manteniendo propiedad BST
         pass
     
-    def _insertar_recursivo(self, nodo, valor):
+    def _insert_recursive(self, current_node, value):
         # Método auxiliar recursivo para inserción
         pass
     
-    def buscar(self, valor):
-        # Buscar valor en el árbol
+    def search(self, value):
+        # Buscar value en el árbol
         pass
     
-    def _buscar_recursivo(self, nodo, valor):
+    def _search_recursive(self, current_node, value):
         # Método auxiliar recursivo para búsqueda
         pass
     
-    def eliminar(self, valor):
-        # Eliminar valor del árbol
+    def delete(self, value):
+        # Eliminar value del árbol
         pass
     
-    def _eliminar_recursivo(self, nodo, valor):
+    def _delete_recursive(self, current_node, value):
         # Método auxiliar recursivo para eliminación
         pass
     
-    def _encontrar_minimo(self, nodo):
-        # Encontrar el nodo con valor mínimo
+    def _find_minimum(self, current_node):
+        # Encontrar el nodo con value mínimo
         pass
     
-    def recorrido_inorder(self):
+    def inorder_traversal(self):
         # Recorrido en orden (izquierda, raíz, derecha)
         pass
     
-    def _inorder_recursivo(self, nodo, resultado):
+    def _inorder_recursive(self, current_node, result_list):
         # Método auxiliar para recorrido in-order
         pass
     
-    def recorrido_preorder(self):
+    def preorder_traversal(self):
         # Recorrido pre-orden (raíz, izquierda, derecha)
         pass
     
-    def recorrido_postorder(self):
+    def postorder_traversal(self):
         # Recorrido post-orden (izquierda, derecha, raíz)
         pass
     
-    def altura(self):
+    def height(self):
         # Calcular altura del árbol
         pass
     
-    def _altura_recursiva(self, nodo):
+    def _height_recursive(self, current_node):
         # Método auxiliar recursivo para altura
         pass
     
-    def minimo(self):
-        # Encontrar valor mínimo del árbol
+    def minimum(self):
+        # Encontrar value mínimo del árbol
         pass
     
-    def maximo(self):
-        # Encontrar valor máximo del árbol
+    def maximum(self):
+        # Encontrar value máximo del árbol
         pass
     
-    def esta_vacio(self):
+    def is_empty(self):
         # Verificar si el árbol está vacío
         pass
     
-    def mostrar_estructura(self, nodo=None, nivel=0, prefijo="Raíz: "):
+    def show_structure(self, current_node=None, level=0, prefix="Raíz: "):
         # Mostrar estructura visual del árbol
         pass
 
 # Ejemplo de uso
-arbol = ArbolBinarioBusqueda()
+bst = BinarySearchTree()
 
 # Insertar elementos
 valores = [50, 30, 70, 20, 40, 60, 80]
-for valor in valores:
-    arbol.insertar(valor)
+for val in valores:
+    bst.insert(val)
 
 print("Árbol creado con valores:", valores)
-arbol.mostrar_estructura()
+bst.show_structure()
 
-print("Recorrido in-order:", arbol.recorrido_inorder())
+print("Recorrido in-order:", bst.inorder_traversal())
 \`\`\`
 
 ## Casos de Prueba
 
 ### Caso 1: Inserción y Estructura
 \`\`\`python
-arbol = ArbolBinarioBusqueda()
+bst = BinarySearchTree()
 valores = [50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45]
 
-for valor in valores:
-    arbol.insertar(valor)
+for val in valores:
+    bst.insert(val)
     
 print("Estructura del árbol:")
-arbol.mostrar_estructura()
+bst.show_structure()
 
 print("Recorrido in-order (debe estar ordenado):")
-print(arbol.recorrido_inorder())  # [10, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80]
+print(bst.inorder_traversal())  # [10, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80]
 \`\`\`
 
 ### Caso 2: Búsquedas
 \`\`\`python
+# Assuming bst is already created and populated from Caso 1
 print("Búsquedas:")
-print(f"¿Existe 40? {arbol.buscar(40)}")    # True
-print(f"¿Existe 100? {arbol.buscar(100)}")  # False
-print(f"¿Existe 10? {arbol.buscar(10)}")    # True
-print(f"¿Existe 5? {arbol.buscar(5)}")      # False
+print(f"¿Existe 40? {bst.search(40)}")    # True
+print(f"¿Existe 100? {bst.search(100)}")  # False
+print(f"¿Existe 10? {bst.search(10)}")    # True
+print(f"¿Existe 5? {bst.search(5)}")      # False
 \`\`\`
 
 ### Caso 3: Valores Extremos
 \`\`\`python
+# Assuming bst is already created and populated from Caso 1
 print("Valores extremos:")
-print(f"Mínimo: {arbol.minimo()}")  # 10
-print(f"Máximo: {arbol.maximo()}")  # 80
-print(f"Altura: {arbol.altura()}")  # Depende de la estructura
+print(f"Mínimo: {bst.minimum()}")  # 10
+print(f"Máximo: {bst.maximum()}")  # 80
+print(f"Altura: {bst.height()}")  # Depende de la estructura
 \`\`\`
 
 ### Caso 4: Diferentes Recorridos
 \`\`\`python
+# Assuming bst is already created and populated from Caso 1
 print("Recorridos:")
-print(f"In-order:   {arbol.recorrido_inorder()}")
-print(f"Pre-order:  {arbol.recorrido_preorder()}")
-print(f"Post-order: {arbol.recorrido_postorder()}")
+print(f"In-order:   {bst.inorder_traversal()}")
+print(f"Pre-order:  {bst.preorder_traversal()}")
+print(f"Post-order: {bst.postorder_traversal()}")
 \`\`\`
 
 ### Caso 5: Eliminaciones
 \`\`\`python
+# Assuming bst is already created and populated from Caso 1
 print("\\nAntes de eliminar 30:")
-arbol.mostrar_estructura()
+bst.show_structure()
 
-arbol.eliminar(30)  # Nodo con dos hijos
+bst.delete(30)  # Nodo con dos hijos
 print("\\nDespués de eliminar 30:")
-arbol.mostrar_estructura()
+bst.show_structure()
 
 print("Recorrido in-order después de eliminación:")
-print(arbol.recorrido_inorder())
+print(bst.inorder_traversal())
 \`\`\`
 
 ### Caso 6: Árbol Vacío
 \`\`\`python
-arbol_vacio = ArbolBinarioBusqueda()
-print(f"Árbol vacío: {arbol_vacio.esta_vacio()}")  # True
-print(f"Buscar en árbol vacío: {arbol_vacio.buscar(10)}")  # False
-print(f"Altura de árbol vacío: {arbol_vacio.altura()}")  # 0
+empty_bst = BinarySearchTree()
+print(f"Árbol vacío: {empty_bst.is_empty()}")  # True
+print(f"Buscar en árbol vacío: {empty_bst.search(10)}")  # False
+print(f"Altura de árbol vacío: {empty_bst.height()}")  # 0
 \`\`\`
 
 ## 💡 Pistas Progresivas
 
 ### Pista 1: Estructura del Nodo
 \`\`\`python
-class NodoArbol:
-    def __init__(self, valor):
-        self.valor = valor
-        self.izquierdo = None
-        self.derecho = None
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
 \`\`\`
 
 ### Pista 2: Inserción Recursiva
 Para insertar:
 1. Si el árbol está vacío, crear raíz
-2. Si valor < nodo.valor, ir a la izquierda
-3. Si valor > nodo.valor, ir a la derecha
+2. Si value < current_node.value, ir a la izquierda
+3. Si value > current_node.value, ir a la derecha
 4. Si el hijo es None, crear nuevo nodo
 
 ### Pista 3: Recorrido In-Order
 \`\`\`python
-def _inorder_recursivo(self, nodo, resultado):
-    if nodo is not None:
-        self._inorder_recursivo(nodo.izquierdo, resultado)
-        resultado.append(nodo.valor)
-        self._inorder_recursivo(nodo.derecho, resultado)
+def _inorder_recursive(self, current_node, result_list):
+    if current_node is not None:
+        self._inorder_recursive(current_node.left, result_list)
+        result_list.append(current_node.value)
+        self._inorder_recursive(current_node.right, result_list)
 \`\`\`
 
 ### Pista 4: Eliminación con Dos Hijos
 Cuando eliminas un nodo con dos hijos:
 1. Encuentra el sucesor in-order (mínimo del subárbol derecho)
-2. Reemplaza el valor del nodo a eliminar con el valor del sucesor
+2. Reemplaza el value del nodo a eliminar con el value del sucesor
 3. Elimina el sucesor (que tendrá como máximo un hijo)
 
 ## 🏆 Mejores Prácticas
@@ -302,15 +307,150 @@ Búsquedas:
 
 **Espacio:** O(n) para almacenar n nodos
 `;
+    const exerciseData = {
+        id: 'ej09_arbol_busqueda',
+        title: 'Ejercicio 9: Árbol Binario de Búsqueda',
+        description,
+        starterCode: `class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
 
-  const exerciseData = {
-    id: 'ej09_arbol_busqueda',
-    title: 'Ejercicio 9: Árbol Binario de Búsqueda',
-    description,    starterCode: `# Escribe tu código aquí
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None
+    
+    def insert(self, value):
+        """Inserta un value en el árbol manteniendo la propiedad BST"""
+        if self.root is None:
+            self.root = TreeNode(value)
+        else:
+            self._insert_recursive(self.root, value)
+    
+    def _insert_recursive(self, current_node, value):
+        if value < current_node.value:
+            if current_node.left is None:
+                current_node.left = TreeNode(value)
+            else:
+                self._insert_recursive(current_node.left, value)
+        elif value > current_node.value:
+            if current_node.right is None:
+                current_node.right = TreeNode(value)
+            else:
+                self._insert_recursive(current_node.right, value)
+        # Si value == current_node.value, no se hace nada (o según reglas del problema)
 
+    def search(self, value):
+        """Busca un value en el árbol. Retorna True si existe, False si no"""
+        return self._search_recursive(self.root, value)
+    
+    def _search_recursive(self, current_node, value):
+        if current_node is None:
+            return False
+        if value == current_node.value:
+            return True
+        elif value < current_node.value:
+            return self._search_recursive(current_node.left, value)
+        else:
+            return self._search_recursive(current_node.right, value)
+    
+    def delete(self, value):
+        """Elimina un value del árbol manteniendo la propiedad BST"""
+        self.root = self._delete_recursive(self.root, value)
+    
+    def _delete_recursive(self, current_node, value):
+        # Implementar eliminación aquí
+        pass
+    
+    def inorder_traversal(self):
+        """Retorna los valores del árbol en orden ascendente"""
+        result_list = []
+        self._inorder_recursive(self.root, result_list)
+        return result_list
+    
+    def _inorder_recursive(self, current_node, result_list):
+        if current_node is not None:
+            self._inorder_recursive(current_node.left, result_list)
+            result_list.append(current_node.value)
+            self._inorder_recursive(current_node.right, result_list)
+
+# Crear un árbol de prueba
+bst = BinarySearchTree()
 `,
-    tests: [],
-    hints: []
+    tests: [
+        {
+            name: "Test creación del árbol",
+            input: "bst = BinarySearchTree(); bst.root is None",
+            expected: "True",
+            points: 1,
+            feedback: "El árbol debe inicializarse vacío"
+        },
+        {
+            name: "Test inserción básica",
+            input: "bst = BinarySearchTree(); bst.insert(5); bst.root.value",
+            expected: "5",
+            points: 2,
+            feedback: "La inserción debe crear el nodo raíz correctamente"
+        },
+        {
+            name: "Test inserción múltiple",
+            input: "bst = BinarySearchTree(); bst.insert(5); bst.insert(3); bst.insert(7); bst.root.left.value, bst.root.right.value",
+            expected: "(3, 7)",
+            points: 3,
+            feedback: "Los nodos deben insertarse respetando la propiedad BST"
+        },
+        {
+            name: "Test búsqueda exitosa",
+            input: "bst = BinarySearchTree(); bst.insert(5); bst.insert(3); bst.insert(7); bst.search(3)",
+            expected: "True",
+            points: 2,
+            feedback: "La búsqueda debe encontrar valores existentes"
+        },      {
+            name: "Test búsqueda fallida",
+            input: "bst = BinarySearchTree(); bst.insert(5); bst.insert(3); bst.insert(7); bst.search(10)",
+            expected: "False",
+            points: 2,
+            feedback: "La búsqueda debe retornar False para valores inexistentes"
+        },      {
+            name: "Test recorrido in-order",
+            input: "bst = BinarySearchTree(); for x in [5,3,7,1,9]: bst.insert(x); bst.inorder_traversal()",
+            expected: "[1, 3, 5, 7, 9]",
+            points: 3,
+            feedback: "El recorrido in-order debe retornar valores en orden ascendente"
+        },
+        {
+            name: "Test árbol complejo",
+            input: "bst = BinarySearchTree(); for x in [10,5,15,3,7,12,18]: bst.insert(x); all([bst.search(x) for x in [5,15,3,18]])",
+            expected: "True",
+            points: 3,
+            feedback: "El árbol debe manejar correctamente estructuras más complejas"
+        },
+        {
+            name: "Test búsqueda en árbol vacío",
+            input: "bst = BinarySearchTree(); bst.search(5)",
+            expected: "False",
+            points: 1,
+            feedback: "La búsqueda en árbol vacío debe retornar False"
+        }
+    ],
+    hints: [
+      {
+        id: 'h1',
+        text: "Recuerda que en un BST, los valores menores van a la izquierda y los mayores a la derecha",
+        condition: 'onAnyFailure' as 'onAnyFailure' // Ensure type compatibility
+      },
+      {
+        id: 'h2',
+        text: "Para la búsqueda recursiva, compara el valor buscado con el nodo actual y decide qué subárbol explorar",
+        condition: { testCaseFailedName: "Test búsqueda exitosa" }
+      },
+      {
+        id: 'h3',
+        text: "El recorrido in-order debe visitar: izquierdo → nodo → derecho",
+        condition: { testCaseFailedName: "Test recorrido in-order" }
+      }
+    ]
   };
 
   return <IntroPythonXom data={exerciseData} />;

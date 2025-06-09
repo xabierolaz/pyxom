@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { repasoExercises } from './06-repaso/repasoExercises';
+import MonacoPreloaderOptimized from '@/components/MonacoPreloaderOptimized';
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
@@ -11,10 +12,10 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+export default function Home() {  return (
+    <MonacoPreloaderOptimized>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             🎯 PyXom - Estructura de Datos 2025/2026
@@ -114,10 +115,9 @@ export default function Home() {
               {repasoExercises.slice(15, 16).map((exercise) => (
                 <ExerciseCard key={exercise.id} exercise={exercise} />
               ))}
-            </div>
-          </section>        </div>
+            </div>          </section>        </div>        </div>
       </div>
-    </div>
+    </MonacoPreloaderOptimized>
   );
 }
 

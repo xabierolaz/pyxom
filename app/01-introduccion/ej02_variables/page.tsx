@@ -1,5 +1,5 @@
 // Ejercicio de variables y tipos básicos para el módulo Introducción
-import IntroPythonXom from '@/components/IntroPythonXom';
+import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
 
 const variablesExercise = {
   id: 'ej02_variables',
@@ -86,7 +86,7 @@ print(c)`,
 export default function Page() {
   return (
     <div>
-      <IntroPythonXom data={variablesExercise} />
+      <OptimizedIntroPythonXom data={variablesExercise} />
     </div>
   );
 }

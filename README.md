@@ -2,23 +2,31 @@
 
 **Advanced Python Learning Platform - Complete MOOC.fi Implementation**
 
-PyXom is a comprehensive Python learning platform that replicates the University of Helsinki's Python Programming MOOC 2024 with all advanced technical and pedagogical features. Built with Next.js, TypeScript, and Pyodide for in-browser Python execution.
+PyXom es una plataforma completa de aprendizaje de Python que replica el MOOC de Programación Python 2024 de la Universidad de Helsinki con todas las características técnicas y pedagógicas avanzadas. Construida con Next.js, TypeScript y Pyodide para la ejecución de Python en el navegador.
 
-## 🌟 Features
+## 🌟 Características
 
-### 🔧 Advanced Development Environment
-- **Monaco Code Editor** with Python syntax highlighting
-- **Real-time Python Execution** using Pyodide (no server required)
-- **Interactive Debugging** with breakpoints and step-by-step execution
-- **Python Tutor Visualization** for code execution visualization
-- **Integrated Testing** with TMC-style automated testing
+### 🔧 Entorno de Desarrollo Avanzado
+- **Editor de Código Monaco** con resaltado de sintaxis Python
+- **Ejecución de Python en tiempo real** usando Pyodide (sin servidor requerido)
+- **Depuración interactiva** con puntos de interrupción y ejecución paso a paso
+- **Visualización con Python Tutor** para visualizar la ejecución del código
+- **Pruebas integradas** con pruebas automatizadas estilo TMC
 
-### 🎓 Educational Features
-- **Intelligent Hints System** with context-aware suggestions
-- **Model Solutions** with protected viewing and explanations
-- **Progress Tracking** with comprehensive analytics
-- **Static Code Analysis** for code quality feedback
-- **Interactive Learning Path** following Helsinki MOOC structure
+### 🎓 Características Educativas
+- **Sistema de Pistas Inteligente** con sugerencias contextuales
+- **Soluciones Modelo** con visualización protegida y explicaciones
+- **Seguimiento de Progreso** con análisis completo
+- **Análisis Estático de Código** para retroalimentación de calidad de código
+- **Ruta de Aprendizaje Interactiva** siguiendo la estructura del MOOC de Helsinki
+
+### ⚡ Optimizaciones de Rendimiento
+- **Carga Rápida de Monaco Editor** con múltiples CDNs y fallbacks
+- **Precarga de Recursos Críticos** para mejorar el rendimiento inicial
+- **Gestión Eficiente de Cache** mediante Service Worker
+- **Configuración Optimizada de Monaco** para reducir el consumo de recursos
+- **Diagnóstico de Sistema** para solucionar problemas de carga
+- **Compatibilidad con Dispositivos Móviles** con ajustes específicos
 
 ### 📚 Course Content
 - **14 Parts** covering Python fundamentals to advanced topics
@@ -239,17 +247,54 @@ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 ```
 
-## 🧪 Testing
+## 🧪 Testing y Diagnósticos
 
-### Running Tests
+### Páginas de Diagnóstico Monaco
+
+El proyecto incluye páginas especiales para probar y diagnosticar el rendimiento del editor Monaco:
+
+- **`/monaco-test`** - Diagnóstico básico de carga de Monaco
+  - Verifica que Monaco se carga correctamente
+  - Muestra información de rendimiento
+  - Detecta problemas de conectividad con CDNs
+
+- **`/monaco-test/editor`** - Test completo del editor
+  - Editor funcional con todas las optimizaciones
+  - Prueba de funcionalidades de Python
+  - Verificación de temas y configuraciones
+
+- **`/diagnostico`** - Diagnóstico del sistema completo
+  - Estado de Pyodide y Python
+  - Rendimiento general del sistema
+  - Información de compatibilidad del navegador
+
+### Comandos de Testing
+
 ```bash
-npm run test
+# Desarrollo con modo turbo
+npm run dev:turbo
+
+# Build rápido sin linting
+npm run build:fast
+
+# Build de producción completo
+npm run build:production
+
+# Tests end-to-end
+npm run test:e2e
+
+# Análisis del bundle
+npm run analyze
 ```
 
-### Test Structure
-- **Unit Tests**: Component testing
-- **Integration Tests**: Feature testing
-- **E2E Tests**: Full user flow testing
+### Verificación de Rendimiento
+
+Para verificar que las optimizaciones de Monaco están funcionando:
+
+1. Abrir DevTools → Network
+2. Navegar a `/monaco-test/editor`
+3. Verificar que Monaco se carga en < 2 segundos
+4. Confirmar que se utilizan los CDNs fallback si es necesario
 
 ## 🚀 Deployment
 
@@ -328,3 +373,35 @@ Uso educativo permitido. Prohibido uso comercial o modificación sin consentimie
 
 **PyXom - Advanced Python Learning Platform**  
 Built with ❤️ for Python education
+
+## 🚨 Solución Rápida de Problemas
+
+### Monaco Editor No Carga (15+ segundos)
+
+Si Monaco Editor está tardando más de lo normal en cargar:
+
+#### **🔧 Solución Inmediata:**
+1. **Ir a la página de diagnóstico rápido**: `http://localhost:3000/monaco-debug`
+2. **Hacer clic en "Cargar Monaco Manualmente"**
+3. **Si no funciona, hacer clic en "Recargar Página"**
+
+#### **📋 Script de Diagnóstico PowerShell:**
+```powershell
+# Ejecutar en el directorio del proyecto
+.\fix-monaco.ps1 -All           # Diagnóstico completo
+.\fix-monaco.ps1 -TestConnectivity  # Solo probar CDNs
+.\fix-monaco.ps1 -ClearCache    # Solo limpiar cache
+.\fix-monaco.ps1 -StartDev      # Iniciar servidor desarrollo
+```
+
+#### **🌐 Páginas de Prueba:**
+- `/monaco-debug` - Diagnóstico y solución rápida
+- `/monaco-test` - Test básico de Monaco
+- `/monaco-test/editor` - Editor completo funcional
+- `/diagnostico` - Diagnóstico del sistema completo
+
+#### **⚡ Soluciones Comunes:**
+1. **Problema de red**: Monaco usa CDNs múltiples (jsdelivr, cdnjs, unpkg)
+2. **Cache corrupto**: Usar `Ctrl+Shift+R` para recarga forzada
+3. **Extensiones del navegador**: Probar en modo incógnito
+4. **Firewall/Antivirus**: Puede bloquear CDNs, usar carga manual

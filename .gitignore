@@ -75,3 +75,19 @@ scripts/
 
 # Text files with logs or notes
 *.txt
+
+# Monaco Editor Test Files (exclude from production)
+public/monaco-emergency-test.html
+public/monaco-performance-monitor.html
+public/monaco-speed-test.html
+public/monaco-test-comprehensive.html
+test-preloader.html
+utils/MonacoPerformanceDiagnostic.ts
+verify-monaco-performance.js
+debug-monaco.js
+monaco-*.png
+
+# Performance test and diagnostic files
+**/performance-test-*
+**/monaco-test-*
+**/monaco-debug-*

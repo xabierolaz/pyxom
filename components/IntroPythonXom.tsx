@@ -8,9 +8,58 @@ import type { PyodideInterface } from 'pyodide';
 import type { 
   ExerciseData, 
   AttemptResult, 
-  SingleTestRunResult, 
-  StaticCheckRunResult
+  SingleTestRunResult,   StaticCheckRunResult
 } from '@/types/types'; // Ajusta la ruta si es necesario
+// import ReactMarkdown from 'react-markdown';
+
+// Enhanced Code Editor with fallback
+import { preloadMonaco } from '@/utils/loadMonaco';
+
+// Preload Monaco to address loading issues
+if (typeof window !== 'undefined') {
+  preloadMonaco();
+}
+
+const PyCodeEditor = dynamic(() => 
+  import('./PyCodeEditor')
+    .catch(err => {
+      console.error('Failed to load PyCodeEditor:', err);
+      return import('./LazyMonacoEditor').then(mod => {
+        console.log('Fallback to LazyMonacoEditor');
+        return { 
+          default: ({ initialCode, onCodeChange }: any) => 
+            <mod.default 
+              value={initialCode} 
+              onChange={onCodeChange} 
+              height="400px"
+              language="python"
+            />
+        };
+      }).catch(err2 => {
+        console.error('All editor loading attempts failed:', err2);
+        return {
+          default: () => (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-red-700 font-medium">Error cargando el editor</p>
+              <p className="text-sm text-red-600 mt-2">Por favor, recarga la página o prueba con otro navegador.</p>
+            </div>
+          )
+        };
+      });
+    }),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-96 bg-gray-100 rounded">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <p className="text-gray-600">Cargando editor Python...</p>
+          <p className="text-xs text-gray-500 mt-2">Si tarda mucho, prueba a recargar la página</p>
+        </div>
+      </div>
+    )
+  }
+);
 
 // --- Carga dinámica para Componentes Pesados ---
 // Añadimos un componente de carga simple para Suspense
@@ -144,36 +193,71 @@ export default function IntroPythonXom({ data }: { data?: ExerciseData }) {
             <span className="px-3 py-1.5 text-sm font-semibold text-indigo-700 bg-indigo-100 rounded-full">
               Puntos: {currentAttempt.totalPointsEarned || 0} / {data.maxPoints}
             </span>
-          )}
+          )}        </div>        {/* Use ReactMarkdown to properly render Markdown content */}
+        <div className="text-slate-600 text-base md:text-lg leading-relaxed prose">
+          <div dangerouslySetInnerHTML={{ __html: data.description.replace(/\n/g, '<br>') }} />
         </div>
-        {/* Usar dangerouslySetInnerHTML con precaución. Asegúrate de que data.description es seguro. */}
-        <div className="text-slate-600 text-base md:text-lg leading-relaxed prose" dangerouslySetInnerHTML={{ __html: data.description }} />
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">        <div className="md:col-span-2 space-y-6">
           <section>
             <h2 className="text-xl font-semibold text-slate-700 mb-2">Tu Código:</h2>
-            <div className="rounded-lg overflow-hidden shadow-lg border border-slate-300">
+            <div className="rounded-lg overflow-hidden shadow-lg border border-slate-300 h-96">
               <Suspense fallback={<LoadingPlaceholder message="Cargando editor..." />}>
-                <Editor
-                  height="450px" defaultLanguage="python" value={code}
-                  onChange={(val) => setCode(val ?? '')} theme="vs-dark"
-                  options={{ fontSize: 15, minimap: { enabled: false }, scrollBeyondLastLine: false, automaticLayout: true, wordWrap: 'on', padding: { top: 12, bottom: 12 } }}
+                <PyCodeEditor
+                  initialCode={code}                  tests={data.tests.map(test => ({
+                    name: test.name || 'Test',
+                    input: test.input,
+                    expected: test.expected,
+                    points: test.points || 1
+                  }))}
+                  onCodeChange={(newCode) => setCode(newCode)}
+                  onTestResults={(results) => {                    // Convert results to our format
+                    const newAttempt: AttemptResult = {
+                      timestamp: Date.now(),
+                      overallPassed: results.testRunResults.every(tr => tr.passed),
+                      testRunResults: results.testRunResults.map((tr, index) => ({
+                        testCase: data.tests[index] || { name: `Test ${index + 1}`, input: '', expected: '', points: 1 },
+                        isSuccessExecution: !tr.error,
+                        actualOutput: tr.output || '',
+                        normalizedActualOutput: tr.output?.trim() || '',
+                        passed: tr.passed,
+                        durationMs: tr.executionTime || 0,
+                        error: tr.error,
+                        pointsEarned: tr.pointsEarned || 0
+                      })),
+                      staticCheckRunResults: results.staticCheckRunResults?.map(scr => ({
+                        check: { id: '', description: '', checkFunction: async () => false },
+                        passed: scr.passed,
+                        message: scr.feedback,
+                        error: undefined,
+                        pointsEarned: scr.pointsEarned || 0
+                      })) || [],
+                      totalTests: results.testRunResults.length,
+                      testsPassedCount: results.testRunResults.filter(tr => tr.passed).length,
+                      totalStaticChecks: results.staticCheckRunResults?.length || 0,
+                      staticChecksPassedCount: results.staticCheckRunResults?.filter(scr => scr.passed).length || 0,
+                      durationMs: results.executionTime || 0,
+                      totalPointsEarned: results.testRunResults.reduce((sum, tr) => sum + (tr.pointsEarned || 0), 0),
+                      maxPossiblePoints: data.maxPoints || 0
+                    };
+                    setCurrentAttempt(newAttempt);
+                  }}
                 />
               </Suspense>
             </div>
           </section>
 
+          {/* Simplified controls - most functionality is now in the editor */}
           <section className="flex flex-wrap gap-3 items-center">
-            <button onClick={handleSubmit} disabled={isLoading || !isPyodideReady}
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150 disabled:opacity-60 disabled:cursor-not-allowed">
-              {isLoading ? 'Evaluando...' : (isPyodideReady ? 'Ejecutar y Comprobar' : 'Entorno Preparándose...')}
+            <button onClick={handleReset} className="px-5 py-2.5 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors">
+              🔄 Resetear a código inicial
             </button>
-            <button onClick={handleReset} className="px-5 py-2.5 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors">Resetear</button>
-            <button onClick={openPythonTutor} className="px-5 py-2.5 bg-teal-500 text-white font-semibold rounded-lg shadow-sm hover:bg-teal-600 transition-colors">Visualizar</button>
+            <button onClick={openPythonTutor} className="px-5 py-2.5 bg-teal-500 text-white font-semibold rounded-lg shadow-sm hover:bg-teal-600 transition-colors">
+              🔍 Visualizar con Python Tutor
+            </button>
           </section>
-        </div>        <aside className="md:col-span-1 space-y-6">
+        </div><aside className="md:col-span-1 space-y-6">
           {/* Estado General */}
           {currentAttempt && !isLoading && (
             <div className={`p-4 rounded-lg shadow ${isExerciseCompleted ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500'} border-l-4`}>

@@ -1,10 +1,14 @@
-import { useRouter } from 'next/router';
 import IntroPythonXom from '@/components/IntroPythonXom';
 import { repasoExercises } from './repasoExercises';
 
-export default function ExercisePage() {
-  const router = useRouter();
-  const { exerciseId } = router.query;
+interface ExercisePageProps {
+  params: {
+    exerciseId: string;
+  };
+}
+
+export default function ExercisePage({ params }: ExercisePageProps) {
+  const { exerciseId } = params;
 
   const exercise = repasoExercises.find((ex) => ex.id === exerciseId);
 

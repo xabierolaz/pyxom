@@ -1,5 +1,5 @@
 // Ejercicio 1: Mutables vs Inmutables - Conceptos fundamentales de Python
-import IntroPythonXom from '@/components/IntroPythonXom';
+import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
 
 const mutablesInmutablesExercise = {
   id: 'ej01_mutables_inmutables',
@@ -62,5 +62,5 @@ def demostrar_mutabilidad():
 };
 
 export default function Page() {
-  return <IntroPythonXom data={mutablesInmutablesExercise} />;
+  return <OptimizedIntroPythonXom data={mutablesInmutablesExercise} />;
 }

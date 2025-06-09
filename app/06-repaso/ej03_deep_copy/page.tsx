@@ -1,5 +1,5 @@
 // Ejercicio 3: Deep Copy - Copia Profunda vs Superficial
-import IntroPythonXom from '@/components/IntroPythonXom';
+import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
 
 const deepCopyExercise = {
   id: 'ej03_deep_copy',
@@ -99,5 +99,5 @@ print(copia)     # [[999, 2], [3, 4]] - solo la copia cambió
 };
 
 export default function DeepCopyPage() {
-  return <IntroPythonXom data={deepCopyExercise} />;
+  return <OptimizedIntroPythonXom data={deepCopyExercise} />;
 }

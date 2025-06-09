@@ -1,5 +1,5 @@
 ﻿// Debug Demo Page
-import IntroPythonXom from '@/components/IntroPythonXom';
+import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
 
 const debugExercise = {
   id: 'debug_demo',
@@ -28,5 +28,5 @@ print("Hello debug!")`,
 };
 
 export default function DebugDemoPage() {
-  return <IntroPythonXom data={debugExercise} />;
+  return <OptimizedIntroPythonXom data={debugExercise} />;
 }

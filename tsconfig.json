@@ -22,6 +22,29 @@
     "plugins": [{ "name": "next" }],
     "types": ["node", "react", "pyodide"] // <--- AÑADE "pyodide" AQUÍ
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts", 
+    "**/*.ts", 
+    "**/*.tsx", 
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "scripts/**/*",
+    "playwright-report/**/*",
+    "test-results/**/*", 
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "utils/pythonRunner_clean.ts",
+    "debug-monaco.js",
+    "app/monaco-debug/**/*",
+    "app/debug-demo/**/*",
+    "components/MonacoDebug.tsx",
+    "**/*.log",
+    "**/*.tmp",
+    "**/*_backup.*",
+    "**/*_old.*"
+  ]
 }

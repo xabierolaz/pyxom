@@ -1,5 +1,5 @@
 // Ejercicio 2: Parámetros por Defecto - Debugging de errores comunes
-import IntroPythonXom from '@/components/IntroPythonXom';
+import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
 
 const parametrosDefectoExercise = {
   id: 'ej02_parametros_defecto',
@@ -92,5 +92,5 @@ print(result)
 };
 
 export default function ParametrosDefecto() {
-  return <IntroPythonXom data={parametrosDefectoExercise} />;
+  return <OptimizedIntroPythonXom data={parametrosDefectoExercise} />;
 }

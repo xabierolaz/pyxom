@@ -1,7 +1,7 @@
 // app/01-introduccion/ej01_suma_producto/page.tsx
 'use client'; 
 
-import IntroPythonXom from '@/components/IntroPythonXom';
+import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
 import type { ExerciseData, StaticCheckFunction } from '@/types/types'; // Ajusta la ruta
 import type { PyodideInterface } from 'pyodide'; // Necesario para el tipo de 'py' en checkFunction
 
@@ -166,5 +166,5 @@ print_calls >= 2
 };
 
 export default function SumaProductoAvanzadoPage() {
-  return <IntroPythonXom data={sumaProductoExerciseData} />;
+  return <OptimizedIntroPythonXom data={sumaProductoExerciseData} />;
 }

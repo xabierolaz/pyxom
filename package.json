@@ -3,21 +3,29 @@
   "version": "1.0.0",
   "private": true,  "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "dev:turbo": "next dev --turbo",
+    "build": "npm run clean && next build",
+    "build:fast": "npm run clean && next build --no-lint",
+    "build:production": "npm run clean:all && npm run build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --max-warnings 0",
     "test:e2e": "start-server-and-test \"npm run dev\" http://localhost:3000 \"playwright test\"",
     "test:e2e:clean": "taskkill /f /im node.exe 2>nul & start-server-and-test \"npm run dev\" http://localhost:3000 \"playwright test\"",
     "dev:e2e": "concurrently \"npm run dev\" \"npm run test:e2e -- --watch\"",
     "test": "npm run test:e2e",
+    "clean": "if exist .next rmdir /s /q .next",
+    "clean:all": "if exist .next rmdir /s /q .next && if exist out rmdir /s /q out && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache",
+    "analyze": "cross-env ANALYZE=true npm run build",
     "prepare": "husky install"
-  },"dependencies": {
+  },
+  "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "critters": "^0.0.23",
     "next": "^14.2.28",
     "pyodide": "^0.27.5",
     "react": "^18.3.1",
-    "react-diff-view": "^3.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-markdown": "^8.0.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0",
@@ -25,10 +33,13 @@
     "@types/react": "19.1.2",
     "autoprefixer": "^10.4.14",
     "concurrently": "^7.6.0",
+    "eslint": "8.57.1",
+    "eslint-config-next": "15.3.3",
     "husky": "^8.0.0",
     "postcss": "^8.4.24",
     "start-server-and-test": "^1.13.1",
     "tailwindcss": "^3.3.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "webpack": "^5.0.0"
   }
 }
