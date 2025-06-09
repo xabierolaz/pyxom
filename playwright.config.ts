@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: true, // Habilitado para paralelizar tests
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0, // Sin retries en local
-  workers: 8, // Increased to 8 workers directly
+  workers: 16, // Increased to 16 workers
   reporter: [['list'], ['html', { open: 'never' }]],  use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
