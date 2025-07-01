@@ -1,42 +1,20 @@
 // app/01-introduccion/ej01_suma_producto/page.tsx
-'use client'; 
+'use client';
 
-import OptimizedIntroPythonXom from '@/components/OptimizedIntroPythonXom';
-import type { ExerciseData, StaticCheckFunction } from '@/types/types'; // Ajusta la ruta
-import type { PyodideInterface } from 'pyodide'; // Necesario para el tipo de 'py' en checkFunction
+import IntroPythonXom from '@/components/IntroPythonXom';
+import type { ExerciseData, StaticCheckFunction } from '@/types/types';
 
 // --- Ejemplo de StaticCheckFunctions ---
-const checkNoEval: StaticCheckFunction = async (userCode, py, ast) => {
+const checkNoEval: StaticCheckFunction = async (userCode) => {
   try {
-    const codeToRunInPyodide = `
-import ast
-parsed_code = ast.parse(user_code_param)
-no_eval_used = True
-for node in ast.walk(parsed_code):
-    if isinstance(node, ast.Call) and hasattr(node.func, 'id') and node.func.id == 'eval':
-        no_eval_used = False
-        break
-no_eval_used`;
-    py.globals.set('user_code_param', userCode);
-    const result = await py.runPythonAsync(codeToRunInPyodide);
-    return Boolean(result);
-  } catch (e: any) { return `Error analizando uso de eval: ${e.message}`; }
-};
-
-const checkUsesPrint: StaticCheckFunction = async (userCode, py, ast) => {
-  try {
-    const analysisCode = `
-import ast
-tree = ast.parse(user_code_param)
-found_print = False
-for node in ast.walk(tree):
-    if isinstance(node, ast.Call) and hasattr(node.func, 'id') and node.func.id == 'print':
-        found_print = True
-        break
-found_print`;
-    py.globals.set('user_code_param', userCode);
-    return Boolean(await py.runPythonAsync(analysisCode));
-  } catch (e:any) { return `Error analizando uso de print: ${e.message}`; }
+    if (userCode.includes('eval(')) {
+      return "❌ No deberías usar eval() en este ejercicio.";
+    }
+    return true; // OK
+  } catch (e: unknown) {
+    const error = e as Error;
+    return `Error analizando uso de eval: ${error.message}`;
+  }
 };
 
 const sumaProductoExerciseData: ExerciseData = {
@@ -65,7 +43,8 @@ Producto: 15
 
 ### Consejos:
 - Usa f-strings para formatear la salida de manera clara y precisa.
-- Prueba tu código con diferentes entradas para asegurarte de que funciona correctamente.`,  starterCode: `# Ejercicio: Suma y Producto
+- Prueba tu código con diferentes entradas para asegurarte de que funciona correctamente.`,
+  starterCode: `# Ejercicio: Suma y Producto
 # En este ejercicio, tu tarea es crear un programa que:
 # 1. Solicite dos números al usuario
 # 2. Calcule su suma y su producto
@@ -82,7 +61,7 @@ Producto: 15
     { name: "Test Grande (Oculto)", input: "123\n456", expected: "Suma: 579\nProducto: 56088", hidden: true, points: 5, feedback: "Este test comprueba que tu código funciona con números grandes." },
   ],
   globalTimeoutMs: 7000,
-  maxPoints: 17, // 15 de tests + 2 de static check (ejemplo)
+  maxPoints: 16,
 
   hints: [
     { id: 'h1_input_type', text: "Recuerda que \`input()\` devuelve texto. Necesitas \`int()\` para convertirlo a número antes de operar.", condition: { errorType: 'TypeError' } },
@@ -92,7 +71,7 @@ Producto: 15
   ],
 
   modelSolution: {
-    code: `num1 = int(input()) # No es necesario el prompt en la solución para los tests automáticos
+    code: `num1 = int(input())
 num2 = int(input())
 
 suma = num1 + num2
@@ -100,7 +79,7 @@ producto = num1 * num2
 
 print(f"Suma: {suma}")
 print(f"Producto: {producto}")`,
-    explanation: "Esta solución convierte las entradas a enteros, calcula la suma y el producto, y luego los imprime usando f-strings para un formato claro. Los prompts en \`input()\` no son necesarios para los tests automatizados."
+    explanation: "Esta solución convierte las entradas a enteros, calcula la suma y el producto, y luego los imprime usando f-strings para un formato claro."
   },
 
   staticCodeChecks: [
@@ -109,52 +88,24 @@ print(f"Producto: {producto}")`,
       description: 'No se debe usar la función eval()',
       checkFunction: checkNoEval,
       failureMessage: 'Por seguridad, evita usar la función eval(). Convierte los inputs con int() directamente.',
-      points: 1 
-    },
-    {
-      id: 'scheck_uses_print_at_least_twice',
-      description: 'Se debe usar print() al menos dos veces',
-      checkFunction: async (userCode, py, ast) => {
-        try {
-          const analysisCode = `
-import ast
-tree = ast.parse(user_code_param)
-print_calls = 0
-for node in ast.walk(tree):
-    if isinstance(node, ast.Call) and hasattr(node.func, 'id') and node.func.id == 'print':
-        print_calls += 1
-print_calls >= 2
-          `;
-          py.globals.set('user_code_param', userCode);
-          return Boolean(await py.runPythonAsync(analysisCode));
-        } catch (e:any) { return `Error analizando uso de print: ${e.message}`; }
-      },
-      successMessage: '¡Correcto! Usas print() para mostrar ambos resultados.',
-      failureMessage: 'Asegúrate de usar la función print() para mostrar tanto la suma como el producto.',
       points: 1
     }
   ],
-  
+
   commonPitfalls: [
     {
       id: 'pit_type_error_concat',
       explanation: "Si ves un resultado como 'Suma: 53' en lugar de 'Suma: 8' (para inputs 5 y 3), es probable que estés concatenando cadenas en lugar de sumar números. Asegúrate de convertir los resultados de \`input()\` a enteros usando \`int()\` antes de realizar operaciones matemáticas.",
-      trigger: { errorType: 'TypeError' } // O podrías basarlo en un patrón de salida incorrecta
-    },
-    {
-      id: 'pit_input_prompts',
-      explanation: "Los prompts dentro de \`input()\` (ej. \`input('Dame un número: ')\`) son para interacción humana. Los tests automáticos proveen los inputs directamente, así que los prompts no son necesarios y pueden a veces interferir si se imprimen como parte de la salida esperada (aunque nuestro evaluador actual los ignora).",
-      trigger: 'onAnyFailure' // Ejemplo de trigger más general
+      trigger: { errorType: 'TypeError' }
     }
   ],
 
   positiveFeedback: [ "¡Excelente!", "¡Buen trabajo!", "¡Perfecto!", "¡Sigue así!" ],
   maxHintsToShowAutomatically: 2,
 
-  // --- Feedback de eficiencia y estilo ---
   efficiencyFeedback: 'Tu código es eficiente para este problema, pero recuerda que para entradas muy grandes podrías necesitar validar los límites.',
   styleFeedback: 'Usa nombres de variables claros y sigue la indentación estándar de Python. Prefiere f-strings para imprimir.',
-  // --- Sugerencias automáticas y buenas prácticas ---
+
   suggestions: [
     '¿Estás usando int() para convertir los inputs antes de operar?',
     '¿Tu salida coincide exactamente con el formato pedido? Usa f-strings para evitar errores de formato.'
@@ -166,5 +117,5 @@ print_calls >= 2
 };
 
 export default function SumaProductoAvanzadoPage() {
-  return <OptimizedIntroPythonXom data={sumaProductoExerciseData} />;
+  return <IntroPythonXom data={sumaProductoExerciseData} />;
 }

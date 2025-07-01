@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { ExerciseData, AttemptResult, SingleTestRunResult, StaticCheckRunResult, TestCase } from '@/types/types';
-import { runPythonTests, type ExecutionResult } from '@/utils/pythonRunner';
-import { TestResultsPanel } from './TestResultsPanel';
-import UltraFastMonacoOptimized from './UltraFastMonacoOptimized';
-import { MonacoLoadingSkeleton, PythonExecutionSkeleton } from './LoadingSkeleton';
+import { ExerciseData, AttemptResult, SingleTestRunResult, StaticCheckRunResult } from '@/types/types';
+import { runPythonTests } from '@/utils/pythonRunner';
+import LazyMonacoEditor from './LazyMonacoEditor';
+import { PythonExecutionSkeleton } from './LoadingSkeleton';
 import { getMemoryManager } from '@/utils/memoryManager';
 import { getPerformanceTracker } from '@/utils/performanceMonitoring';
 
@@ -16,47 +15,43 @@ interface CodeEditorProps {
   initialCode?: string;
 }
 
-export default function CodeEditor({ 
-  exercise, 
-  onSubmit, 
-  onCodeChange, 
-  initialCode 
-}: CodeEditorProps) {  const [code, setCode] = useState(initialCode || exercise.starterCode);
+export default function CodeEditor({
+  exercise,
+  onSubmit,
+  onCodeChange,
+  initialCode
+}: CodeEditorProps) {
+  const [code, setCode] = useState(initialCode || exercise.starterCode);
   const [isRunning, setIsRunning] = useState(false);
-  const [lastResult, setLastResult] = useState<AttemptResult | null>(null);
-  const [isEditorReady, setIsEditorReady] = useState(false);
   const [memoryStats, setMemoryStats] = useState<{ used?: number; percentage?: number }>({});
-  const editorRef = useRef<any>(null);
-  
+  const editorRef = useRef<HTMLDivElement | null>(null);
   const memoryManager = getMemoryManager();
   const performanceTracker = getPerformanceTracker();
 
   useEffect(() => {
     onCodeChange?.(code);
-  }, [code, onCodeChange]);  useEffect(() => {
+  }, [code, onCodeChange]);
+
+  useEffect(() => {
     // Track CodeEditor component mount
     performanceTracker.trackUserInteraction('code_editor_mount');
-    
+
     // Update memory stats periodically
     const updateMemoryStats = async () => {
       const stats = await memoryManager.getMemoryStats();
       setMemoryStats(stats);
     };
-    
     updateMemoryStats();
-    const memoryInterval = setInterval(updateMemoryStats, 2000);
-    
+    const interval = setInterval(updateMemoryStats, 5000);
     return () => {
-      // Cleanup on unmount
-      clearInterval(memoryInterval);
+      clearInterval(interval);
       memoryManager.cleanup();
     };
-  }, []);
+  }, [memoryManager, performanceTracker]);
 
-  const handleEditorReady = (editor: any, monaco: any) => {
-    editorRef.current = editor;
-    setIsEditorReady(true);
-    
+  const handleEditorReady = (editor: unknown) => {
+    editorRef.current = editor as HTMLDivElement;
+
     // Track editor ready event
     performanceTracker.trackUserInteraction('monaco_editor_ready');
   };
@@ -64,25 +59,28 @@ export default function CodeEditor({
   const handleCodeChange = (value: string | undefined) => {
     const newCode = value || '';
     setCode(newCode);
-    
+
     // Track code changes for performance monitoring
     performanceTracker.trackUserInteraction('code_change');
-  };  const runTests = async () => {
+  };
+  const runTests = async () => {
     if (isRunning) return;
-    
+
     setIsRunning(true);
-    
+
     // Track test execution start
     const startTime = performance.now();
     performanceTracker.trackUserInteraction('test_execution_start');
-    
+
     try {
-      const testStrings = exercise.tests.map(test => 
+      const testStrings = exercise.tests.map(test =>
         `assert ${test.input} == ${test.expected}, "Test failed for ${test.name || 'unnamed test'}"`
       );
-      
       const executionResult = await runPythonTests(code, testStrings);
-      
+
+      // Guardar el resultado completo para el sistema de feedback inteligente
+      // setLastExecutionResult(executionResult);
+
       // Transform ExecutionResult to AttemptResult
       const result: AttemptResult = {
         timestamp: Date.now(),
@@ -111,16 +109,16 @@ export default function CodeEditor({
         durationMs: performance.now() - startTime,
         totalPointsEarned: executionResult.testRunResults.reduce((acc, tr) => acc + (tr.pointsEarned || 0), 0),
         maxPossiblePoints: exercise.maxPoints || 0
-      };
-      
-      // Track test execution completion
-      performanceTracker.trackUserInteraction('test_execution_complete', result.durationMs);
-      
-      setLastResult(result);
+      };      // Track test execution completion
+      performanceTracker.trackUserInteraction('test_execution_complete', {
+        timestamp: Date.now(),
+        metadata: { durationMs: result.durationMs }
+      });
+
       onSubmit?.(result);
     } catch (error) {
       console.error('Error running tests:', error);
-      
+
       // Track test execution error
       performanceTracker.trackUserInteraction('test_execution_error');
     } finally {
@@ -134,7 +132,7 @@ export default function CodeEditor({
       `https://pythontutor.com/iframe-embed.html#code=${encoded}&origin=opt-frontend.js&py=3&curInstr=0`,
       '_blank', 'noopener,noreferrer'
     );
-    
+
     // Track Python Tutor usage
     performanceTracker.trackUserInteraction('python_tutor_open');
   };
@@ -154,13 +152,14 @@ export default function CodeEditor({
                 <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
                 <span>Ejecutando...</span>
               </>
-            ) : (              <>
+            ) : (
+              <>
                 <span>▶</span>
                 <span>Ejecutar Pruebas</span>
               </>
             )}
           </button>
-            <button
+          <button
             onClick={openPythonTutor}
             disabled={isRunning}
             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 flex items-center space-x-2"
@@ -169,7 +168,7 @@ export default function CodeEditor({
             <span>Visualizar</span>
           </button>
         </div>
-          {/* Memory usage indicator */}
+        {/* Memory usage indicator */}
         <div className="flex items-center space-x-2 text-sm text-gray-600">
           {memoryStats.used && (
             <span>
@@ -180,14 +179,16 @@ export default function CodeEditor({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">        {/* Code Editor */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Code Editor */}
         <div className="flex-1 flex flex-col">
           <div className="flex-1 relative">
             {isRunning && (
               <div className="absolute inset-0 bg-black bg-opacity-20 z-10 flex items-center justify-center">
                 <PythonExecutionSkeleton />
               </div>
-            )}              <UltraFastMonacoOptimized
+            )}
+            <LazyMonacoEditor
               height="100%"
               language="python"
               value={code}
@@ -196,10 +197,16 @@ export default function CodeEditor({
               theme="vs-dark"
               readOnly={isRunning}
             />
-          </div>          {/* Test Results */}
-          {lastResult && (
-            <TestResultsPanel result={lastResult} />
-          )}
+          </div>
+          {/* Enhanced Test Results */}
+          {/* {lastResult && lastExecutionResult && (
+            <EnhancedTestResultsPanel
+              result={lastResult}
+              exercise={exercise}
+              userCode={code}
+              executionResult={lastExecutionResult}
+            />
+          )} */}
         </div>
       </div>
     </div>

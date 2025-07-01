@@ -48,6 +48,66 @@ next-env.d.ts
 Thumbs.db
 .DS_Store
 
+# Deployment and diagnostic scripts (CLEANUP)
+*.ps1
+*.bat
+analyze-*.js
+quick-test.js
+validation-*.js
+verify-*.js
+test-preloader.html
+force-reload.ts
+
+# Documentation cleanup (keep only README.md)
+ANALISIS-*.md
+CLEANUP_*.md
+MONACO_*.md
+OPTIMIZATION*.md
+POWERSHELL_*.md
+PRODUCTION_*.md
+SCRIPTS-*.md
+SECURITY_*.md
+VERCEL_*.md
+
+# === LIMPIEZA COMPLETA - Evitar archivos de testing/desarrollo ===
+# Scripts de desarrollo obsoletos
+*.ps1
+!iniciar-local.ps1
+!test-local-completo.ps1
+!deploy-github.ps1
+analyze-*.js
+quick-test.js
+validation-*.js
+verify-*.js
+test-preloader.html
+benchmark-*.ps1
+check-*.ps1
+fix-*.ps1
+
+# Documentación duplicada
+*ANALISIS*.md
+*CLEANUP*.md
+*MONACO*.md
+*OPTIMIZATION*.md
+*POWERSHELL*.md
+*PRODUCTION*.md
+*SCRIPTS*.md
+*SECURITY*.md
+*VERCEL*.md
+
+# Archivos de testing Monaco
+public/monaco-*.html
+app/monaco-test*/
+app/monaco-debug*/
+app/monaco-benchmark*/
+app/monaco-performance*/
+
+# Archivos temporales con nombres corruptos
+*headers and CSP*
+*Monaco Editor optimizations*
+tures
+*ystem*
+
 # Logs
 *.log
 

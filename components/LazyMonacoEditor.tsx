@@ -4,11 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { configurePythonMonaco, getOptimizedEditorOptions } from '@/utils/monacoConfig';
 import { loadMonacoWithFallback } from '@/utils/loadMonaco';
 import type { Monaco } from '@monaco-editor/react';
+import type * as monaco from 'monaco-editor';
 
 interface LazyMonacoEditorProps {
   value: string;
   onChange: (value: string | undefined) => void;
-  onMount?: (editor: any, monaco: Monaco) => void;
+  onMount?: (editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => void;
   height?: string;
   language?: string;
   theme?: string;
@@ -20,16 +21,16 @@ interface LazyMonacoEditorProps {
 const EditorSkeleton = ({ onManualLoad }: { onManualLoad?: () => void }) => {
   const [loadTime, setLoadTime] = React.useState(0);
   const [showRecovery, setShowRecovery] = React.useState(false);
-  
+
   React.useEffect(() => {
     const interval = setInterval(() => {
       setLoadTime(prev => prev + 1);
     }, 100);
-    
+
     const recoveryTimer = setTimeout(() => {
       setShowRecovery(true);
     }, 3000);
-    
+
     return () => {
       clearInterval(interval);
       clearTimeout(recoveryTimer);
@@ -44,15 +45,15 @@ const EditorSkeleton = ({ onManualLoad }: { onManualLoad?: () => void }) => {
           Cargando... {(loadTime / 10).toFixed(1)}s
         </div>
       </div>
-      
+
       <div className="space-y-3">
         <div className="h-3 bg-gray-600 rounded w-3/4"></div>
         <div className="h-3 bg-gray-600 rounded w-1/2"></div>
         <div className="h-3 bg-gray-600 rounded w-5/6"></div>
       </div>
-      
+
       <div className="mt-6 h-32 bg-gray-700 rounded"></div>
-      
+
       {showRecovery && (
         <div className="mt-4 p-3 bg-yellow-800 rounded">
           <p className="text-sm mb-2">⚡ Carga lenta detectada</p>
@@ -69,17 +70,26 @@ const EditorSkeleton = ({ onManualLoad }: { onManualLoad?: () => void }) => {
 };
 
 // Monaco Editor with optimized loading
-const MonacoEditor = ({ 
-  value, 
-  onChange, 
-  onMount, 
-  height = '400px', 
-  language = 'python', 
-  theme = 'vs-dark', 
-  readOnly = false, 
-  options = {} 
-}: any) => {
-  const [Editor, setEditor] = useState<any>(null);
+const MonacoEditor = ({
+  value,
+  onChange,
+  onMount,
+  height = '400px',
+  language = 'python',
+  theme = 'vs-dark',
+  readOnly = false,
+  options = {}
+}: {
+  value: string;
+  onChange: (value: string | undefined) => void;
+  onMount?: (editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => void;
+  height?: string;
+  language?: string;
+  theme?: string;
+  readOnly?: boolean;
+  options?: Record<string, unknown>;
+}) => {
+  const [Editor, setEditor] = useState<React.ComponentType<Record<string, unknown>> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,71 +99,74 @@ const MonacoEditor = ({
     const loadEditor = async () => {
       try {
         console.log('🚀 Loading Monaco...');
-        
+
         // Try normal import with 3 second timeout
         const result = await Promise.race([
           import('@monaco-editor/react'),
           new Promise((_, reject) => setTimeout(() => reject(new Error('Import timeout')), 3000))
         ]);
-        
+
         if (mounted) {
-          setEditor(() => (result as any).default);
+          setEditor(() => (result as { default: React.ComponentType<Record<string, unknown>> }).default);
           setLoading(false);
         }
-      } catch (error) {
+      } catch {
         console.log('⚡ Using CDN fallback...');
-        
+
         try {
-          await loadMonacoWithFallback();
-          
-          // Create fallback component using global Monaco
-          const FallbackEditor = (props: any) => {
+          await loadMonacoWithFallback();          // Create fallback component using global Monaco
+          const FallbackEditor = (props: Record<string, unknown>) => {
             const editorRef = useRef<HTMLDivElement>(null);
-            const editorInstanceRef = useRef<any>(null);            useEffect(() => {
-              if (editorRef.current && (window as any).monaco && !editorInstanceRef.current) {                const config = {
-                  value: props.value || '',
-                  language: props.language || 'python',
+            const editorInstanceRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+
+            useEffect(() => {
+              if (editorRef.current && window.monaco && !editorInstanceRef.current) {
+                const config = {
+                  value: props.value as string || '',
+                  language: props.language as string || 'python',
                   ...getOptimizedEditorOptions()
                 };
+                editorInstanceRef.current = window.monaco.editor.create(editorRef.current, config);
 
-                editorInstanceRef.current = (window as any).monaco.editor.create(editorRef.current, config);
-
-                if (props.onChange) {
+                if (props.onChange && typeof props.onChange === 'function') {
                   editorInstanceRef.current.onDidChangeModelContent(() => {
-                    props.onChange(editorInstanceRef.current.getValue());
+                    if (editorInstanceRef.current) {
+                      const currentValue = editorInstanceRef.current.getValue();
+                      (props.onChange as (value: string) => void)(currentValue);
+                    }
                   });
                 }
 
-                if (props.onMount) {
-                  props.onMount(editorInstanceRef.current, (window as any).monaco);
+                if (props.onMount && typeof props.onMount === 'function') {
+                  (props.onMount as (editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => void)(
+                    editorInstanceRef.current,
+                    window.monaco as Monaco
+                  );
                 }
-              }
-
-              return () => {
+              }              return () => {
                 if (editorInstanceRef.current) {
                   editorInstanceRef.current.dispose();
                   editorInstanceRef.current = null;
                 }
               };
-            }, []);
+            }, [props.onChange, props.onMount, props.language, props.value]);
 
             useEffect(() => {
               if (editorInstanceRef.current && props.value !== undefined) {
                 const currentValue = editorInstanceRef.current.getValue();
                 if (currentValue !== props.value) {
-                  editorInstanceRef.current.setValue(props.value);
+                  editorInstanceRef.current.setValue(props.value as string);
                 }
               }
             }, [props.value]);
 
-            return <div ref={editorRef} style={{ height: props.height || '400px', width: '100%' }} />;
+            return <div ref={editorRef} style={{ height: (props.height as string) || '400px', width: '100%' }} />;
           };
-          
+
           if (mounted) {
             setEditor(() => FallbackEditor);
             setLoading(false);
-          }
-        } catch (fallbackError) {
+          }        } catch {
           if (mounted) {
             setError('Error cargando Monaco Editor');
             setLoading(false);
@@ -223,38 +236,37 @@ export default function LazyMonacoEditor({
   const [isClient, setIsClient] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [forceReload, setForceReload] = useState(0);
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
   useEffect(() => {
     setIsClient(true);
-    
+
     // Mobile detection
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                           window.innerWidth < 768;
     setIsMobile(isMobileDevice);
-    
+
     // Preload Monaco resources
     import('@/utils/loadMonaco').then(({ prefetchMonacoResources }) => {
       prefetchMonacoResources?.();
     });
-    
+
     // Listen for Monaco load events
     const handleMonacoLoaded = () => {
       console.log('✅ Monaco loaded successfully');
       setForceReload(prev => prev + 1);
     };
-    
+
     window.addEventListener('monaco-loaded', handleMonacoLoaded);
-    
+
     return () => {
       window.removeEventListener('monaco-loaded', handleMonacoLoaded);
     };
   }, []);
-
   const handleManualLoad = async () => {
     console.log('⚡ Manual Monaco load requested...');
     try {
-      await loadMonacoWithFallback();
+      await import('../utils/monacoCore').then(({ loadMonacoUniversal }) => loadMonacoUniversal());
       setForceReload(prev => prev + 1);
     } catch (error) {
       console.error('Manual load failed:', error);
@@ -262,20 +274,19 @@ export default function LazyMonacoEditor({
         window.location.reload();
       }
     }
-  };
+  };  const handleEditorDidMount = (editor: unknown, monaco: Monaco) => {
+    editorRef.current = editor as monaco.editor.IStandaloneCodeEditor;
 
-  const handleEditorDidMount = (editor: any, monaco: Monaco) => {
-    editorRef.current = editor;
-    
     // Apply Python configuration
     configurePythonMonaco(monaco);
-    
+
     // Apply optimized settings
-    editor.updateOptions(getOptimizedEditorOptions());
-    
+    const editorInstance = editor as monaco.editor.IStandaloneCodeEditor;
+    editorInstance.updateOptions(getOptimizedEditorOptions());
+
     // Mobile optimizations
     if (isMobile) {
-      editor.updateOptions({
+      editorInstance.updateOptions({
         wordWrap: 'on',
         minimap: { enabled: false },
         scrollBeyondLastLine: false,
@@ -283,8 +294,8 @@ export default function LazyMonacoEditor({
         lineHeight: 20
       });
     }
-    
-    onMount?.(editor, monaco);
+
+    onMount?.(editorInstance, monaco);
   };
 
   if (!isClient) {

@@ -2,14 +2,6 @@
 
 import React, { useState } from 'react';
 
-interface SupportTicket {
-  id: string;
-  subject: string;
-  message: string;
-  status: 'open' | 'resolved';
-  date: string;
-}
-
 export default function SupportPage() {
   const [formData, setFormData] = useState({
     subject: '',

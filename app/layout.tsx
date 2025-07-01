@@ -3,8 +3,9 @@ import '../styles/globals.css';
 import Script from 'next/script';
 import Header from '@/components/Header';
 import PyodideLoader from '@/components/PyodideLoader';
+import GlobalErrorBoundary from '@/components/GlobalErrorBoundary';
 
-export const metadata = { 
+export const metadata = {
   title: 'PyXom - Plataforma de Aprendizaje Python',
   description: 'Aprende Python de forma interactiva con ejercicios prácticos y seguimiento de progreso'
 };
@@ -20,11 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="PyXom" />
         <link rel="manifest" href="/manifest.json" />
-        
+
         {/* Icons */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
-        
+
         {/* Preload critical resources with multiple CDN options */}
         <link
           rel="preload"
@@ -38,23 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           crossOrigin="anonymous"
         />
 
-        {/* Monaco Editor optimized preloading */}
-        <link
-          rel="preload"
-          href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/loader.js"
-          as="script"
-        />
-        <link
-          rel="preload"
-          href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.js"
-          as="script"
-        />
-        <link 
-          rel="preload" 
-          href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/basic-languages/python/python.js" 
-          as="script"
-        />
-        
+        {/* Monaco Editor resources - Loaded only when required by components */}
+
         {/* Fallback CDNs for key resources */}
         <link
           rel="dns-prefetch"
@@ -64,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="dns-prefetch"
           href="https://unpkg.com"
         />
-        
+
         {/* Service Worker Registration */}
         <Script
           id="sw-register"
@@ -97,11 +83,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           httpEquiv="Content-Security-Policy"
           content="
             default-src 'self';
-            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com;
             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
             font-src 'self' https://fonts.gstatic.com;
             img-src 'self' data: https:;
-            connect-src 'self' https://cdn.jsdelivr.net https://api.github.com;
+            connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://api.github.com;
             worker-src 'self' blob:;
             object-src 'none';
             base-uri 'self';
@@ -110,11 +96,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <Header />
-        <PyodideLoader />
-        <main className="min-h-screen bg-gray-50">
-          {children}
-        </main>
+        <GlobalErrorBoundary>
+          <Header />
+          <PyodideLoader />
+          <main className="min-h-screen bg-gray-50">
+            {children}
+          </main>
+        </GlobalErrorBoundary>
       </body>
     </html>
   );
