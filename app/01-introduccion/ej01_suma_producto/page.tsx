@@ -2,20 +2,7 @@
 'use client';
 
 import IntroPythonXom from '@/components/IntroPythonXom';
-import type { ExerciseData, StaticCheckFunction } from '@/types/types';
-
-// --- Ejemplo de StaticCheckFunctions ---
-const checkNoEval: StaticCheckFunction = async (userCode) => {
-  try {
-    if (userCode.includes('eval(')) {
-      return "❌ No deberías usar eval() en este ejercicio.";
-    }
-    return true; // OK
-  } catch (e: unknown) {
-    const error = e as Error;
-    return `Error analizando uso de eval: ${error.message}`;
-  }
-};
+import type { ExerciseData } from '@/types/types';
 
 const sumaProductoExerciseData: ExerciseData = {
   id: 'ej01_suma_producto_avanzado',
@@ -86,8 +73,17 @@ print(f"Producto: {producto}")`,
     {
       id: 'scheck_no_eval',
       description: 'No se debe usar la función eval()',
-      checkFunction: checkNoEval,
-      failureMessage: 'Por seguridad, evita usar la función eval(). Convierte los inputs con int() directamente.',
+      checkFunction: async (userCode) => {
+        try {
+          if (userCode.includes('eval(')) {
+            return "❌ No deberías usar eval() en este ejercicio.";
+          }
+          return true; // OK
+        } catch (e: unknown) {
+          const error = e as Error;
+          return `Error analizando uso de eval: ${error.message}`;
+        }
+      },
       points: 1
     }
   ],

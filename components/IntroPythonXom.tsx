@@ -2,13 +2,10 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import { getPyodideInstance } from '@/utils/pythonRunner';
 import type { PyodideInterface } from 'pyodide';
-import type {
-  ExerciseData,
-  AttemptResult
-} from '@/types/types'; // Ajusta la ruta si es necesario
+import { getPyodideInstance, type ExecutionResult } from '@/utils/pythonRunner';
+import type { ExerciseData, AttemptResult } from '@/types/types';
+import PyCodeEditor from './PyCodeEditor'; // Importación directa del editor consolidado
 
 // Beautiful custom icon components for the interface
 const CheckCircleIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
@@ -48,57 +45,12 @@ const PlayIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 );
 
 // Enhanced Code Editor with fallback
-import { preloadMonaco } from '@/utils/loadMonaco';
+import { prefetchMonacoResources } from '@/utils/loadMonaco';
 
-// Preload Monaco to address loading issues
+// Prefetch recursos de Monaco para acelerar la carga del editor
 if (typeof window !== 'undefined') {
-  preloadMonaco();
+  prefetchMonacoResources();
 }
-
-const PyCodeEditor = dynamic(() =>
-  import('./SimplePyCodeEditor')
-    .catch(err => {
-      console.error('Failed to load SimplePyCodeEditor:', err);
-      return import('./LazyMonacoEditor').then(mod => {
-        console.log('Fallback to LazyMonacoEditor');
-        return {
-          default: ({ initialCode, onCodeChange }: {
-            initialCode: string;
-            onCodeChange?: (code: string) => void;
-            tests?: Array<{ name: string; input: string; expected: string; points: number }>;
-          }) =>
-            <mod.default
-              value={initialCode}
-              onChange={(value: string | undefined) => onCodeChange?.(value ?? '')}
-              height="400px"
-              language="python"
-            />
-        };
-      }).catch(err2 => {
-        console.error('All editor loading attempts failed:', err2);
-        return {
-          default: () => (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-700 font-medium">Error cargando el editor</p>
-              <p className="text-sm text-red-600 mt-2">Por favor, recarga la página o prueba con otro navegador.</p>
-            </div>
-          )
-        };
-      });
-    }),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-96 bg-gray-100 rounded">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-          <p className="text-gray-600">Cargando editor Python...</p>
-          <p className="text-xs text-gray-500 mt-2">Si tarda mucho, prueba a recargar la página</p>
-        </div>
-      </div>
-    )
-  }
-);
 
 // --- Carga dinámica para Componentes Pesados ---
 // Añadimos un componente de carga simple para Suspense
@@ -122,36 +74,55 @@ const IconInfo = ({ className = "h-5 w-5 inline mr-1 text-blue-600" }: { classNa
 
 
 export default function IntroPythonXom({ data }: { data: ExerciseData }) {
-  // Move all hooks to the top level, before any return
   const [code, setCode] = useState<string>(data?.starterCode ?? '');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPyodideReady, setIsPyodideReady] = useState<boolean>(false);
   const [currentAttempt, setCurrentAttempt] = useState<AttemptResult | null>(null);
 
-  // Efecto para inicializar Pyodide
+  // Efecto para inicializar Pyodide y resetear el estado del componente
   useEffect(() => {
     setCode(data.starterCode);
     setCurrentAttempt(null);
-    setIsLoading(true);
-
+    setIsPyodideReady(false);
     getPyodideInstance().then((pyInstance: PyodideInterface) => {
-        if (pyInstance) {
-            setIsPyodideReady(true);
-            console.log("IntroPythonXom: Pyodide está listo.");
-        } else {
-            setIsPyodideReady(false);
-            console.error("IntroPythonXom: Pyodide no pudo ser inicializado.");
-        }
-        setIsLoading(false);
+      if (pyInstance) {
+        setIsPyodideReady(true);
+      } else {
+        console.error("IntroPythonXom: Pyodide no pudo ser inicializado.");
+      }
     });
-
   }, [data.id, data.starterCode]);
 
-  const isExerciseCompleted = useMemo(() => currentAttempt?.overallPassed || false, [currentAttempt]);  const handleReset = () => {
-    setCode(data.starterCode);
-    setCurrentAttempt(null);
+  const handleTestResults = (results: ExecutionResult) => {
+    const testsPassedCount = results.testRunResults.filter(r => r.passed).length;
+    const staticChecksPassedCount = results.staticCheckRunResults.filter(r => r.passed).length;
+    const totalPointsEarned = results.testRunResults.reduce((sum, r) => sum + r.pointsEarned, 0);
+
+    const newAttempt: AttemptResult = {
+      timestamp: Date.now(),
+      overallPassed: testsPassedCount === data.tests.length && results.success,
+      testRunResults: results.testRunResults,
+      staticCheckRunResults: results.staticCheckRunResults,
+      totalTests: data.tests.length,
+      testsPassedCount,
+      totalStaticChecks: results.staticCheckRunResults.length,
+      staticChecksPassedCount,
+      durationMs: results.executionTime,
+      totalPointsEarned,
+      maxPossiblePoints: data.maxPoints ?? 0,
+    };
+
+    setCurrentAttempt(newAttempt);
     setIsLoading(false);
   };
+
+  const isExerciseCompleted = useMemo(() => currentAttempt?.overallPassed || false, [currentAttempt]);
+
+  const handleReset = () => {
+    setCode(data.starterCode);
+    setCurrentAttempt(null);
+  };
+
   const openPythonTutor = () => {
     const encoded = encodeURIComponent(code);
     window.open(
@@ -160,7 +131,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
     );
   };
 
-  if (isLoading && !isPyodideReady && !currentAttempt) {
+  if (!isPyodideReady) {
     return <LoadingPlaceholder message="Preparando entorno Python, por favor espera..." />;
   }
     return (
@@ -174,7 +145,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
           {data.maxPoints && data.maxPoints > 0 && currentAttempt && (
             <div className="px-4 py-2 text-sm font-semibold text-emerald-700 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-full border border-emerald-200 shadow-sm backdrop-blur-sm">
               <span className="flex items-center gap-1">
-                Puntos: {currentAttempt.totalPointsEarned || 0} / {data.maxPoints}
+                Puntos: {currentAttempt.totalPointsEarned || 0} / {currentAttempt.maxPossiblePoints}
               </span>
             </div>
           )}
@@ -191,16 +162,14 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
                 Tu Código:
               </h2>
               <div className="rounded-xl overflow-hidden shadow-lg border border-slate-300 bg-white backdrop-blur-sm">
-                <Suspense fallback={<LoadingPlaceholder message="Cargando editor..." />}>                <PyCodeEditor
-                  initialCode={code}
-                  onCodeChange={(newCode) => setCode(newCode)}
-                  tests={data.tests.map(t => ({
-                    name: t.name ?? '',
-                    input: t.input,
-                    expected: t.expected,
-                    points: t.points ?? 0
-                  }))}
-                /></Suspense>
+                <Suspense fallback={<LoadingPlaceholder message="Cargando editor..." />}>
+                  <PyCodeEditor
+                    initialCode={code}
+                    onCodeChange={(newCode) => setCode(newCode)}
+                    tests={data.tests}
+                    onTestResults={handleTestResults}
+                  />
+                </Suspense>
             </div>
           </section>
 
@@ -225,7 +194,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
 
         <aside className="md:col-span-1 space-y-6">
           {/* Beautiful Status General */}
-          {currentAttempt && !isLoading && (
+          {currentAttempt && (
             <div className={`p-6 rounded-xl shadow-lg backdrop-blur-sm border-2 transition-all duration-300 ${
               isExerciseCompleted
                 ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300 shadow-green-100'
@@ -275,7 +244,7 @@ export default function IntroPythonXom({ data }: { data: ExerciseData }) {
             </div>
           )}
 
-          {/* Beautiful Loading Indicator */}
+          {/* Beautiful Loading Indicator - Ahora se basa en isLoading */}
           {(isLoading && !currentAttempt) && (
             <div className="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-lg backdrop-blur-sm">
               <div className="flex items-center gap-3">

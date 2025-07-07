@@ -1,5 +1,5 @@
-import { ExecutionResult, TestResult } from '@/utils/pythonRunner';
-import { ExerciseData, TestCase } from '@/types/types';
+import { ExecutionResult } from '@/utils/pythonRunner';
+import { ExerciseData, TestCase, TestResult } from '@/types/types';
 
 // Error patterns que el sistema puede reconocer y explicar
 export interface ErrorPattern {
@@ -207,14 +207,13 @@ export class IntelligentFeedbackSystem {
    */
   private static generateTestFailureExplanation(result: TestResult, testCase: TestCase): string {
     if (result.error) {
-      return `Error durante la ejecución: ${result.error}`;
+      return `Error durante la ejecución del test: ${result.error}`;
     }
 
     const expected = testCase.expected;
-    const actual = result.output || 'Sin salida';
+    const actual = result.actualOutput || 'Sin salida';
 
-    return `Tu código devolvió "${actual}" pero se esperaba "${expected}".
-            Esto indica que hay un problema en la lógica para el caso: ${testCase.input}`;
+    return `Para la entrada "${testCase.input}", se esperaba la salida "${expected}", pero tu código devolvió "${actual}".`;
   }
 
   /**

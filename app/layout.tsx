@@ -4,6 +4,7 @@ import Script from 'next/script';
 import Header from '@/components/Header';
 import PyodideLoader from '@/components/PyodideLoader';
 import GlobalErrorBoundary from '@/components/GlobalErrorBoundary';
+import { headers } from 'next/headers';
 
 export const metadata = {
   title: 'PyXom - Plataforma de Aprendizaje Python',
@@ -11,6 +12,8 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = headers().get('x-nonce') || '';
+
   return (
     <html lang="es">
       <head>
@@ -78,22 +81,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="beforeInteractive"
         />
 
-        {/* Content Security Policy */}
-        <meta
-          httpEquiv="Content-Security-Policy"
-          content="
-            default-src 'self';
-            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com;
-            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-            font-src 'self' https://fonts.gstatic.com;
-            img-src 'self' data: https:;
-            connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://api.github.com;
-            worker-src 'self' blob:;
-            object-src 'none';
-            base-uri 'self';
-            form-action 'self';
-          "
-        />
+        {/* Nota: La política CSP ahora se aplica dinámicamente mediante middleware para evitar duplicidades y conflictos. */}
+
+        {/*
+          El nonce se inyecta en este script, que a su vez lo establece
+          para que Webpack pueda usarlo en los estilos y scripts que carga dinámicamente.
+        */}
+        <Script id="webpack-nonce" nonce={nonce} strategy="beforeInteractive">
+          {`__webpack_nonce__ = "${nonce}";`}
+        </Script>
       </head>
       <body>
         <GlobalErrorBoundary>

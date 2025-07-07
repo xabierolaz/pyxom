@@ -1,13 +1,15 @@
-// Simplified Python Code Editor - No ESLint errors
+// Simple Python Code Editor - Clean implementation
 'use client';
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import 'monaco-editor/min/vs/editor/editor.main.css';
 import {
   runPythonTestsEnhanced,
   stopExecution,
   type ExecutionResult
 } from '@/utils/pythonRunner';
+import type { TestCase } from '@/types/types';
 
 // Load Monaco Editor with fallback
 const Editor = dynamic(
@@ -38,15 +40,10 @@ interface PyCodeEditorProps {
   initialCode: string;
   onCodeChange?: (code: string) => void;
   onTestResults?: (results: ExecutionResult) => void;
-  tests?: Array<{
-    name: string;
-    input: string;
-    expected: string;
-    points: number;
-  }>;
+  tests?: TestCase[];
 }
 
-function LegacyPyCodeEditor({
+export default function PyCodeEditor({
   initialCode = '# Escribe tu código aquí\nprint("Hola Mundo")',
   onCodeChange,
   onTestResults,
@@ -56,8 +53,6 @@ function LegacyPyCodeEditor({
   const [isRunning, setIsRunning] = useState(false);
   const [results, setResults] = useState<ExecutionResult | null>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
-
   const editorRef = useRef<unknown>(null);
 
   // Handle code changes
@@ -72,12 +67,9 @@ function LegacyPyCodeEditor({
     if (isRunning) return;
 
     setIsRunning(true);
+    setResults(null);
     try {
-      const testStrings = tests.map(test =>
-        `assert ${test.input} == ${test.expected}, "${test.name} failed"`
-      );
-
-      const result = await runPythonTestsEnhanced(code, testStrings);
+      const result = await runPythonTestsEnhanced(code, tests);
       setResults(result);
       onTestResults?.(result);
     } catch (error) {
@@ -86,7 +78,8 @@ function LegacyPyCodeEditor({
         testRunResults: [],
         staticCheckRunResults: [],
         executionTime: 0,
-        output: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+        output: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        success: false
       };
       setResults(errorResult);
       onTestResults?.(errorResult);
@@ -111,22 +104,11 @@ function LegacyPyCodeEditor({
   const resetCode = useCallback(() => {
     setCode(initialCode);
     setResults(null);
-  }, [initialCode]);
-
-  // Auto-run tests cuando el código cambia (debounce 3 s)
-  useEffect(() => {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    const timer = setTimeout(() => {
-      runTests();
-    }, 3000);
-    setDebounceTimer(timer);
-
-    // Limpieza
-    return () => clearTimeout(timer);
-  }, [code]);
+    onCodeChange?.(initialCode);
+  }, [initialCode, onCodeChange]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-white rounded-lg shadow-sm border">
+    <div className="w-full h-full flex flex-col bg-white rounded-lg shadow-sm border relative">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b bg-gray-50">
         <h3 className="font-medium text-gray-700">Editor Python</h3>
@@ -147,8 +129,9 @@ function LegacyPyCodeEditor({
           ) : (
             <button
               onClick={runTests}
-              disabled={!isEditorReady}
+              disabled={!isEditorReady || tests.length === 0}
               className="px-4 py-1 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded transition-colors"
+              title={tests.length === 0 ? "No hay tests para este ejercicio" : "Ejecutar tests"}
             >
               Ejecutar
             </button>
@@ -180,19 +163,21 @@ function LegacyPyCodeEditor({
         />
       </div>
 
-      {/* Results */}
+      {/* Results Panel */}
       {results && (
-        <div className="border-t p-3 bg-gray-50">
+        <div className="border-t p-3 bg-gray-50 max-h-60 overflow-y-auto">
           <h4 className="font-medium text-gray-700 mb-2">Resultados:</h4>
           {results.output && (
             <div className="mb-2">
-              <pre className="text-sm bg-white p-2 border rounded whitespace-pre-wrap">
+              <h5 className="font-semibold text-sm">Salida:</h5>
+              <pre className="text-sm bg-white p-2 border rounded whitespace-pre-wrap mt-1">
                 {results.output}
               </pre>
             </div>
           )}
           {results.testRunResults && results.testRunResults.length > 0 && (
             <div className="space-y-1">
+               <h5 className="font-semibold text-sm">Tests:</h5>
               {results.testRunResults.map((test, index) => (
                 <div
                   key={index}
@@ -204,7 +189,7 @@ function LegacyPyCodeEditor({
                     Test {index + 1}: {test.passed ? '✓ Pasó' : '✗ Falló'}
                   </span>
                   {test.error && (
-                    <div className="mt-1 text-xs">{test.error}</div>
+                    <div className="mt-1 text-xs font-mono">{test.error}</div>
                   )}
                 </div>
               ))}
@@ -213,19 +198,15 @@ function LegacyPyCodeEditor({
         </div>
       )}
 
-      {/* Loading indicator */}
+      {/* Loading Overlay */}
       {isRunning && (
-        <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-lg">
-            <div className="flex items-center space-x-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              <span className="text-gray-700">Ejecutando código...</span>
-            </div>
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+          <div className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-lg">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <span className="text-gray-700">Ejecutando código...</span>
           </div>
         </div>
       )}
     </div>
   );
 }
-
-export default LegacyPyCodeEditor;

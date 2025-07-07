@@ -1,14 +1,16 @@
-// Simplified Performance Monitoring - No ESLint errors
 'use client';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { PyodideInterface } from 'pyodide';
+
+// Tipos para las métricas y errores
+type MetricValueType = string | number | boolean | Record<string, unknown>;
 
 export interface SystemPerformance {
   pyodideStatus: 'loading' | 'ready' | 'error';
 }
 
 interface MetricValue {
-  value: unknown;
+  value: MetricValueType;
   timestamp: number;
 }
 
@@ -22,32 +24,30 @@ class PerformanceMonitor {
     this.initializeMonitoring();
   }
 
-  private initializeMonitoring() {
-    // Monitor page load performance
-    if (typeof window !== 'undefined') {
+  private initializeMonitoring(): void {
+    if (typeof window !== 'undefined' && typeof performance !== 'undefined') {
       window.addEventListener('load', () => {
         const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        this.recordMetric('pageLoadTime', navigation.loadEventEnd - navigation.fetchStart);
+        if (navigation) {
+          this.recordMetric('pageLoadTime', navigation.loadEventEnd - navigation.fetchStart);
+        }
       });
 
-      // Monitor errors
-      window.addEventListener('error', (event) => {
+      window.addEventListener('error', (event: ErrorEvent) => {
         this.recordError('javascript_error', event.error);
       });
 
-      window.addEventListener('unhandledrejection', (event) => {
+      window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
         this.recordError('promise_rejection', event.reason);
       });
     }
   }
 
-  // Start timing an operation
-  startTiming(operation: string): void {
+  public startTiming(operation: string): void {
     this.startTimes.set(operation, performance.now());
   }
 
-  // End timing an operation and record the duration
-  endTiming(operation: string): number {
+  public endTiming(operation: string): number {
     const startTime = this.startTimes.get(operation);
     if (startTime) {
       const duration = performance.now() - startTime;
@@ -58,60 +58,61 @@ class PerformanceMonitor {
     return 0;
   }
 
-  // Record a custom metric
-  recordMetric(name: string, value: any): void {
+  public recordMetric(name: string, value: MetricValueType): void {
     this.metrics.set(name, {
       value,
       timestamp: Date.now()
     });
   }
 
-  // Record an error
-  recordError(type: string, error: any): void {
-    const errorCount = (this.metrics.get('errorCount')?.value as number | undefined) || 0;
+  public recordError(type: string, error: unknown): void {
+    const errorCount = (this.metrics.get('errorCount')?.value as number ?? 0);
     this.recordMetric('errorCount', errorCount + 1);
+
+    let message = String(error);
+    let stack: string | undefined;
+
+    if (error instanceof Error) {
+      message = error.message;
+      stack = error.stack;
+    }
+
     this.recordMetric(`error_${type}`, {
-      message: error?.message || String(error),
-      stack: error?.stack,
+      message,
+      stack,
       timestamp: Date.now()
     });
   }
 
-  // Get current performance snapshot
-  getPerformanceSnapshot(): SystemPerformance {
+  public getPerformanceSnapshot(): SystemPerformance {
     return {
       pyodideStatus: (this.metrics.get('pyodideStatus')?.value as SystemPerformance['pyodideStatus']) ?? 'loading',
     };
   }
 
-  // Generate performance report
-  generateReport(): string {
+  public generateReport(): string {
     const metrics = Array.from(this.metrics.entries()).map(([key, value]) => {
-      return `${key}: ${JSON.stringify(value.value)} (${new Date(value.timestamp).toLocaleTimeString()})`;
+      const formattedValue = typeof value.value === 'object' ? JSON.stringify(value.value) : value.value;
+      return `${key}: ${formattedValue} (${new Date(value.timestamp).toLocaleTimeString()})`;
     }).join('\n');
 
     return `Performance Report - Session: ${this.sessionId}\n${'='.repeat(50)}\n${metrics}`;
   }
 
-  // Monitor Pyodide performance specifically
-  monitorPyodidePerformance(pyodide: any): void {
-    if (!pyodide) return;
-
-    // Monitor package loading
+  public monitorPyodidePerformance(pyodide: PyodideInterface): void {
     const originalLoadPackage = pyodide.loadPackage;
-    pyodide.loadPackage = (...args: any[]) => {
+    pyodide.loadPackage = (...args: Parameters<typeof originalLoadPackage>) => {
       this.startTiming('package_load');
-      return originalLoadPackage.apply(pyodide, args).finally(() => {
+      return originalLoadPackage(...args).finally(() => {
         this.endTiming('package_load');
       });
     };
 
-    // Monitor code execution
     const originalRunPython = pyodide.runPython;
-    pyodide.runPython = (code: string, ...args: any[]) => {
+    pyodide.runPython = (code: string, globals?: Record<string, unknown>) => {
       this.startTiming('code_execution');
       try {
-        const result = originalRunPython.call(pyodide, code, ...args);
+        const result = originalRunPython(code, globals);
         this.endTiming('code_execution');
         return result;
       } catch (error) {
@@ -124,9 +125,8 @@ class PerformanceMonitor {
     this.recordMetric('pyodideStatus', 'ready');
   }
 
-  // Track user interactions
-  trackInteraction(type: string, data?: any): void {
-    const interactionCount = (this.metrics.get(`interaction_${type}`)?.value as number | undefined) || 0;
+  public trackInteraction(type: string, data?: Record<string, unknown>): void {
+    const interactionCount = (this.metrics.get(`interaction_${type}`)?.value as number ?? 0);
     this.recordMetric(`interaction_${type}`, interactionCount + 1);
 
     if (data) {
@@ -173,7 +173,7 @@ export const trackDebugStep = () => {
   performanceMonitor.recordMetric('debugSteps', current + 1);
 };
 
-export const trackError = (type: string, error: any) => {
+export const trackError = (type: string, error: unknown) => {
   performanceMonitor.recordError(type, error);
 };
 
